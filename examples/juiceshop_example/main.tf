@@ -68,85 +68,6 @@ module "nip_apigee_hostname" {
   subdomain_prefixes = ["demo"]
 }
 
-# module "apigee_core" {
-#   source = "github.com/apigee/terraform-modules//modules/apigee-x-core"
-
-#   project_id          = module.project.project_id
-#   network             = module.vpc.network_id
-#   billing_type        = "EVALUATION"
-#   ax_region           = var.region
-#   apigee_environments = ["demo"]
-#   apigee_envgroups = {
-#     demo = {
-#       environments = ["demo"]
-#       hostnames    = [module.nip_apigee_hostname.hostname]
-#     }
-#   }
-#   apigee_instances = {
-#     instance-1 = {
-#       region       = var.region
-#       ip_range     = "10.0.0.0/22"
-#       environments = ["demo"]
-#     }
-#   }
-# }
-
-# # Service Networking
-# resource "google_compute_global_address" "apigee_ranges" {
-#   for_each      = local.psa_ranges
-#   project       = module.project.project_id
-#   name          = each.key
-#   purpose       = "VPC_PEERING"
-#   address_type  = "INTERNAL"
-#   address       = split("/", each.value)[0]
-#   prefix_length = split("/", each.value)[1]
-#   network       = module.vpc.network_id
-# }
-
-# resource "google_service_networking_connection" "apigee_peering" {
-#   network = module.vpc.network_id
-#   service = "servicenetworking.googleapis.com"
-#   reserved_peering_ranges = [
-#     for k, v in google_compute_global_address.apigee_ranges : v.name
-#   ]
-# }
-
-# resource "google_compute_network_peering_routes_config" "psa_routes" {
-#   project              = module.project.project_id
-#   peering              = google_service_networking_connection.apigee_peering.peering
-#   network              = module.vpc.network_name
-#   export_custom_routes = false
-#   import_custom_routes = false
-# }
-
-# # Routing
-# resource "google_compute_region_network_endpoint_group" "psc_neg" {
-#   project               = module.project.project_id
-#   name                  = "apigee-neg"
-#   region                = var.region
-#   network               = module.vpc.network_id
-#   subnetwork            = module.vpc.subnets_ids[0]
-#   network_endpoint_type = "PRIVATE_SERVICE_CONNECT"
-#   psc_target_service    = module.apigee_core.instance_service_attachments[var.region]
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
-
-# module "psc_lb" {
-#   source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb"
-
-#   project_id              = module.project.project_id
-#   name                    = "apigee-xlb-psc"
-#   network                 = module.vpc.network_id
-# #   psc_service_attachments = { (var.region) = module.apigee_core.instance_service_attachments[var.region] }
-#   ssl_certificate         = module.nip_apigee_hostname.ssl_certificate
-#   external_ip             = module.nip_apigee_hostname.ip_address
-#   psc_negs                = [google_compute_region_network_endpoint_group.psc_neg.id]
-# }
-
-
-
 # ----------------------------------------------------------------------------------------------------------------------
 # Configure 3P Apigee
 # ----------------------------------------------------------------------------------------------------------------------
@@ -246,34 +167,8 @@ resource "google_artifact_registry_repository" "waap_repo" {
   repository_id = "waap-repo"
 }
 
-# resource "google_cloudbuild_trigger" "juiceshop_trigger" {
-#   name    = "juiceshop-build"
-#   project = module.project.project_id
 
-#   source_to_build {
-#     uri       = "https://github.com/ssvaidyanathan/juice-shop"
-#     ref       = "refs/head/master"
-#     repo_type = "GITHUB"
-#   }
-
-#   git_file_source {
-#     path      = "cloudbuild.yaml"
-#     uri       = "https://github.com/ssvaidyanathan/juice-shop"
-#     revision  = "refs/head/master"
-#     repo_type = "GITHUB"
-#   }
-
-#   substitutions = {
-#       _API_ENDPOINT  = module.nip_apigee_hostname.hostname
-#       _BASEPATH      = "/owasp"
-#       _APIKEY        = apigee_developer_app_credential.example.consumer_key
-#       _RECAPTCHA_KEY = google_recaptcha_enterprise_key.primary.name
-#       _IMAGETAG      = "${var.region}-docker.pkg.dev/${module.project.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
-#       # us-central1-docker.pkg.dev/cicd-solution-test/cicd-solution-test-my-app-image-repo
-#   }
-# }
-
-### Clone Git Repo
+# Clone Git Repo
 resource "null_resource" "git_clone_source" {
   provisioner "local-exec" {
     command = "git clone https://github.com/ssvaidyanathan/juice-shop.git ${path.module}/juice-shop"
@@ -288,17 +183,7 @@ resource "time_sleep" "wait_for_git_seconds" {
   create_duration = "60s"
 }
 
-### Build Docker Image
-# resource "null_resource" "build_juiceshop_image" {
-#   provisioner "local-exec" {
-#     command = "cd ${path.module}/juice-shop && gcloud builds submit --config=cloudbuild.yaml --project=${module.project.project_id} --substitutions=_API_ENDPOINT=https://${module.nip_apigee_hostname.hostname},_BASEPATH=/owasp,_APIKEY=${apigee_developer_app_credential.example.consumer_key},_RECAPTCHA_KEY=${google_recaptcha_enterprise_key.primary.name},_IMAGETAG=${var.region}-docker.pkg.dev/${module.project.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
-#   }
-
-#   depends_on = [
-#     time_sleep.wait_for_git_seconds
-#   ]
-# }
-
+# Build Docker Image
 module "build_juiceshop_image" {
   source  = "terraform-google-modules/gcloud/google"
   version = "~> 2.0"
