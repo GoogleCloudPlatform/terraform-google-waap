@@ -54,20 +54,25 @@ module "apigee" {
   source = "../../modules/apigee"
 
   project_id          = var.project_id
+  create_apigee_org   = true
   billing_type        = "EVALUATION"
-  ax_region           = var.region
-  apigee_environments = ["demo"]
-  apigee_envgroups = {
+  analytics_region    = var.region
+  prevent_key_destroy = false
+  apigee_environments = {
     demo = {
-      environments = ["demo"]
-      hostnames    = [module.nip_apigee_hostname.hostname]
+      display_name = "demo"
+      description  = "Juiceshop Demo env"
+      envgroups    = ["demo"]
     }
+  }
+  apigee_envgroups = {
+    demo = [module.nip_apigee_hostname.hostname]
   }
   apigee_instances = {
     instance-1 = {
-      region       = var.region
-      ip_range     = "10.0.0.0/22"
-      environments = ["demo"]
+      region            = var.region
+      psa_ip_cidr_range = "10.0.0.0/22"
+      environments      = ["demo"]
     }
   }
   network_id = module.vpc.network_id
