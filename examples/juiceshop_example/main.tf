@@ -3,7 +3,7 @@ module "vpc" {
   source  = "terraform-google-modules/network/google"
   version = "~> 4.0"
 
-  project_id   = module.project.project_id
+  project_id   = var.project_id
   network_name = "waap-vpc"
   routing_mode = "GLOBAL"
 
@@ -24,7 +24,7 @@ module "vpc" {
 module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
   version = "~> 4.0"
-  project = module.project.project_id
+  project = var.project_id
   name    = "juiceshop-router"
   network = module.vpc.network_name
   region  = var.region
@@ -35,35 +35,35 @@ module "cloud_router" {
 }
 
 module "apigee" {
-    source = "../../modules/apigee"
+  source = "../../modules/apigee"
 
-    project_id          = module.project.project_id
-    billing_type        = "EVALUATION"
-    ax_region           = var.region
-    apigee_environments = ["demo"]
-    apigee_envgroups = {
-        demo = {
-            environments = ["demo"]
-            hostnames    = [module.nip_apigee_hostname.hostname]
-        }
+  project_id          = var.project_id
+  billing_type        = "EVALUATION"
+  ax_region           = var.region
+  apigee_environments = ["demo"]
+  apigee_envgroups = {
+    demo = {
+      environments = ["demo"]
+      hostnames    = [module.nip_apigee_hostname.hostname]
     }
-    apigee_instances = {
-        instance-1 = {
-            region       = var.region
-            ip_range     = "10.0.0.0/22"
-            environments = ["demo"]
-        }
+  }
+  apigee_instances = {
+    instance-1 = {
+      region       = var.region
+      ip_range     = "10.0.0.0/22"
+      environments = ["demo"]
     }
-    network_id = module.vpc.network_id
-    subnet_id = module.vpc.subnets_ids[0]
+  }
+  network_id = module.vpc.network_id
+  subnet_id  = module.vpc.subnets_ids[0]
 
-    ssl_certificate = module.nip_apigee_hostname.ssl_certificate
-    external_ip     = module.nip_apigee_hostname.ip_address
+  ssl_certificate = module.nip_apigee_hostname.ssl_certificate
+  external_ip     = module.nip_apigee_hostname.ip_address
 }
 
 module "nip_apigee_hostname" {
   source             = "github.com/apigee/terraform-modules//modules/nip-development-hostname"
-  project_id         = module.project.project_id
+  project_id         = var.project_id
   address_name       = "apigee-external"
   subdomain_prefixes = ["demo"]
 }
@@ -85,7 +85,7 @@ resource "apigee_proxy" "juiceshop_proxy" {
   bundle_hash = filebase64sha256("${path.module}/waap-demo-proxy-bundle.zip")
 
   depends_on = [
-      module.apigee
+    module.apigee
   ]
 }
 
@@ -93,6 +93,10 @@ resource "apigee_proxy_deployment" "juiceshop_proxy_deployment" {
   proxy_name       = apigee_proxy.juiceshop_proxy.name
   environment_name = "demo"
   revision         = apigee_proxy.juiceshop_proxy.revision
+
+  depends_on = [
+    apigee_target_server.target_server
+  ]
 }
 
 resource "apigee_target_server" "target_server" {
@@ -101,6 +105,10 @@ resource "apigee_target_server" "target_server" {
   host             = module.nip_juiceshop_hostname.hostname
   port             = 443
   ssl_enabled      = true
+
+  depends_on = [
+    module.apigee
+  ]
 }
 
 resource "apigee_product" "juiceshop_product" {
@@ -152,7 +160,7 @@ resource "apigee_developer_app_credential" "example" {
 resource "google_recaptcha_enterprise_key" "primary" {
   display_name = "juiceshop-session-token-key"
 
-  project = module.project.project_id
+  project = var.project_id
 
   web_settings {
     integration_type  = "SCORE"
@@ -163,7 +171,7 @@ resource "google_recaptcha_enterprise_key" "primary" {
 resource "google_artifact_registry_repository" "waap_repo" {
   format        = "DOCKER"
   location      = var.region
-  project       = module.project.project_id
+  project       = var.project_id
   repository_id = "waap-repo"
 }
 
@@ -190,8 +198,8 @@ module "build_juiceshop_image" {
 
   platform = "linux"
 
-  create_cmd_entrypoint  = "gcloud"
-  create_cmd_body        = "builds submit ${path.module}/juice-shop/ --config=${path.module}/juice-shop/cloudbuild.yaml --project=${module.project.project_id} --substitutions=_API_ENDPOINT=https://${module.nip_apigee_hostname.hostname},_BASEPATH=/owasp,_APIKEY=${apigee_developer_app_credential.example.consumer_key},_RECAPTCHA_KEY=${google_recaptcha_enterprise_key.primary.name},_IMAGETAG=${var.region}-docker.pkg.dev/${module.project.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
+  create_cmd_entrypoint = "gcloud"
+  create_cmd_body       = "builds submit ${path.module}/juice-shop/ --config=${path.module}/juice-shop/cloudbuild.yaml --project=${var.project_id} --substitutions=_API_ENDPOINT=https://${module.nip_apigee_hostname.hostname},_BASEPATH=/owasp,_APIKEY=${apigee_developer_app_credential.example.consumer_key},_RECAPTCHA_KEY=${google_recaptcha_enterprise_key.primary.name},_IMAGETAG=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
 
   module_depends_on = [
     time_sleep.wait_for_git_seconds
@@ -220,7 +228,7 @@ locals {
 }
 
 data "google_compute_default_service_account" "default" {
-  project = module.project.project_id
+  project = var.project_id
 }
 
 module "gce_container" {
@@ -229,7 +237,7 @@ module "gce_container" {
 
   container = {
     name  = "juiceshop-demo-mig-template"
-    image = "${var.region}-docker.pkg.dev/${module.project.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
+    image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
     securityContext = {
       privileged : false
     }
@@ -255,7 +263,7 @@ module "instance_template" {
   source = "terraform-google-modules/vm/google//modules/instance_template"
 
   name_prefix = "juiceshop-instance-template"
-  project_id  = module.project.project_id
+  project_id  = var.project_id
   service_account = {
     email  = data.google_compute_default_service_account.default.email
     scopes = ["cloud-platform"]
@@ -274,7 +282,7 @@ module "instance_template" {
   /* network */
   network            = module.vpc.network_id
   subnetwork         = module.vpc.subnets_ids[1]
-  subnetwork_project = module.project.project_id
+  subnetwork_project = var.project_id
 
   access_config = [{
     network_tier = "PREMIUM"
@@ -285,7 +293,7 @@ module "instance_template" {
 
   /* image */
   source_image = module.gce_container.source_image
-  #   source_image_project = module.project.project_id
+  #   source_image_project = var.project_id
 
   /* disks */
   disk_size_gb = 10
@@ -296,7 +304,7 @@ module "instance_template" {
 module "mig" {
   source = "terraform-google-modules/vm/google//modules/mig"
 
-  project_id        = module.project.project_id
+  project_id        = var.project_id
   hostname          = "juiceshop-demo"
   region            = var.region
   instance_template = module.instance_template.self_link
@@ -339,14 +347,14 @@ module "mig" {
 
 module "nip_juiceshop_hostname" {
   source       = "github.com/apigee/terraform-modules//modules/nip-development-hostname"
-  project_id   = module.project.project_id
+  project_id   = var.project_id
   address_name = "juiceshop-lb-ip"
 }
 
 module "lb-http" {
   source = "GoogleCloudPlatform/lb-http/google"
 
-  project     = module.project.project_id
+  project     = var.project_id
   name        = "juiceshop"
   target_tags = ["juiceshop"]
 
@@ -414,7 +422,7 @@ module "lb-http" {
 # ----------------------------------------------------------------------------------------------------------------------
 module "firewall_rules" {
   source       = "terraform-google-modules/network/google//modules/firewall-rules"
-  project_id   = module.project.project_id
+  project_id   = var.project_id
   network_name = module.vpc.network_name
 
   rules = [
@@ -573,7 +581,7 @@ module "firewall_rules" {
 # ----------------------------------------------------------------------------------------------------------------------
 resource "google_compute_security_policy" "waap_policies" {
   name    = "waap-demo-juice-shop"
-  project = module.project.project_id
+  project = var.project_id
 
   rule {
     action      = "allow"
