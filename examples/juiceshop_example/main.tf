@@ -154,6 +154,10 @@ resource "apigee_developer" "example" {
   first_name = "WAAP"
   last_name  = "Developer"
   user_name  = "waap"
+
+  depends_on = [
+    module.apigee
+  ]
 }
 
 resource "apigee_developer_app" "example" {
