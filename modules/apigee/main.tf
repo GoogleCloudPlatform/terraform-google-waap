@@ -7,7 +7,7 @@ module "apigee_core" {
 
   project_id          = var.project_id
   network             = var.network_id
-  billing_type        = var.billing_typea
+  billing_type        = var.billing_type
   ax_region           = var.ax_region
   apigee_instances    = var.apigee_instances
   apigee_environments = var.apigee_environments
@@ -62,11 +62,11 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
 module "psc_lb" {
   source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb"
 
-  project_id              = var.project_id
-  name                    = "apigee-xlb-psc"
-  network                 = var.network_id
-#   psc_service_attachments = { (local.region) = module.apigee_core.instance_service_attachments[local.region] }
-  ssl_certificate         = var.ssl_certificate
-  external_ip             = var.external_ip
-  psc_negs                = [for _, psc_neg in google_compute_region_network_endpoint_group.psc_neg : psc_neg.id]
+  project_id = var.project_id
+  name       = "apigee-xlb-psc"
+  network    = var.network_id
+  #   psc_service_attachments = { (local.region) = module.apigee_core.instance_service_attachments[local.region] }
+  ssl_certificate = var.ssl_certificate
+  external_ip     = var.external_ip
+  psc_negs        = [for _, psc_neg in google_compute_region_network_endpoint_group.psc_neg : psc_neg.id]
 }

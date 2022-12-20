@@ -31,8 +31,8 @@ variable "apigee_instances" {
 variable "psa_ranges" {
   description = "Apigee Private Service Access peering ranges"
   type = object({
-      apigee-range = string
-      google-managed-services-support-1 = string
+    apigee-range                      = string
+    google-managed-services-support-1 = string
   })
   default = {
     apigee-range                      = "10.0.0.0/22"
@@ -52,23 +52,23 @@ variable "network_id" {
 
 variable "subnet_id" {
   description = "Apigee NEG subnet ID"
-  type = string
+  type        = string
 }
 
 variable "ssl_certificate" {
   description = "SSL Certificate ID for Apigee Load Balancer"
-  type = string
+  type        = string
 }
 
 variable "external_ip" {
   description = "Reserved global external IP for Apigee Load Balancer"
-  type = string
+  type        = string
 }
 
 variable "billing_type" {
   description = "Apigee billing type. Can be one of EVALUATION, PAYG, or SUBSCRIPTION. See https://cloud.google.com/apigee/pricing"
-  type = string
-  default = "EVALUATION"
+  type        = string
+  default     = "EVALUATION"
 }
 
 # variable "region" {
