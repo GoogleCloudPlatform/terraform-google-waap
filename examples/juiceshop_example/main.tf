@@ -1,3 +1,19 @@
+/**
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 module "vpc" {
   source  = "terraform-google-modules/network/google"
@@ -62,7 +78,8 @@ module "apigee" {
 }
 
 module "nip_apigee_hostname" {
-  source             = "github.com/apigee/terraform-modules//modules/nip-development-hostname"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+
   project_id         = var.project_id
   address_name       = "apigee-external"
   subdomain_prefixes = ["demo"]
@@ -260,7 +277,8 @@ module "gce_container" {
 }
 
 module "instance_template" {
-  source = "terraform-google-modules/vm/google//modules/instance_template"
+  source  = "terraform-google-modules/vm/google//modules/instance_template"
+  version = "~> 7.9.0"
 
   name_prefix = "juiceshop-instance-template"
   project_id  = var.project_id
@@ -302,7 +320,8 @@ module "instance_template" {
 }
 
 module "mig" {
-  source = "terraform-google-modules/vm/google//modules/mig"
+  source  = "terraform-google-modules/vm/google//modules/mig"
+  version = "~> 7.9.0"
 
   project_id        = var.project_id
   hostname          = "juiceshop-demo"
@@ -346,13 +365,15 @@ module "mig" {
 
 
 module "nip_juiceshop_hostname" {
-  source       = "github.com/apigee/terraform-modules//modules/nip-development-hostname"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+
   project_id   = var.project_id
   address_name = "juiceshop-lb-ip"
 }
 
 module "lb-http" {
-  source = "GoogleCloudPlatform/lb-http/google"
+  source  = "GoogleCloudPlatform/lb-http/google"
+  version = "~> 6.3.0"
 
   project     = var.project_id
   name        = "juiceshop"
@@ -421,7 +442,9 @@ module "lb-http" {
 # Firewalls
 # ----------------------------------------------------------------------------------------------------------------------
 module "firewall_rules" {
-  source       = "terraform-google-modules/network/google//modules/firewall-rules"
+  source  = "terraform-google-modules/network/google//modules/firewall-rules"
+  version = "~> 6.0.0"
+
   project_id   = var.project_id
   network_name = module.vpc.network_name
 

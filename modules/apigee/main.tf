@@ -1,9 +1,25 @@
+/**
+ * Copyright 2022 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 # Apigee Org, Instance, EnvGroup, Env setup
 # https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#create-org
 # https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#runtime-instance
 # https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#create-environment
 module "apigee_core" {
-  source = "github.com/apigee/terraform-modules//modules/apigee-x-core"
+  source = "github.com/apigee/terraform-modules//modules/apigee-x-core?ref=v0.12.0"
 
   project_id          = var.project_id
   network             = var.network_id
@@ -60,7 +76,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
 }
 
 module "psc_lb" {
-  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb"
+  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb?ref=v0.12.0"
 
   project_id = var.project_id
   name       = "apigee-xlb-psc"
