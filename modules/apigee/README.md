@@ -11,7 +11,7 @@
 | external\_ip | Reserved global external IP for Apigee Load Balancer | `string` | n/a | yes |
 | network\_id | VPC network ID | `string` | n/a | yes |
 | project\_id | Project id (also used for the Apigee Organization). | `string` | n/a | yes |
-| psa\_ranges | Apigee Private Service Access peering ranges | <pre>object({<br>      apigee-range = string<br>      google-managed-services-support-1 = string<br>  })</pre> | <pre>{<br>  "apigee-range": "10.0.0.0/22",<br>  "google-managed-services-support-1": "10.1.0.0/28"<br>}</pre> | no |
+| psa\_ranges | Apigee Private Service Access peering ranges | <pre>object({<br>    apigee-range                      = string<br>    google-managed-services-support-1 = string<br>  })</pre> | <pre>{<br>  "apigee-range": "10.0.0.0/22",<br>  "google-managed-services-support-1": "10.1.0.0/28"<br>}</pre> | no |
 | ssl\_certificate | SSL Certificate ID for Apigee Load Balancer | `string` | n/a | yes |
 | subnet\_id | Apigee NEG subnet ID | `string` | n/a | yes |
 
