@@ -1,6 +1,6 @@
 # terraform-google-waap
 
-This repository contains Terraform modules and eample configurations to deploy the [Web Application and API Protection (WAAP)](https://cloud.google.com/solutions/web-app-and-api-protection) solution on Google Cloud.  
+This repository contains Terraform modules and eample configurations to deploy the [Web Application and API Protection (WAAP)](https://cloud.google.com/solutions/web-app-and-api-protection) solution on Google Cloud.
 
 
 ## Usage

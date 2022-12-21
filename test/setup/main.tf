@@ -31,9 +31,12 @@ module "project" {
     "artifactregistry.googleapis.com",
     "cloudbuild.googleapis.com",
     "cloudkms.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com",
+    "iam.googleapis.com",
     "monitoring.googleapis.com",
     "recaptchaenterprise.googleapis.com",
     "servicenetworking.googleapis.com",
+    "serviceusage.googleapis.com",
   ]
 }

@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-variable "project_id" {
-  description = "GCP Project ID in which to create example resources"
-  type        = string
-}
-
-variable "region" {
-  description = "Region in which to create regional resources."
-  type        = string
-  default     = "us-central1"
+terraform {
+  required_version = ">= 0.13.0"
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = ">= 3.45"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 3.45"
+    }
+  }
 }
