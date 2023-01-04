@@ -96,13 +96,13 @@ module "nip_apigee_hostname" {
 data "google_client_config" "current" {}
 
 resource "google_service_account" "apigee_waap" {
-  project      = module.project.project_id
+  project      = module.apigee.apigee_org_id
   account_id   = "apigee-waap"
   display_name = "apigee-waap"
 }
 
 resource "google_project_iam_member" "apigee_waap" {
-  project = module.project.project_id
+  project = module.apigee.apigee_org_id
   role    = local.apigee_waap_svc_account_roles[count.index]
   member  = "serviceAccount:${google_service_account.apigee_waap.email}"
 }
@@ -181,7 +181,7 @@ resource "apigee_developer_app" "example" {
   developer_email = apigee_developer.example.email
   name            = "JuiceShop"
   attributes = {
-    siteKey = "${google_recaptcha_enterprise_key.primary.name}"
+    siteKey = google_recaptcha_enterprise_key.primary.name
   }
 }
 
