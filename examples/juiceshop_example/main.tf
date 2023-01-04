@@ -105,7 +105,7 @@ resource "google_project_iam_member" "apigee_waap" {
   count   = length(local.apigee_waap_svc_account_roles)
   project = module.apigee.apigee_org_id
   role    = local.apigee_waap_svc_account_roles[count.index]
-  member  = "serviceAccount:${google_service_account.apigee_waap.email}"
+  member  = google_service_account.apigee_waap.email
 }
 
 provider "apigee" {
