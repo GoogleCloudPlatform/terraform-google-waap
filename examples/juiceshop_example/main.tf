@@ -96,16 +96,16 @@ module "nip_apigee_hostname" {
 data "google_client_config" "current" {}
 
 resource "google_service_account" "apigee_waap" {
-  project      = module.apigee.apigee_org_id
+  project      = var.project_id
   account_id   = "apigee-waap"
   display_name = "apigee-waap"
 }
 
 resource "google_project_iam_member" "apigee_waap" {
-  count   = length(local.apigee_waap_svc_account_roles)
-  project = module.apigee.apigee_org_id
-  role    = local.apigee_waap_svc_account_roles[count.index]
-  member  = google_service_account.apigee_waap.email
+  for_each = toset(local.apigee_waap_svc_account_roles)
+  project  = var.project_id
+  role     = local.apigee_waap_svc_account_roles[count.index]
+  member   = "serviceAccount:${google_service_account.apigee_waap.email}"
 }
 
 provider "apigee" {
