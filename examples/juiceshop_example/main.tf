@@ -104,7 +104,7 @@ resource "google_service_account" "apigee_waap" {
 resource "google_project_iam_member" "apigee_waap" {
   for_each = toset(local.apigee_waap_svc_account_roles)
   project  = var.project_id
-  role     = local.apigee_waap_svc_account_roles[count.index]
+  role     = local.apigee_waap_svc_account_roles[each.value]
   member   = "serviceAccount:${google_service_account.apigee_waap.email}"
 }
 
