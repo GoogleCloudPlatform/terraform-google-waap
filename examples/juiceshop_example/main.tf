@@ -128,7 +128,7 @@ resource "apigee_proxy_deployment" "juiceshop_proxy_deployment" {
   proxy_name       = apigee_proxy.juiceshop_proxy.name
   environment_name = "demo"
   revision         = apigee_proxy.juiceshop_proxy.revision
-  service_account  = "serviceAccount:${google_service_account.apigee_waap.email}"
+  service_account  = google_service_account.apigee_waap.email
   depends_on = [
     apigee_target_server.target_server
   ]
