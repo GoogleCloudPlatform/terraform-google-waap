@@ -16,7 +16,9 @@
 
 locals {
   int_required_roles = [
-    "roles/owner"
+    "roles/owner",
+    "roles/recaptchaenterprise.admin",
+    "roles/artifactregistry.admin",
   ]
 }
 

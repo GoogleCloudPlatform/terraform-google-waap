@@ -95,6 +95,19 @@ module "nip_apigee_hostname" {
 # ----------------------------------------------------------------------------------------------------------------------
 data "google_client_config" "current" {}
 
+resource "google_service_account" "apigee_waap" {
+  project      = var.project_id
+  account_id   = "apigee-waap"
+  display_name = "apigee-waap"
+}
+
+resource "google_project_iam_member" "apigee_waap" {
+  for_each = toset(local.apigee_waap_svc_account_roles)
+  project  = var.project_id
+  role     = each.value
+  member   = "serviceAccount:${google_service_account.apigee_waap.email}"
+}
+
 provider "apigee" {
   access_token = data.google_client_config.current.access_token
   organization = module.apigee.apigee_org_id
@@ -115,7 +128,7 @@ resource "apigee_proxy_deployment" "juiceshop_proxy_deployment" {
   proxy_name       = apigee_proxy.juiceshop_proxy.name
   environment_name = "demo"
   revision         = apigee_proxy.juiceshop_proxy.revision
-
+  service_account  = google_service_account.apigee_waap.email
   depends_on = [
     apigee_target_server.target_server
   ]
@@ -168,6 +181,9 @@ resource "apigee_developer" "example" {
 resource "apigee_developer_app" "example" {
   developer_email = apigee_developer.example.email
   name            = "JuiceShop"
+  attributes = {
+    siteKey = google_recaptcha_enterprise_key.primary.name
+  }
 }
 
 resource "apigee_developer_app_credential" "example" {
@@ -251,6 +267,9 @@ locals {
     response            = null
     logging             = true
   }
+  apigee_waap_svc_account_roles = [
+    "roles/dlp.user", "roles/recaptchaenterprise.agent"
+  ]
 }
 
 data "google_compute_default_service_account" "default" {
