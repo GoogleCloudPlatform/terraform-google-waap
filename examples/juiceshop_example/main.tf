@@ -651,7 +651,7 @@ resource "google_compute_security_policy" "waap_policies" {
     action      = "deny(403)"
     description = "Deny all requests below 0.9 recaptcha score"
     preview     = true
-    
+
     match {
       expr {
         expression = "token.recaptcha_session.score <= 0.9"
@@ -748,7 +748,7 @@ resource "google_compute_security_policy" "waap_policies" {
   rule {
     action      = "deny(403)"
     description = "block local file inclusion"
-    
+
     match {
       expr {
         expression = "evaluatePreconfiguredExpr('protocolattack-stable')"
