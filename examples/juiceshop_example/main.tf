@@ -777,5 +777,5 @@ module "analytics" {
   log_sink_name  = "juiceshop_log_sink"
   ca_policy_name = google_compute_security_policy.waap_policies.name
   dataset_name   = "juiceshop_analytics"
-  sa_name        = "juiceshop_bq_sa"
+  sa_name        = "juiceshop-bq-sa"
 }
