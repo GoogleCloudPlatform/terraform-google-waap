@@ -43,7 +43,7 @@ resource "google_service_account" "waap_analytics_sa" {
 
 resource "google_bigquery_dataset_iam_member" "editor" {
   project    = var.project_id
-  dataset_id = module.destination.resource_id
+  dataset_id = module.destination.resource_name
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.waap_analytics_sa.email}"
 }
