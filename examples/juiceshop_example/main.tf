@@ -650,10 +650,11 @@ resource "google_compute_security_policy" "waap_policies" {
   rule {
     action      = "deny(403)"
     description = "Deny all requests below 0.9 recaptcha score"
+    preview     = true
 
     match {
       expr {
-        expression = "recaptchaTokenScore() <= 0.9"
+        expression = "token.recaptcha_session.score <= 0.9"
       }
     }
     priority = 8998
@@ -689,7 +690,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
     match {
       expr {
-        expression = "evaluatePreconfiguredExpr('sqli-stable', ['owasp-crs-v030001-id942251-sqli', 'owasp-crs-v030001-id942420-sqli', 'owasp-crs-v030001-id942431-sqli', 'owasp-crs-v030001-id942460-sqli', 'owasp-crs-v030001-id942421-sqli', 'owasp-crs-v030001-id942432-sqli'])"
+        expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
       }
     }
     priority = 9000
@@ -701,7 +702,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
     match {
       expr {
-        expression = "evaluatePreconfiguredExpr('xss-stable', ['owasp-crs-v030001-id941110-xss', 'owasp-crs-v030001-id941120-xss', 'owasp-crs-v030001-id941130-xss', 'owasp-crs-v030001-id941140-xss', 'owasp-crs-v030001-id941160-xss', 'owasp-crs-v030001-id941170-xss', 'owasp-crs-v030001-id941180-xss', 'owasp-crs-v030001-id941190-xss', 'owasp-crs-v030001-id941200-xss', 'owasp-crs-v030001-id941210-xss', 'owasp-crs-v030001-id941220-xss', 'owasp-crs-v030001-id941230-xss', 'owasp-crs-v030001-id941240-xss', 'owasp-crs-v030001-id941250-xss', 'owasp-crs-v030001-id941260-xss', 'owasp-crs-v030001-id941270-xss', 'owasp-crs-v030001-id941280-xss', 'owasp-crs-v030001-id941290-xss', 'owasp-crs-v030001-id941300-xss', 'owasp-crs-v030001-id941310-xss', 'owasp-crs-v030001-id941350-xss', 'owasp-crs-v030001-id941150-xss', 'owasp-crs-v030001-id941320-xss', 'owasp-crs-v030001-id941330-xss', 'owasp-crs-v030001-id941340-xss'])"
+        expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
       }
     }
     priority = 3000
@@ -734,6 +735,7 @@ resource "google_compute_security_policy" "waap_policies" {
   rule {
     action      = "deny(403)"
     description = "block local file inclusion"
+    preview     = true
 
     match {
       expr {
