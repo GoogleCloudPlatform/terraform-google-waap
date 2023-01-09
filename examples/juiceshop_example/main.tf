@@ -182,7 +182,7 @@ resource "apigee_developer_app" "example" {
   developer_email = apigee_developer.example.email
   name            = "JuiceShop"
   attributes = {
-    siteKey = google_recaptcha_enterprise_key.primary.name
+    siteKey = local.recaptcha_key_id
   }
 }
 
@@ -199,15 +199,36 @@ resource "apigee_developer_app_credential" "example" {
 # ----------------------------------------------------------------------------------------------------------------------
 # JuiceShop App
 # ----------------------------------------------------------------------------------------------------------------------
-resource "google_recaptcha_enterprise_key" "primary" {
-  display_name = "juiceshop-session-token-key"
 
-  project = var.project_id
+module "recaptcha_key_gcloud" {
+  source  = "terraform-google-modules/gcloud/google"
+  version = "~> 3.1.2"
 
-  web_settings {
-    integration_type  = "SCORE"
-    allow_all_domains = true
-  }
+  platform              = "linux"
+  additional_components = ["jq"]
+
+  create_cmd_entrypoint = "gcloud"
+  create_cmd_body       = "recaptcha keys create --web --display-name=${local.recaptcha_key_name} --waf-feature=SESSION_TOKEN --waf-service=CA --integration-type=SCORE --domains=${module.nip_juiceshop_hostname.hostname} --project=${var.project_id}"
+}
+
+module "recaptcha_keys_list_gcloud" {
+  source  = "terraform-google-modules/gcloud/google"
+  version = "~> 3.1.2"
+
+  platform = "linux"
+
+  create_cmd_entrypoint = "gcloud"
+  create_cmd_body       = "recaptcha keys list --format=json --project=${var.project_id} --filter=\"displayName=${local.recaptcha_key_name}\" > ${path.module}/recaptcha_keys_list.json"
+  module_depends_on = [
+    module.recaptcha_key_gcloud
+  ]
+}
+
+data "local_file" "recaptcha_keys_list_file" {
+  filename = "${path.module}/recaptcha_keys_list.json"
+  depends_on = [
+    module.recaptcha_keys_list_gcloud
+  ]
 }
 
 resource "google_artifact_registry_repository" "waap_repo" {
@@ -241,7 +262,7 @@ module "build_juiceshop_image" {
   platform = "linux"
 
   create_cmd_entrypoint = "gcloud"
-  create_cmd_body       = "builds submit ${path.module}/juice-shop/ --config=${path.module}/juice-shop/cloudbuild.yaml --project=${var.project_id} --substitutions=_API_ENDPOINT=https://${module.nip_apigee_hostname.hostname},_BASEPATH=/owasp,_APIKEY=${apigee_developer_app_credential.example.consumer_key},_RECAPTCHA_KEY=${google_recaptcha_enterprise_key.primary.name},_IMAGETAG=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
+  create_cmd_body       = "builds submit ${path.module}/juice-shop/ --config=${path.module}/juice-shop/cloudbuild.yaml --project=${var.project_id} --substitutions=_API_ENDPOINT=https://${module.nip_apigee_hostname.hostname},_BASEPATH=/owasp,_APIKEY=${apigee_developer_app_credential.example.consumer_key},_RECAPTCHA_KEY=${local.recaptcha_key_id},_IMAGETAG=${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.waap_repo.repository_id}/juiceshop-image"
 
   module_depends_on = [
     time_sleep.wait_for_git_seconds
@@ -270,6 +291,8 @@ locals {
   apigee_waap_svc_account_roles = [
     "roles/dlp.user", "roles/recaptchaenterprise.agent"
   ]
+  recaptcha_key_name = "juiceshop-session-token-key"
+  recaptcha_key_id   = jsondecode(data.local_file.recaptcha_keys_list_file.content)[0].name
 }
 
 data "google_compute_default_service_account" "default" {
