@@ -186,11 +186,21 @@ resource "apigee_developer_app" "example" {
   }
 }
 
+resource "random_string" "consumer_key" {
+  length  = 16
+  special = false
+}
+
+resource "random_string" "consumer_secret" {
+  length  = 16
+  special = false
+}
+
 resource "apigee_developer_app_credential" "example" {
   developer_email    = apigee_developer.example.email
   developer_app_name = apigee_developer_app.example.name
-  consumer_key       = "12345"
-  consumer_secret    = "secret"
+  consumer_key       = random_string.consumer_key.result
+  consumer_secret    = random_string.consumer_secret.result
   api_products = [
     apigee_product.juiceshop_product.name
   ]
@@ -292,7 +302,7 @@ locals {
     "roles/dlp.user", "roles/recaptchaenterprise.agent"
   ]
   recaptcha_key_name = "juiceshop-session-token-key"
-  recaptcha_key_id   = jsondecode(data.local_file.recaptcha_keys_list_file.content)[0].name
+  recaptcha_key_id   = split("/", jsondecode(data.local_file.recaptcha_keys_list_file.content)[0].name)[3]
 }
 
 data "google_compute_default_service_account" "default" {
