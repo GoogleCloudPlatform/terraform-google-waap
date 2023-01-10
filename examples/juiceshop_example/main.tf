@@ -163,7 +163,7 @@ resource "apigee_product" "juiceshop_product" {
   operation {
     api_source = apigee_proxy.juiceshop_proxy.name
     path       = "/"
-    methods    = ["GET"]
+    methods    = ["GET", "POST", "PUT", "DELETE", "PATCH"]
   }
 }
 

@@ -38,5 +38,6 @@ module "project" {
     "recaptchaenterprise.googleapis.com",
     "servicenetworking.googleapis.com",
     "serviceusage.googleapis.com",
+    "dlp.googleapis.com"
   ]
 }
