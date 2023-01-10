@@ -1,39 +1,13 @@
-# terraform-google-waap
+# Web Application and API Protection (WAAP) Blueprint
 
-This repository contains Terraform modules and eample configurations to deploy the [Web Application and API Protection (WAAP)](https://cloud.google.com/solutions/web-app-and-api-protection) solution on Google Cloud.
+This repository contains Terraform modules and example configurations to deploy the [Web Application and API Protection (WAAP)](https://cloud.google.com/solutions/web-app-and-api-protection) solution on Google Cloud.
 
 
 ## Usage
 
-Basic usage of this module is as follows:
-
-```hcl
-module "waap" {
-  source  = "terraform-google-modules/waap/google"
-  version = "~> 0.1"
-
-  project_id  = "<PROJECT ID>"
-  bucket_name = "gcs-test-bucket"
-}
-```
-
-Functional examples are included in the
-[examples](./examples/) directory.
+Refer to the [JuiceShop Example](./examples/juiceshop_example/) for a functional example deployment of the WAAP solution.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
-## Inputs
-
-| Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
-| gcs-bucket-name | n/a | `string` | `"juiceshop-code"` | no |
-| project\_id | project id required | `string` | n/a | yes |
-| regions | List of regions (support for multi-region deployment) | <pre>list(object({<br>    region = string<br>    cidr   = string<br>    })<br>  )</pre> | <pre>[<br>  {<br>    "cidr": "10.0.32.0/20",<br>    "region": "us-east1"<br>  }<br>]</pre> | no |
-| services\_to\_enable | List of GCP Services to enable | `list(string)` | <pre>[<br>  "compute.googleapis.com",<br>  "iap.googleapis.com",<br>  "apigee.googleapis.com",<br>  "cloudresourcemanager.googleapis.com",<br>  "cloudbuild.googleapis.com",<br>  "iam.googleapis.com",<br>  "logging.googleapis.com",<br>  "monitoring.googleapis.com",<br>  "compute.googleapis.com",<br>  "serviceusage.googleapis.com",<br>  "stackdriver.googleapis.com",<br>  "servicemanagement.googleapis.com",<br>  "servicecontrol.googleapis.com",<br>  "storage.googleapis.com",<br>  "servicenetworking.googleapis.com",<br>  "cloudkms.googleapis.com",<br>  "containerregistry.googleapis.com",<br>  "run.googleapis.com",<br>  "recaptchaenterprise.googleapis.com",<br>  "artifactregistry.googleapis.com"<br>]</pre> | no |
-| vpc-name | Custom VPC Name | `string` | `"apigee-waap-demo"` | no |
-
-## Outputs
-
-No output.
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
@@ -46,14 +20,16 @@ These sections describe requirements for using this module.
 The following dependencies must be available:
 
 - [Terraform][terraform] v0.13
-- [Terraform Provider for GCP][terraform-provider-gcp] plugin v3.0
+- [Terraform Provider for GCP][terraform-provider-gcp] plugin v3.53
 
 ### Service Account
 
 A service account with the following roles must be used to provision
 the resources of this module:
 
-- Storage Admin: `roles/storage.admin`
+- Editor `roles/editor`
+- reCAPTCHA Enterprise Admin: `roles/recaptchaenterprise.admin`
+- Artifact Registry Admin: `roles/artifactregistry.admin`
 
 The [Project Factory module][project-factory-module] and the
 [IAM module][iam-module] may be used in combination to provision a
@@ -64,10 +40,21 @@ service account with the necessary roles applied.
 A project with the following APIs enabled must be used to host the
 resources of this module:
 
-- Google Cloud Storage JSON API: `storage-api.googleapis.com`
+- Apigee API: `apigee.googleapis.com`
+- Artifact Registry API: `artifactregistry.googleapis.com`
+- Cloud Build API: `cloudbuild.googleapis.com`
+- Cloud KMS API: `cloudkms.googleapis.com`
+- Cloud Resource Manager API: `cloudresourcemanager.googleapis.com`
+- Compute API: `compute.googleapis.com`
+- Data Loss Prevention API: `dlp.googleapis.com`
+- Identity and Access Management API: `iam.googleapis.com`
+- Cloud Monitoring API: `monitoring.googleapis.com`
+- reCAPTCHA Enterprise API: `recaptchaenterprise.googleapis.com`
+- Service Networking API: `servicenetworking.googleapis.com`
+- Service Usage API: `serviceusage.googleapis.com`
 
 The [Project Factory module][project-factory-module] can be used to
-provision a project with the necessary APIs enabled.
+provision a project with the necessary APIs enabled. See [this example](./test/setup/main.tf) for properly configuring project factory to enable these APIs.
 
 ## Contributing
 
