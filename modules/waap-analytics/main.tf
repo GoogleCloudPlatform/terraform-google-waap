@@ -24,7 +24,7 @@ module "log_export" {
     {
       name        = "Ignore",
       description = "Ignore socket and assets",
-      filter      = "httpRequest.requestUrl !~ \"socket.io\" or httpRequest.requestUrl !~ \".js\" or httpRequest.requestUrl !~ \".css\"",
+      filter      = "httpRequest.requestUrl =~ \"(socket.io|.js|.css)\"",
       disabled    = false
     }
   ]
