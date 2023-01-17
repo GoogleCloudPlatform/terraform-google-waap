@@ -20,7 +20,7 @@ module "log_export" {
 
   destination_uri = module.destination.destination_uri
   filter          = "resource.type:(http_load_balancer) AND jsonPayload.enforcedSecurityPolicy.name:(${var.ca_policy_name})"
-  exclusions      = [
+  exclusions = [
     {
       name     = "Ignore socket and assets",
       filter   = "httpRequest.requestUrl !~ \"socket.io\" or httpRequest.requestUrl !~ \".js\" or httpRequest.requestUrl !~ \".css\"",
