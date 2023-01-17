@@ -22,9 +22,10 @@ module "log_export" {
   filter          = "resource.type:(http_load_balancer) AND jsonPayload.enforcedSecurityPolicy.name:(${var.ca_policy_name})"
   exclusions = [
     {
-      name     = "Ignore socket and assets",
-      filter   = "httpRequest.requestUrl !~ \"socket.io\" or httpRequest.requestUrl !~ \".js\" or httpRequest.requestUrl !~ \".css\"",
-      disabled = false
+      name        = "Ignore",
+      description = "Ignore socket and assets",
+      filter      = "httpRequest.requestUrl !~ \"socket.io\" or httpRequest.requestUrl !~ \".js\" or httpRequest.requestUrl !~ \".css\"",
+      disabled    = false
     }
   ]
   log_sink_name          = var.log_sink_name
