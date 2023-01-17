@@ -18,8 +18,15 @@ module "log_export" {
   source  = "terraform-google-modules/log-export/google"
   version = "~> 7.4.2"
 
-  destination_uri        = module.destination.destination_uri
-  filter                 = "resource.type:(http_load_balancer) AND jsonPayload.enforcedSecurityPolicy.name:(${var.ca_policy_name})"
+  destination_uri = module.destination.destination_uri
+  filter          = "resource.type:(http_load_balancer) AND jsonPayload.enforcedSecurityPolicy.name:(${var.ca_policy_name})"
+  exclusions      = [
+    {
+      name     = "Ignore socket and assets",
+      filter   = "httpRequest.requestUrl !~ \"socket.io\" or httpRequest.requestUrl !~ \".js\" or httpRequest.requestUrl !~ \".css\"",
+      disabled = false
+    }
+  ]
   log_sink_name          = var.log_sink_name
   parent_resource_id     = var.project_id
   parent_resource_type   = "project"
