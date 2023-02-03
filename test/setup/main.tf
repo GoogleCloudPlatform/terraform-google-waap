@@ -29,6 +29,7 @@ module "project" {
   activate_apis = [
     "apigee.googleapis.com",
     "artifactregistry.googleapis.com",
+    "bigquery.googleapis.com",
     "cloudbuild.googleapis.com",
     "cloudkms.googleapis.com",
     "cloudresourcemanager.googleapis.com",
