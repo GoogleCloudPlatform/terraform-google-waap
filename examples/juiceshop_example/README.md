@@ -75,6 +75,8 @@ terraform init
 
 5. Run `terraform apply` within this example directory. If you skipped step 4, you may be prompted for the `project_id` value at this stage. Deployment may take up to 60 minutes.
 
+6. Navigate to the address in the value of the `juiceshop_url` output to view the live sample application.
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
@@ -85,6 +87,8 @@ terraform init
 
 ## Outputs
 
-No output.
+| Name | Description |
+|------|-------------|
+| juiceshop\_url | n/a |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
