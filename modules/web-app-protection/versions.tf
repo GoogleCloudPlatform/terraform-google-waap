@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ terraform {
   }
 
   provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-waap:apigee/v0.0.1"
+    module_name = "blueprints/terraform/terraform-google-waap:web-app-protection/v0.0.1"
   }
   provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-waap:apigee/v0.0.1"
+    module_name = "blueprints/terraform/terraform-google-waap:web-app-protection/v0.0.1"
   }
 }
