@@ -1,3 +1,6 @@
+/*****************
+*** Create VPC ***
+******************/
 module "mig_vpc" {
     source  = "terraform-google-modules/network/google"
     version = "~> 6.0"
@@ -15,15 +18,19 @@ module "mig_vpc" {
     ]
 }
 
+/***********************
+*** Create Cloud NAT ***
+************************/
+
 module "cloud-nat" {
-  source            = "terraform-google-modules/cloud-nat/google"
-  version           = "~> 1.2"
-  create_router     = true
-  project_id        = var.project_id
-  region            = var.default_region #!TODO
-  network           = module.mig_vpc.network_name #!TODO
-  router            = format("router-%s", var.network_name)
-  name              = format("nat-%s", var.network_name)
+    source            = "terraform-google-modules/cloud-nat/google"
+    version           = "~> 1.2"
+    create_router     = true
+    project_id        = var.project_id
+    region            = var.default_region #!TODO
+    network           = module.mig_vpc.network_name #!TODO
+    router            = format("router-%s", var.network_name)
+    name              = format("nat-%s", var.network_name)
 }
 
 /**********************************************************************************
