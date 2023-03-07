@@ -13,7 +13,7 @@ module "mig_vpc" {
         {
             subnet_name           = var.subnet_name
             subnet_ip             = var.subnet_ip
-            subnet_region         = var.default_region
+            subnet_region         = var.subnet_region
         }
     ]
 }
@@ -27,13 +27,13 @@ module "cloud-nat" {
     version           = "~> 1.2"
     create_router     = true
     project_id        = var.project_id
-    region            = var.default_region #!TODO
+    region            = var.region #!TODO
     network           = module.mig_vpc.network_name #!TODO
     router            = format("router-%s", var.network_name)
     name              = format("nat-%s", var.network_name)
 }
 
-/**********************************************************************************
+/*********************************************************************************
 **** Firewall rule to allow incoming ssh connections from Google IAP servers. ****
 **********************************************************************************/
 resource "google_compute_firewall" "inbound-ip-ssh" {
