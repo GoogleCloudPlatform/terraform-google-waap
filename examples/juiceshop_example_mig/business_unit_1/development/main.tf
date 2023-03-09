@@ -1,3 +1,7 @@
+/*********************************
+** Juice Shop Example using MIG **
+**********************************/
+
 locals {
   business_unit = "business_unit_1"
   environment   = "development"
