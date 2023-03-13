@@ -18,6 +18,7 @@ pipeline {
                 gcloud config set auth/impersonate_service_account ${_TF_SA_EMAIL}
                 echo "Adding bucket information to backends"
                 for i in `find -name 'backend.tf'`; do sed -r -i "s/_BUCKET_GCS_/${_STATE_BUCKET_NAME}/" $i; done
+                chmod +x ${WORKSPACE}/build/script.sh
                 '''
             }
         }
