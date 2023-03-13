@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    
+    environment {
+        _BUILD_ID="${env.BUILD_ID}"
+        _BRANCH_NAME="${env.BRANCH_NAME}"
+
+        _TF_SA_EMAIL="TERRAFORM_SA_EMAIL"
+        _STATE_BUCKET_NAME="BACKEND_STATE_BUCKET_NAME"
+        _PROJECT_ID="CICD_PROJECT_ID"
+    }
+
+    stages{
+        stage("Terraform Setup"){
+            steps{
+                sh '''
+                echo "Setting up gcloud for impersonation"
+                gcloud config set auth/impersonate_service_account ${_TF_SA_EMAIL}
+                echo "Adding bucket information to backends"
+                for i in `find -name 'backend.tf'`; do sed -r -i "s/UPDATE_ME|UPDATE_PROJECTS_BACKEND|UPDATE_APP_INFRA_BUCKET/${_STATE_BUCKET_NAME}/" $i; done
+                '''
+            }
+        }
+    stage("Terraform Plan and validate") {
+        when {
+              not {
+                    anyOf {
+                    branch 'dev'
+                    branch 'prd'
+                    branch 'npd'
+                    }
+                }
+            }
+        steps {
+            
+        }
+        }
+    }
+}
