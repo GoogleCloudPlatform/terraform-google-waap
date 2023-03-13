@@ -35,7 +35,7 @@ tf_apply() {
   echo "***************************************************"
   if [ -d "$path" ]; then
     cd "$path" || exit
-    terraform apply -input=false -auto-approve "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 1
+    terraform apply -no-color -input=false -auto-approve "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 1
     cd "$base_dir" || exit
   else
     echo "ERROR:  ${path} does not exist"
@@ -52,7 +52,7 @@ tf_init() {
   echo "**************************************************"
   if [ -d "$path" ]; then
     cd "$path" || exit
-    terraform init || exit 11
+    terraform init -no-color || exit 11
     cd "$base_dir" || exit
   else
     echo "ERROR:  ${path} does not exist"
@@ -72,7 +72,7 @@ tf_plan() {
   fi
   if [ -d "$path" ]; then
     cd "$path" || exit
-    terraform plan -input=false -out "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 21
+    terraform plan -no-color -input=false -out "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 21
     cd "$base_dir" || exit
   else
     echo "ERROR:  ${tf_env} does not exist"
@@ -110,7 +110,7 @@ tf_show() {
   echo "**************************************************"
   if [ -d "$path" ]; then
     cd "$path" || exit
-    terraform show "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 41
+    terraform show -no-color "${tmp_plan}/${tf_component}-${tf_env}.tfplan" || exit 41
     cd "$base_dir" || exit
   else
     echo "ERROR:  ${path} does not exist"
@@ -133,7 +133,7 @@ tf_validate() {
   else
     if [ -d "$path" ]; then
       cd "$path" || exit
-      terraform show -json "${tmp_plan}/${tf_component}-${tf_env}.tfplan" > "${tf_env}.json" || exit 32
+      terraform show -no-color -json "${tmp_plan}/${tf_component}-${tf_env}.tfplan" > "${tf_env}.json" || exit 32
       if [[ "$policy_type" == "CLOUDSOURCE" ]]; then
         # Check if $policy_file_path is empty so we clone the policies repo only once
         if [ -z "$(ls -A "${policy_file_path}" 2> /dev/null)" ]; then
