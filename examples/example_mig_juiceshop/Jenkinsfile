@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    
+    environment {
+        BUILD_ID    = "${env.BUILD_ID}"
+        BRANCH_NAME = "${env.BRANCH_NAME}"
+    }
+
+    stages{
+        stage("Terraform Init"){
+            steps{
+                echo "========executing A========"
+            }
+            post{
+                always{
+                    echo "========always========"
+                }
+                success{
+                    echo "========A executed successfully========"
+                }
+                failure{
+                    echo "========A execution failed========"
+                }
+            }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
+        }
+    }
+}
