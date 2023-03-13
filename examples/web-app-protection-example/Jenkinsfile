@@ -2,37 +2,101 @@ pipeline {
     agent any
     
     environment {
-        BUILD_ID    = "${env.BUILD_ID}"
-        BRANCH_NAME = "${env.BRANCH_NAME}"
+        _BUILD_ID="${env.BUILD_ID}"
+        _BRANCH_NAME="${env.BRANCH_NAME}"
+
+        _TF_SA_EMAIL="sa-terraform-cicd@cicd-prj-bbee.iam.gserviceaccount.com"
+        _STATE_BUCKET_NAME="cicd-prj-tfstate-bkt-1rd3"
+        _PROJECT_ID="cicd-prj-bbee"
     }
 
     stages{
-        stage("Terraform Init"){
+        stage("Terraform Setup"){
             steps{
-                echo "========executing A========"
-            }
-            post{
-                always{
-                    echo "========always========"
-                }
-                success{
-                    echo "========A executed successfully========"
-                }
-                failure{
-                    echo "========A execution failed========"
-                }
+                sh '''
+                echo "Setting up gcloud for impersonation"
+                gcloud config set auth/impersonate_service_account ${_TF_SA_EMAIL}
+                echo "Adding bucket information to backends"
+                for i in `find -name 'backend.tf'`; do sed -r -i "s/_BUCKET_GCS_/${_STATE_BUCKET_NAME}/" $i; done
+                '''
             }
         }
-    }
-    post{
-        always{
-            echo "========always========"
+        stage("Terraform Plan and validate") {
+            when {
+              not {
+                    anyOf {
+                    branch 'dev'
+                    branch 'prd'
+                    branch 'npd'
+                    }
+                }
+            }
+            steps {
+                sh '''
+                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
+                ../../build/script.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                '''
+            }
         }
-        success{
-            echo "========pipeline executed successfully ========"
+        stage('TF init') {
+            when {
+              anyOf {
+                  branch 'dev'
+                  branch 'prd'
+                  branch 'npd'
+              }
+            }
+            steps {
+                sh '''
+                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
+                ../../build/script.sh init $BRANCH_NAME
+                '''
+            }
         }
-        failure{
-            echo "========pipeline execution failed========"
+        stage('TF plan') {
+            when {
+              anyOf {
+                  branch 'dev'
+                  branch 'prd'
+                  branch 'npd'
+                }
+            }
+            steps {
+                sh '''
+                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
+                ../../build/script.sh plan $BRANCH_NAME
+                '''
+            }
+        }
+        stage('TF validate') {
+            when {
+              anyOf {
+                  branch 'dev'
+                  branch 'prd'
+                  branch 'npd'
+                }
+            }
+            steps {
+                sh '''
+                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
+                ../../build/script.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                '''
+            }
+        }
+        stage('TF apply') {
+            when {
+              anyOf {
+                  branch 'dev'
+                  branch 'prd'
+                  branch 'npd'
+                }
+            }
+            steps {
+                sh '''
+                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
+                ../../build/script.sh apply $BRANCH_NAME
+                '''
+            }
         }
     }
 }
