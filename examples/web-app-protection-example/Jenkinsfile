@@ -34,7 +34,7 @@ pipeline {
             steps {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                ${WORKSPACE}/build/script.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                sudo ${WORKSPACE}/build/script.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
