@@ -49,7 +49,7 @@ pipeline {
             steps {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                ../../build/script.sh init $BRANCH_NAME
+                ${WORKSPACE}/build/script.sh init $BRANCH_NAME
                 '''
             }
         }
@@ -64,7 +64,7 @@ pipeline {
             steps {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                ../../build/script.sh plan $BRANCH_NAME
+                ${WORKSPACE}/build/script.sh plan $BRANCH_NAME
                 '''
             }
         }
@@ -79,7 +79,7 @@ pipeline {
             steps {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                ../../build/script.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                ${WORKSPACE}/build/script.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
@@ -94,7 +94,7 @@ pipeline {
             steps {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                ../../build/script.sh apply $BRANCH_NAME
+                ${WORKSPACE}/build/script.sh apply $BRANCH_NAME
                 '''
             }
         }
