@@ -22,12 +22,12 @@ module "mig_vpc" {
   version = "~> 6.0"
 
   project_id   = var.project_id
-  network_name = var.network_name
+  network_name = format("vpc-%", var.network_name)
   routing_mode = "GLOBAL"
 
   subnets = [
     {
-      subnet_name   = var.subnet_name
+      subnet_name   = format("subnet-%", var.subnet_name)
       subnet_ip     = var.subnet_ip
       subnet_region = var.subnet_region
     }
