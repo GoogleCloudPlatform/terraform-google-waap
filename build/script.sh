@@ -24,6 +24,7 @@ policy_type=$5 # FILESYSTEM or CLOUDSOURCE
 base_dir=$(pwd)
 tmp_plan="${base_dir}/tmp_plan" #if you change this, update build triggers
 environments_regex="^(dev|npd|prd)$"
+_GCLOUD_PATH="/var/lib/jenkins/google-cloud-sdk/bin"
 
 ## Terraform apply for single environment.
 tf_apply() {
@@ -137,7 +138,7 @@ tf_validate() {
       if [[ "$policy_type" == "CLOUDSOURCE" ]]; then
         # Check if $policy_file_path is empty so we clone the policies repo only once
         if [ -z "$(ls -A "${policy_file_path}" 2> /dev/null)" ]; then
-          gcloud source repos clone gcp-policies "${policy_file_path}" --project="${project_id}" || exit 34
+          $_GCLOUD_PATH/gcloud source repos clone gcp-policies "${policy_file_path}" --project="${project_id}" || exit 34
           pushd .
           cd "${policy_file_path}"
           # Commented command below works only on Git 2.22.0+
@@ -152,7 +153,7 @@ tf_validate() {
           popd
         fi
       fi
-      gcloud beta terraform vet "${tf_env}.json" --policy-library="${policy_file_path}" --project="${project_id}" || exit 33
+      $_GCLOUD_PATH/gcloud beta terraform vet "${tf_env}.json" --policy-library="${policy_file_path}" --project="${project_id}" || exit 33
       cd "$base_dir" || exit
     else
       echo "ERROR:  ${path} does not exist"
