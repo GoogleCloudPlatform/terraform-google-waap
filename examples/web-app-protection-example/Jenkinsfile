@@ -22,7 +22,7 @@ pipeline {
                 ${_GCLOUD_PATH}/gcloud config set auth/impersonate_service_account ${_TF_SA_EMAIL}
                 echo "Adding bucket information to backends"
                 for i in `find -name 'backend.tf'`; do sed -r -i "s/_BUCKET_GCS_/${_STATE_BUCKET_NAME}/" $i; done
-                chmod +x ${WORKSPACE}/build/script.sh
+                for i in `find -name 'jenkins-functions.sh'`;do chmod +x $i; done
                 '''
             }
         }
@@ -40,7 +40,7 @@ pipeline {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                sudo ${WORKSPACE}/build/script.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                sudo ./jenkins-functions.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
@@ -56,7 +56,7 @@ pipeline {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                ${WORKSPACE}/build/script.sh init $BRANCH_NAME
+                ./jenkins-functions.sh init $BRANCH_NAME
                 '''
             }
         }
@@ -72,7 +72,7 @@ pipeline {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                ${WORKSPACE}/build/script.sh plan $BRANCH_NAME
+                ./jenkins-functions.sh plan $BRANCH_NAME
                 '''
             }
         }
@@ -88,7 +88,7 @@ pipeline {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                ${WORKSPACE}/build/script.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
+                sudo ./jenkins-functions.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
@@ -104,7 +104,7 @@ pipeline {
                 sh '''
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                ${WORKSPACE}/build/script.sh apply $BRANCH_NAME
+                ./jenkins-functions.sh apply $BRANCH_NAME
                 '''
             }
         }
