@@ -26,7 +26,6 @@ pipeline {
                 '''
             }
         }
-        /* !TODO: Precisa de alguns testes ainda
         stage("Terraform Plan and validate") {
             when {
               not {
@@ -44,7 +43,7 @@ pipeline {
                 sudo ${WORKSPACE}/build/script.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
-        } */
+        }
         stage('TF init') {
             when {
               anyOf {
@@ -77,7 +76,6 @@ pipeline {
                 '''
             }
         }
-        /* !TODO: Precisa de testes ainda.
         stage('TF validate') {
             when {
               anyOf {
@@ -93,7 +91,7 @@ pipeline {
                 ${WORKSPACE}/build/script.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
-        } */
+        }
         stage('TF apply') {
             when {
               anyOf {
