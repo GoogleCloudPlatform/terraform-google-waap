@@ -11,7 +11,7 @@ pipeline {
         _POLICY_REPO="CLOUDSOURCE"
 
         EXAMPLE_BUILD="web-app-protection-example"
-        _GCLOUD_PATH=/var/lib/jenkins/plugins/google-cloud-sdk/bin
+        _GCLOUD_PATH="/var/lib/jenkins/plugins/google-cloud-sdk/bin"
     }
 
     stages{
