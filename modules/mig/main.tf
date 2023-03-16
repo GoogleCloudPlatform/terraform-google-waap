@@ -50,20 +50,10 @@ resource "google_compute_instance_template" "vm_template" {
     scopes                = var.service_account_scopes
   }
 
-<<<<<<< HEAD
    metadata = {
     # startup-script        = "${data.template_file.ops_agent_install_script.rendered}"
     startup-script        = var.startup_script
   }
-=======
-/*********************************************************************************
-**** Firewall rule to allow incoming ssh connections from Google IAP servers. ****
-**********************************************************************************/
-resource "google_compute_firewall" "inbound-ip-ssh" {
-  name    = format("allow-ssh-iap-%s", var.network_name)
-  project = var.project_id
-  network = module.mig_vpc.network_name #!TODO
->>>>>>> origin/dev
 
     network_interface {
       network             = var.network
