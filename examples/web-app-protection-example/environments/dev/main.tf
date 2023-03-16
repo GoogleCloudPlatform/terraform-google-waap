@@ -22,34 +22,89 @@ data "template_file" "startup_script" {
     EOT
 }
 
-module "mig_network" {
+module "network_mig_r1" {
     source = "../../../../modules/mig_network"
 
-    project_id    = "cicd-prj-bbee"
-    region        = var.region
-    network_name  = var.network_name
-    subnet_name   = var.subnet_name
-    subnet_ip     = var.subnet_ip
-    subnet_region = var.subnet_region
+    project_id    = var.project_id
+    region        = var.region_r1
+    network_name  = var.network_name_r1
+    subnet_name   = var.subnet_name_r1
+    subnet_ip     = var.subnet_ip_r1
+    subnet_region = var.subnet_region_r1
 }
 
-module "mig" {
+module "network_mig_r2" {
+    source = "../../../../modules/mig_network"
+
+    project_id    = var.project_id
+    region        = var.region_r2
+    network_name  = var.network_name_r2
+    subnet_name   = var.subnet_name_r2
+    subnet_ip     = var.subnet_ip_r2
+    subnet_region = var.subnet_region_r2
+}
+
+module "mig_r1" {
   source = "../../../../modules/mig"
 
-  project_id      = ""
-  region          = var.region
-  name_prefix     = ""
-  machine_type    = ""
-  tags            = ""
+  # VM Template
+  project_id          = var.project_id
+  region              = var.region
+  name_prefix         = ""
+  machine_type        = ""
+  tags                = ""
 
-  source_image    = ""
-  auto_delete     = ""
-  disk_type       = ""
-  disk_size_gb    = ""
-  mode            = "" 
+  source_image        = ""
+  auto_delete         = ""
+  disk_type           = ""
+  disk_size_gb        = ""
+  mode                = "" 
 
-  email           = ""
-  scopes          = ""
+  email               = ""
+  scopes              = ""
 
-  startup_script  = "${data.template_file.startup_script.rendered}" 
+  startup_script      = "${data.template_file.startup_script.rendered}"
+
+  network             = ""
+  subnetwork          = ""
+  
+  # Managed Instance Group
+  name                = ""
+  base_instance_name  = ""
+  zone                = ""
+
+  target_size         = ""  
+}
+
+module "mig_r1" {
+  source = "../../../../modules/mig"
+
+  # VM Template
+  project_id          = var.project_id
+  region              = var.region
+  name_prefix         = ""
+  machine_type        = ""
+  tags                = ""
+
+  source_image        = ""
+  auto_delete         = ""
+  disk_type           = ""
+  disk_size_gb        = ""
+  mode                = "" 
+
+  email               = ""
+  scopes              = ""
+
+  startup_script      = "${data.template_file.startup_script.rendered}"
+
+  network             = ""
+  subnetwork          = ""
+  
+  # Managed Instance Group
+  name                = ""
+  base_instance_name  = ""
+  zone                = ""
+
+  target_size         = ""
+   
 }

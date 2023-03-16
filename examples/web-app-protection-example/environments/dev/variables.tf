@@ -20,31 +20,65 @@ variable "project_id" {
   default     = ""
 }
 
-variable "region" {
+variable "region_r1" {
   description = "Region in which to create resources"
   type        = string
   default     = ""
 }
 
-variable "network_name" {
+variable "network_name_r1" {
   description = "VPC network name"
   type        = string
   default     = ""
 }
 
-variable "subnet_name" {
+variable "subnet_name_r1" {
   description = "Subnet name"
   type        = string
   default     = ""
 }
 
-variable "subnet_ip" {
+variable "subnet_ip_r1" {
   description = "This is th IP of your subnet"
   type        = string
   default     = ""
 }
 
-variable "subnet_region" {
+variable "subnet_region_r1" {
+  description = "Subnet Region"
+  type        = string
+  default     = ""
+}
+
+/***********************
+** Veriables Region 2 **
+************************/
+
+variable "region_r2" {
+  description = "Region in which to create resources"
+  type        = string
+  default     = ""
+}
+
+variable "network_name_r2" {
+  description = "VPC network name"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_name_r2" {
+  description = "Subnet name"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_ip_r2" {
+  description = "This is th IP of your subnet"
+  type        = string
+  default     = ""
+}
+
+variable "subnet_region_r2" {
   description = "Subnet Region"
   type        = string
   default     = ""
