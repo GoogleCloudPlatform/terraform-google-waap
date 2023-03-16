@@ -14,56 +14,67 @@
  * limitations under the License.
  */
 
-/*****************
-*** Create VPC ***
-******************/
-module "mig_vpc" {
-  source  = "terraform-google-modules/network/google"
-  version = "~> 6.0"
-
-  project_id   = var.project_id
-  network_name = format("vpc-%s", var.network_name)
-  routing_mode = "GLOBAL"
-
-  subnets = [
-    {
-      subnet_name   = format("subnet-%s", var.subnet_name)
-      subnet_ip     = var.subnet_ip
-      subnet_region = var.subnet_region
-    }
-  ]
+resource "google_service_account" "vm_sa" {
+  project     = var.project_id
+  account_id  = var.service_account_id
 }
 
-/***********************
-*** Create Cloud NAT ***
-************************/
+resource "google_project_iam_member" "sa_roles" {
+  for_each = var.service_account_roles
 
-module "cloud-nat" {
-  source        = "terraform-google-modules/cloud-nat/google"
-  version       = "~> 1.2"
-  create_router = true
-  project_id    = var.project_id
-  region        = var.region                  #!TODO
-  network       = module.mig_vpc.network_name #!TODO
-  router        = format("router-%s", var.network_name)
-  name          = format("nat-%s", var.network_name)
+  project  = var.project_id
+  role     = each.key
+  member   = "serviceAccount:${google_service_account.vm_sa.email}"
 }
 
-/*********************************************************************************
-**** Firewall rule to allow incoming ssh connections from Google IAP servers. ****
-**********************************************************************************/
-resource "google_compute_firewall" "inbound-ip-ssh" {
-  name    = "allow-ssh-iap"
-  project = var.project_id
-  network = module.mig_vpc.network_name #!TODO
+resource "google_compute_instance_template" "vm_template" {
+  project                 = var.project_id
 
-  direction = "INGRESS"
-  allow {
-    protocol = "tcp"
-    ports    = ["22", "8080"] # SSH port and Jenkins port
+  name_prefix             = var.name_prefix
+  machine_type            = var.machine_type
+  region                  = var.region
+  tags                    = var.tags
+
+  disk {
+    boot                  = true
+    type                  = "PERSISTENT"
+    source_image          = var.source_image
+    auto_delete           = var.disk_auto_delete
+    disk_type             = var.disk_type
+    disk_size_gb          = var.disk_size_gb
+    mode                  = var.disk_mode 
   }
-  source_ranges = [
-    "35.235.240.0/20"
-  ]
-  source_tags = ["allow-ssh-iap"]
+  
+  service_account {
+    email                 = google_service_account.vm_sa.email
+    scopes                = var.service_account_scopes
+  }
+
+   metadata = {
+    # startup-script        = "${data.template_file.ops_agent_install_script.rendered}"
+    startup-script        = var.startup_script
+  }
+
+    network_interface {
+      network             = var.network
+      subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+    }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_instance_group_manager" "mig" {
+  project                   = var.project_id
+
+  name                      = var.mig_name == "" ? "${var.base_instance_name}-mig" : var.mig_name
+  base_instance_name        = var.base_instance_name
+  zone                      = var.zone
+  
+  version {
+    instance_template       = google_compute_instance_template.vm_template.self_link
+  }
+
+  target_size               = var.target_size
 }
