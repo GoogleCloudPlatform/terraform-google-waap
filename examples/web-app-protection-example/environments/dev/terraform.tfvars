@@ -1,8 +1,7 @@
 /***********************
 *** Shared Variables ***
 ************************/
-project_id   = "cicd-prj-bbee"
-
+project_id   = "ci-waap-caba"
 
 
 /*************************
@@ -19,8 +18,8 @@ subnet_region_r1 = "us-central1"
 *** Region 2 Variables ***
 **************************/
 
-region_r2        = "us-central1"
+region_r2        = "us-east1"
 network_name_r2  = "webapp-r2"  # prefix vpc
 subnet_name_r2   = "webapp-r2"  # prefix subnet
 subnet_ip_r2     = "10.0.32.0/24"
-subnet_region_r2 = "us-central1"
+subnet_region_r2 = "us-east1"
