@@ -15,7 +15,3 @@
  */
 
 #!TODO
-
-output "network_name" {
-  value = module.mig_vpc.network_name
-}
