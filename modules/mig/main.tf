@@ -16,11 +16,11 @@
 
 resource "google_service_account" "vm_sa" {
   project     = var.project_id
-  account_id  = var.service_account_id
+  account_id  = var.service_account
 }
 
 resource "google_project_iam_member" "sa_roles" {
-  for_each = var.service_account_roles
+  for_each = var.roles
 
   project  = var.project_id
   role     = each.key

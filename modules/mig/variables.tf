@@ -33,13 +33,13 @@ variable "zone" {
 }
 
 ## VM Service Account ##
-variable "service_account_id" {
+variable "service_account" {
   description = "The account ID used to generate the virtual machine service account."
   type        = string 
   default     = ""
 }
 
-variable "service_account_roles" {
+variable "roles" {
   description = "Permissions to be added to the created service account."
   type        = list(string)
   default     = []
@@ -128,4 +128,10 @@ variable "base_instance_name" {
   description = "The base instance name to use for instances in this group."
   type        = string
   default     = "backend-vm" 
+}
+
+variable "target_size" {
+  description = "The target number of running instances for this managed instance group. This value should always be explicitly set unless this resource is attached to an autoscaler, in which case it should never be set."
+  type        = number
+  default     = 1
 }

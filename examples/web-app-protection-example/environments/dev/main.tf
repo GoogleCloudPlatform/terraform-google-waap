@@ -49,62 +49,60 @@ module "mig_r1" {
 
   # VM Template
   project_id          = var.project_id
-  region              = var.region
-  name_prefix         = ""
-  machine_type        = ""
-  tags                = ""
+  region              = var.region_r1
+  name_prefix         = var.name_prefix_r1
+  machine_type        = var.machine_type_r1
+  tags                = var.tags_r1
 
-  source_image        = ""
-  auto_delete         = ""
-  disk_type           = ""
-  disk_size_gb        = ""
-  mode                = "" 
+  source_image        = var.source_image_r1
+  disk_size_gb        = var.disk_size_gb_r1
 
-  email               = ""
-  scopes              = ""
+  service_account     = var.service_account_id_r1
+  roles               = var.service_account_roles_r1
+  scopes              = var.service_account_scopes_r1
 
   startup_script      = "${data.template_file.startup_script.rendered}"
 
-  network             = ""
-  subnetwork          = ""
+  network             = var.network_name_r1
+  subnetwork          = var.subnet_name_r1
   
   # Managed Instance Group
-  name                = ""
-  base_instance_name  = ""
-  zone                = ""
+  mig_name            = var.mig_name_r1
+  base_instance_name  = var.base_instance_name_r1
+  zone                = var.zone_r1
 
-  target_size         = ""  
+  target_size         = var.target_size_r1
 }
 
-module "mig_r1" {
+module "mig_r2" {
   source = "../../../../modules/mig"
 
   # VM Template
-  project_id          = var.project_id
-  region              = var.region
-  name_prefix         = ""
-  machine_type        = ""
-  tags                = ""
+  project_id           = var.project_id
+  region               = var.region_r2
+  name_prefix          = var.name_prefix_r2
+  machine_type         = var.machine_type_r2
+  tags                 = var.tags_r2
 
-  source_image        = ""
-  auto_delete         = ""
-  disk_type           = ""
-  disk_size_gb        = ""
-  mode                = "" 
+  source_image         = var.source_image_r2
+  disk_size_gb         = var.disk_size_gb_r2
 
-  email               = ""
-  scopes              = ""
+  service_account      = var.service_account_id_r2
+  roles                = var.service_account_roles_r2
+  scopes               = var.service_account_scopes_r2
 
-  startup_script      = "${data.template_file.startup_script.rendered}"
+  startup_script       = "${data.template_file.startup_script.rendered}"
 
-  network             = ""
-  subnetwork          = ""
+  network              = var.network_name_r2
+  subnetwork           = var.subnet_name_r2
   
-  # Managed Instance Group
-  name                = ""
-  base_instance_name  = ""
-  zone                = ""
+  
 
-  target_size         = ""
+  # Managed Instance Group
+  mig_name             = var.mig_name_r2
+  base_instance_name   = var.base_instance_name_r2
+  zone                 = var.zone_r2
+
+  target_size          = var.target_size_r2
    
 }
