@@ -92,7 +92,7 @@ variable "disk_mode" {
   default     = "READ_WRITE"
 }
 
-variable "service_account_scopes" {
+variable "scopes" {
   description = "List of scopes for the instance template service account"
   type        = list
   default     = [] 

@@ -47,7 +47,7 @@ resource "google_compute_instance_template" "vm_template" {
   
   service_account {
     email                 = google_service_account.vm_sa.email
-    scopes                = var.service_account_scopes
+    scopes                = var.scopes
   }
 
    metadata = {
