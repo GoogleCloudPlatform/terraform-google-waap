@@ -80,7 +80,7 @@ variable "tags_r1" {
 
 variable "source_image_r1" {
   description = "Image used for compute VMs."
-  default     = "debian-cloud/debian-11"
+  default     = ""
 }
 
 variable "disk_size_gb_r1" {
@@ -191,7 +191,7 @@ variable "tags_r2" {
 
 variable "source_image_r2" {
   description = "Image used for compute VMs."
-  default     = "debian-cloud/debian-11"
+  default     = ""
 }
 
 variable "disk_size_gb_r2" {

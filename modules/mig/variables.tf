@@ -65,8 +65,21 @@ variable "tags" {
 }
 
 variable "source_image" {
-  description = "Image used for compute VMs."
-  default     = "debian-cloud/debian-11"
+  description = "Source disk image. If neither source_image nor source_image_family is specified, defaults to the latest public Ubuntu image."
+  type        = string
+  default     = ""
+}
+
+variable "source_image_family" {
+  description = "Source image family. If neither source_image nor source_image_family is specified, defaults to the latest public Ubuntu image."
+  type        = string
+  default     = "ubuntu-2204-lts"
+}
+
+variable "source_image_project" {
+  description = "Project where the source image comes from. The default project contains Ubuntu images."
+  type        = string
+  default     = "ubuntu-os-cloud"
 }
 
 variable "disk_auto_delete" {
