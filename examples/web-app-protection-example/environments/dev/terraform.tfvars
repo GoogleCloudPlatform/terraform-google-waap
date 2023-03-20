@@ -18,7 +18,7 @@ name_prefix_r1              = "vm-template-"
 machine_type_r1             = "e2-small"
 tags_r1                     = [ "backend-r1" ]
 
-source_image_r1             = "ubuntu-os-cloud/ubuntu-2204-lts"
+source_image_r1             = "family/ubuntu-2204-lts"
 disk_size_gb_r1             = "100"
 
 service_account_id_r1       = "sa-backend-vm-r1"
@@ -44,7 +44,7 @@ name_prefix_r2              = "vm-template-"
 machine_type_r2             = "e2-small"
 tags_r2                     = [ "backend-r2" ]
 
-source_image_r2             = "ubuntu-os-cloud/ubuntu-2204-lts"
+source_image_r2             = "family/ubuntu-2204-lts"
 disk_size_gb_r2             = "100"
 
 service_account_id_r2       = "sa-backend-vm-r2"
