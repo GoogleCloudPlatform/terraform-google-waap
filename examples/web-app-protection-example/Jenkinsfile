@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         _BUILD_ID="${env.BUILD_ID}"
         _BRANCH_NAME="${env.BRANCH_NAME}"

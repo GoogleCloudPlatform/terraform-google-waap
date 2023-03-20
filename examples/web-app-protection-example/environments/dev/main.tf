@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-locals {
-  environment = "dev"
-}
 
-module "base_mig" {
-    source = "../../../../modules/mig"
+module "mig_network" {
+  source = "../../../../modules/mig_network"
 
-    project_id    = var.project_id
-    region        = var.region
-    network_name  = var.network_name
-    subnet_name   = var.subnet_name
-    subnet_ip     = var.subnet_ip
-    subnet_region = var.subnet_region
+  project_id    = var.project_id
+  region        = var.region
+  network_name  = var.network_name
+  subnet_name   = var.subnet_name
+  subnet_ip     = var.subnet_ip
+  subnet_region = var.subnet_region
 }
