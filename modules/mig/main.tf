@@ -44,7 +44,7 @@ resource "google_compute_instance_template" "vm_template" {
   disk {
     boot                  = true
     type                  = "PERSISTENT"
-    source_image = var.source_image != "" ? format("${local.source_image_project}/${local.source_image}") : format("${local.source_image_project}/${local.source_image_family}")
+    source_image          = var.source_image != "" ? format("${local.source_image_project}/${local.source_image}") : format("${local.source_image_project}/${local.source_image_family}")
     auto_delete           = var.disk_auto_delete
     disk_type             = var.disk_type
     disk_size_gb          = var.disk_size_gb
@@ -62,7 +62,7 @@ resource "google_compute_instance_template" "vm_template" {
   }
 
     network_interface {
-      network             = format("vpc-%s", var.network_name)
+      network             = format("vpc-%s", var.network)
       subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
     }
   
