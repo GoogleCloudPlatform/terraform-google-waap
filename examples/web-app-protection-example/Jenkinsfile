@@ -26,24 +26,6 @@ pipeline {
                 '''
             }
         }
-        // stage("Terraform Plan and validate") {
-        //     when {
-        //       not {
-        //             anyOf {
-        //             branch 'dev'
-        //             branch 'prd'
-        //             branch 'npd'
-        //             }
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //         export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-        //         cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-        //         sudo ./jenkins-functions.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
-        //         '''
-        //     }
-        // }
         stage('TF init') {
             when {
               anyOf {
@@ -76,22 +58,6 @@ pipeline {
                 '''
             }
         }
-        // stage('TF validate') {
-        //     when {
-        //       anyOf {
-        //           branch 'dev'
-        //           branch 'prd'
-        //           branch 'npd'
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //         export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-        //         cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-        //         sudo ./jenkins-functions.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
-        //         '''
-        //     }
-        // }
         stage('TF apply') {
             when {
               anyOf {
