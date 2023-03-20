@@ -15,3 +15,8 @@
  */
 
 #!TODO
+
+output "network_name" {
+  description = "The name of the VPC being created"
+  value = module.mig_vpc.network_name
+}

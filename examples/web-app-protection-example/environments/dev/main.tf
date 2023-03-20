@@ -154,7 +154,7 @@ module "lb-http" {
 
       groups = [
         {
-          group                        = module.mig_r1.mig_name
+          group                        = module.mig_r1.instance_group
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
@@ -167,7 +167,7 @@ module "lb-http" {
           max_utilization              = null
         },
         {
-          group                        = module.mig_r2.mig_name
+          group                        = module.mig_r2.instance_group
           balancing_mode               = null
           capacity_scaler              = null
           description                  = null
