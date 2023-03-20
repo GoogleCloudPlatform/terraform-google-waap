@@ -112,7 +112,7 @@ module "lb-http" {
   version = "7.0.0"
 
   name    = "lb-web-app"
-  project = var.project
+  project = var.project_id
   target_tags = [
     var.tags_r1,
     var.tags_r2,
