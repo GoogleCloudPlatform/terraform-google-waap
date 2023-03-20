@@ -18,7 +18,7 @@ name_prefix_r1              = "vm-template-"
 machine_type_r1             = "e2-small"
 tags_r1                     = [ "backend-r1" ]
 
-source_image_r1             = "family/ubuntu-2204-lts"
+source_image_r1             = "ubuntu-2204-lts"
 disk_size_gb_r1             = "100"
 
 service_account_id_r1       = "sa-backend-vm-r1"
