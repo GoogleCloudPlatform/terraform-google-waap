@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+ 
 resource "google_service_account" "vm_sa" {
   project     = var.project_id
   account_id  = var.service_account
 }
 
 resource "google_project_iam_member" "sa_roles" {
-  for_each = var.roles
+  for_each = toset(var.roles)
 
   project  = var.project_id
   role     = each.key
@@ -47,7 +47,7 @@ resource "google_compute_instance_template" "vm_template" {
   
   service_account {
     email                 = google_service_account.vm_sa.email
-    scopes                = var.service_account_scopes
+    scopes                = var.scopes
   }
 
    metadata = {
@@ -56,8 +56,8 @@ resource "google_compute_instance_template" "vm_template" {
   }
 
     network_interface {
-      network             = var.network
-      subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+      network             = format("vpc-%s", var.network)
+      subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/subnet-${var.subnetwork}"
     }
   
   lifecycle {
