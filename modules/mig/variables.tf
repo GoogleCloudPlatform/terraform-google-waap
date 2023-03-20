@@ -41,7 +41,7 @@ variable "service_account" {
 
 variable "roles" {
   description = "Permissions to be added to the created service account."
-  type        = list(string)
+  type        = list
   default     = []
 }
 
