@@ -84,7 +84,7 @@ module "mig_r2" {
   machine_type         = var.machine_type_r2
   tags                 = var.tags_r2
 
-  source_image         = var.source_image_r2
+  source_image         = "family/${var.source_image_r2}"
   disk_size_gb         = var.disk_size_gb_r2
 
   service_account      = var.service_account_id_r2
