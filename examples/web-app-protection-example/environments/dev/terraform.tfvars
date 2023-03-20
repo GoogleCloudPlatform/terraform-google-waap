@@ -1,7 +1,7 @@
 /***********************
 *** Shared Variables ***
 ************************/
-project_id   = "cicd-prj-bbee"
+project_id   = "<PROJECT_ID>"
 
 
 
