@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
- locals {
-  source_image         = var.source_image != "" ? var.source_image : "ubuntu-2204-jammy-v20230302"
-  source_image_family  = var.source_image_family != "" ? var.source_image_family : "ubuntu-2204-lts"
-  source_image_project = var.source_image_project != "" ? var.source_image_project : "ubuntu-os-cloud"
- }
  
 resource "google_service_account" "vm_sa" {
   project     = var.project_id
@@ -44,7 +38,7 @@ resource "google_compute_instance_template" "vm_template" {
   disk {
     boot                  = true
     type                  = "PERSISTENT"
-    source_image          = var.source_image != "" ? format("${local.source_image_project}/${local.source_image}") : format("${local.source_image_project}/${local.source_image_family}")
+    source_image          = var.source_image
     auto_delete           = var.disk_auto_delete
     disk_type             = var.disk_type
     disk_size_gb          = var.disk_size_gb
@@ -63,7 +57,7 @@ resource "google_compute_instance_template" "vm_template" {
 
     network_interface {
       network             = format("vpc-%s", var.network)
-      subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+      subnetwork          = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/subnet-${var.subnetwork}"
     }
   
   lifecycle {
