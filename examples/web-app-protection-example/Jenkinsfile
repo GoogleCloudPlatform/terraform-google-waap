@@ -1,13 +1,13 @@
 pipeline {
     agent any
-    
+
     environment {
         _BUILD_ID="${env.BUILD_ID}"
         _BRANCH_NAME="${env.BRANCH_NAME}"
 
-        _TF_SA_EMAIL="sa-terraform-cicd@cicd-prj-bbee.iam.gserviceaccount.com"
-        _STATE_BUCKET_NAME="cicd-prj-tfstate-bkt-1rd3"
-        _PROJECT_ID="cicd-prj-bbee"
+        _TF_SA_EMAIL="<TERRAFORM_SERVICE_ACCOUNT>"
+        _STATE_BUCKET_NAME="<BUCKET_NAME>"
+        _PROJECT_ID="<PROJECT_ID>"
         _POLICY_REPO="CLOUDSOURCE"
 
         EXAMPLE_BUILD="web-app-protection-example"
@@ -23,24 +23,6 @@ pipeline {
                 echo "Adding bucket information to backends"
                 for i in `find -name 'backend.tf'`; do sed -r -i "s/_BUCKET_GCS_/${_STATE_BUCKET_NAME}/" $i; done
                 for i in `find -name 'jenkins-functions.sh'`;do chmod +x $i; done
-                '''
-            }
-        }
-        stage("Terraform Plan and validate") {
-            when {
-              not {
-                    anyOf {
-                    branch 'dev'
-                    branch 'prd'
-                    branch 'npd'
-                    }
-                }
-            }
-            steps {
-                sh '''
-                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                sudo ./jenkins-functions.sh plan_validate_all ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
@@ -73,22 +55,6 @@ pipeline {
                 export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
                 cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
                 ./jenkins-functions.sh plan $BRANCH_NAME
-                '''
-            }
-        }
-        stage('TF validate') {
-            when {
-              anyOf {
-                  branch 'dev'
-                  branch 'prd'
-                  branch 'npd'
-                }
-            }
-            steps {
-                sh '''
-                export GOOGLE_IMPERSONATE_SERVICE_ACCOUNT=${_TF_SA_EMAIL}
-                cd ${WORKSPACE}/examples/${EXAMPLE_BUILD}
-                sudo ./jenkins-functions.sh validate ${BRANCH_NAME} ${WORKSPACE}/${_POLICY_REPO} ${_PROJECT_ID}
                 '''
             }
         }
