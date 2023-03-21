@@ -114,8 +114,7 @@ module "lb-http" {
   name    = "lb-web-app"
   project = var.project_id
   target_tags = [
-    var.tags_r1,
-    var.tags_r2,
+    "backend-r1", "backend-r2"
   ]
   firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
 
