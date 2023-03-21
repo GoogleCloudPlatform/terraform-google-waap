@@ -20,6 +20,12 @@ variable "project_id" {
   default     = ""
 }
 
+variable "firewall_projects" {
+  description = "Names of the projects to create firewall rules in"
+  type        = list(string)
+  default     = ["ci-waap-caba", "ci-waap-caba"]
+}
+
 /***********************
 ** Variables Region 1 **
 ************************/
