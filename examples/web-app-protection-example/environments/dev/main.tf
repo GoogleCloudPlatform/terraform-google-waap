@@ -112,12 +112,13 @@ module "lb-http" {
   version = "7.0.0"
 
   name    = "lb-web-app"
-  project = "ci-waap-caba"
+  project = var.project_id
   target_tags = [
     "backend-r1", "backend-r2"
   ]
   firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
-
+  firewall_projects = [var.project_id]
+  
   backends = {
     default = {
 
