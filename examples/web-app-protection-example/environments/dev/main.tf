@@ -112,7 +112,7 @@ module "lb-http" {
   version = "7.0.0"
 
   name    = "lb-web-app"
-  project = var.project_id
+  project = "ci-waap-caba"
   target_tags = [
     "backend-r1", "backend-r2"
   ]
