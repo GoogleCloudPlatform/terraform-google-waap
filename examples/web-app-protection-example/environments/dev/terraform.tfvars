@@ -2,7 +2,7 @@
 *** Shared Variables ***
 ************************/
 project_id   = "ci-waap-caba"
-
+firewall_projects = [ "ci-waap-caba", "ci-waap-caba" ]
 
 /*************************
 *** Region 1 Variables ***

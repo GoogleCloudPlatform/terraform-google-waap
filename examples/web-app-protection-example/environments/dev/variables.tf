@@ -23,7 +23,6 @@ variable "project_id" {
 variable "firewall_projects" {
   description = "Names of the projects to create firewall rules in"
   type        = list(string)
-  default     = ["ci-waap-caba", "xpto"]
 }
 
 /***********************
