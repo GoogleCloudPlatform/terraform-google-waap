@@ -29,7 +29,7 @@ variable "backend_port" {
 variable "enable_cdn" {
   description = "value"
   type        = bool
-  default     = true 
+  default     = true
 }
 
 variable "firewall_projects" {
@@ -80,7 +80,7 @@ variable "subnet_region_r1" {
 variable "name_prefix_r1" {
   description = "Name prefix for the instance template"
   type        = string
-  default     = "" 
+  default     = ""
 }
 
 variable "machine_type_r1" {
@@ -108,7 +108,7 @@ variable "disk_size_gb_r1" {
 
 variable "service_account_id_r1" {
   description = "The account ID used to generate the virtual machine service account."
-  type        = string 
+  type        = string
   default     = ""
 }
 
@@ -120,14 +120,8 @@ variable "service_account_roles_r1" {
 
 variable "service_account_scopes_r1" {
   description = "List of scopes for the instance template service account"
-  type        = list
-  default     = [] 
-}
-
-variable "startup_script_r1" {
-  description = "value"
-  type = string
-  default = ""
+  type        = list(string)
+  default     = []
 }
 
 variable "mig_name_r1" {
@@ -139,7 +133,7 @@ variable "mig_name_r1" {
 variable "base_instance_name_r1" {
   description = "The base instance name to use for instances in this group."
   type        = string
-  default     = "" 
+  default     = ""
 }
 
 variable "target_size_r1" {
@@ -191,7 +185,7 @@ variable "subnet_region_r2" {
 variable "name_prefix_r2" {
   description = "Name prefix for the instance template"
   type        = string
-  default     = "" 
+  default     = ""
 }
 
 variable "machine_type_r2" {
@@ -219,26 +213,20 @@ variable "disk_size_gb_r2" {
 
 variable "service_account_id_r2" {
   description = "The account ID used to generate the virtual machine service account."
-  type        = string 
+  type        = string
   default     = ""
 }
 
 variable "service_account_roles_r2" {
   description = "Permissions to be added to the created service account."
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "service_account_scopes_r2" {
   description = "List of scopes for the instance template service account"
-  type        = list
-  default     = [] 
-}
-
-variable "startup_script_r2" {
-  description = "value"
-  type = string
-  default = ""
+  type        = list(string)
+  default     = []
 }
 
 variable "mig_name_r2" {
@@ -250,7 +238,7 @@ variable "mig_name_r2" {
 variable "base_instance_name_r2" {
   description = "The base instance name to use for instances in this group."
   type        = string
-  default     = "" 
+  default     = ""
 }
 
 variable "target_size_r2" {

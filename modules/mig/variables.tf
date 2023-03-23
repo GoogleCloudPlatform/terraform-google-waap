@@ -16,32 +16,32 @@
 
 variable "project_id" {
   description = "Google Project ID"
-  type        = string 
+  type        = string
   default     = ""
 }
 
 variable "region" {
   description = "Region for cloud resources."
-  type        = string 
+  type        = string
   default     = "us-central1"
 }
 
 variable "zone" {
   description = "Zone for managed instance groups."
-  type        = string 
+  type        = string
   default     = "us-central1-f"
 }
 
 ## VM Service Account ##
 variable "service_account" {
   description = "The account ID used to generate the virtual machine service account."
-  type        = string 
+  type        = string
   default     = ""
 }
 
 variable "roles" {
   description = "Permissions to be added to the created service account."
-  type        = list
+  type        = list(string)
   default     = []
 }
 
@@ -70,27 +70,15 @@ variable "source_image" {
   default     = ""
 }
 
-variable "source_image_family" {
-  description = "Source image family. If neither source_image nor source_image_family is specified, defaults to the latest public Ubuntu image."
-  type        = string
-  default     = "ubuntu-2204-lts"
-}
-
-variable "source_image_project" {
-  description = "Project where the source image comes from. The default project contains Ubuntu images."
-  type        = string
-  default     = "ubuntu-os-cloud"
-}
-
 variable "disk_auto_delete" {
   description = "Whether or not the disk should be auto-deleted."
-  type        = bool 
+  type        = bool
   default     = true
 }
 
 variable "disk_type" {
   description = "The GCE disk type. Can be either pd-ssd, local-ssd, pd-balanced or pd-standard."
-  type        = string  
+  type        = string
   default     = "pd-standard"
 }
 
@@ -102,31 +90,32 @@ variable "disk_size_gb" {
 
 variable "disk_mode" {
   description = "The mode in which to attach this disk, either READ_WRITE or READ_ONLY."
+  type        = string
   default     = "READ_WRITE"
 }
 
 variable "scopes" {
   description = "List of scopes for the instance template service account"
-  type        = list
-  default     = [] 
+  type        = list(string)
+  default     = []
 }
 
 variable "startup_script" {
   description = "value"
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 ## Network ##
 variable "network" {
   description = "Name of the network to deploy instances to."
-  type        = string 
+  type        = string
   default     = "default"
 }
 
 variable "subnetwork" {
   description = "The subnetwork to deploy to"
-  type        = string 
+  type        = string
   default     = "default"
 }
 
@@ -140,7 +129,7 @@ variable "mig_name" {
 variable "base_instance_name" {
   description = "The base instance name to use for instances in this group."
   type        = string
-  default     = "backend-vm" 
+  default     = "backend-vm"
 }
 
 variable "target_size" {
