@@ -120,12 +120,19 @@ module "lb-http" {
   
   backends = {
     default = {
-      
+
+      description                     = null
       protocol                        = "HTTP"
       port                            = var.backend_port
       port_name                       = "http"
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
+      compression_mode                = null
+      security_policy                 = null
+      session_affinity                = null
+      affinity_cookie_ttl_sec         = null
+      custom_request_headers          = null
+      custom_response_headers         = null
 
       health_check = {
         check_interval_sec  = null
