@@ -20,6 +20,18 @@ variable "project_id" {
   default     = ""
 }
 
+variable "backend_port" {
+  description = "value"
+  type        = number
+  default     = 80
+}
+
+variable "enable_cdn" {
+  description = "value"
+  type        = bool
+  default     = true 
+}
+
 variable "firewall_projects" {
   description = "Names of the projects to create firewall rules in"
   type        = list(string)

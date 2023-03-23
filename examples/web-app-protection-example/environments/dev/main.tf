@@ -113,28 +113,19 @@ module "lb-http" {
 
   name    = "lb-web-app"
   project = var.project_id
-  target_tags = [
-    "backend-r1", "backend-r2"
-  ]
+  target_tags = ["backend-r1", "backend-r2"]
   
   firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
   firewall_projects = var.firewall_projects
+  
   backends = {
     default = {
-
-      description                     = null
+      
       protocol                        = "HTTP"
-      port                            = 80
+      port                            = var.backend_port
       port_name                       = "http"
       timeout_sec                     = 10
-      connection_draining_timeout_sec = null
-      enable_cdn                      = false
-      compression_mode                = null
-      security_policy                 = null
-      session_affinity                = null
-      affinity_cookie_ttl_sec         = null
-      custom_request_headers          = null
-      custom_response_headers         = null
+      enable_cdn                      = var.enable_cdn
 
       health_check = {
         check_interval_sec  = null
@@ -142,7 +133,7 @@ module "lb-http" {
         healthy_threshold   = null
         unhealthy_threshold = null
         request_path        = "/"
-        port                = 80
+        port                = var.backend_port
         host                = null
         logging             = null
       }
@@ -150,6 +141,20 @@ module "lb-http" {
       log_config = {
         enable      = true
         sample_rate = 1.0
+      }
+
+      cdn_policy = {
+        cache_mode  = "CACHE_ALL_STATIC"
+        default_ttl = 3600
+        client_ttl  = 1800
+        max_ttl     = 28800
+        
+        cache_key_policy = {
+          include_host          = true
+          include_protocol      = true
+          include_query_string  = true
+          include_named_cookies = ["__next_preview_data", "__prerender_bypass"]
+        }
       }
 
       groups = [
