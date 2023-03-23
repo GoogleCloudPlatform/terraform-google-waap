@@ -15,7 +15,6 @@
  */
 
 #!TODO
-
 output "instance_group" {
   description = "Managed instance group"
   value       = google_compute_instance_group_manager.mig.instance_group
