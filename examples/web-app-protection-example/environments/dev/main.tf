@@ -127,6 +127,7 @@ module "lb-http" {
       port_name                       = "http"
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
+      connection_draining_timeout_sec = null
       compression_mode                = null
       security_policy                 = null
       session_affinity                = null
