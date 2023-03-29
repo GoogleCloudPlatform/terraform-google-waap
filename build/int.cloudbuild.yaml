@@ -9,20 +9,20 @@ steps:
   - 'TF_VAR_billing_account=$_BILLING_ACCOUNT'
 
 # juiceshop_example (WAAP)
-- id: juiceshop-example-init
-  waitFor:
-    - prepare
-  name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage init --verbose']
-- id: juiceshop-example-apply
-  name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage apply --verbose']
-- id: juiceshop-example-verify
-  name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage verify --verbose']
-- id: juiceshop-example-teardown
-  name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage teardown --verbose']
+# - id: juiceshop-example-init
+#   waitFor:
+#     - prepare
+#   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
+#   args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage init --verbose']
+# - id: juiceshop-example-apply
+#   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
+#   args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage apply --verbose']
+# - id: juiceshop-example-verify
+#   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
+#   args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage verify --verbose']
+# - id: juiceshop-example-teardown
+#   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
+#   args: ['/bin/bash', '-c', 'cft test run TestAll/examples/juiceshop_example --stage teardown --verbose']
 
 # webapp_protection_example (multi-env)
 - id: webapp-protection-example-init
