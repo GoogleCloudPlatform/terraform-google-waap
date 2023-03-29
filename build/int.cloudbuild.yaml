@@ -7,6 +7,7 @@ steps:
   - 'TF_VAR_org_id=$_ORG_ID'
   - 'TF_VAR_folder_id=$_FOLDER_ID'
   - 'TF_VAR_billing_account=$_BILLING_ACCOUNT'
+  - 'TF_VAR_project_id=$(terraform output -raw project_id)'
 
 # juiceshop_example (WAAP)
 - id: juiceshop-example-init
