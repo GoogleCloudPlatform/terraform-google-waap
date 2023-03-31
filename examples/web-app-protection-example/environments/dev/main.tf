@@ -128,7 +128,7 @@ module "lb-http" {
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
-      compression_mode                = null
+      compression_mode                = "AUTOMATIC"
       security_policy                 = null
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
@@ -157,6 +157,8 @@ module "lb-http" {
         client_ttl        = 1800
         max_ttl           = 28800
         
+        serve_while_stale = 86400
+
         negative_caching  = true
         negative_caching_policy = {
           code = 404
