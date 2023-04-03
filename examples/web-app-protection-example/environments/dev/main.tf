@@ -128,7 +128,7 @@ module "lb-http" {
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
-      compression_mode                = null
+      compression_mode                = "AUTOMATIC"
       security_policy                 = null
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
@@ -148,15 +148,23 @@ module "lb-http" {
 
       log_config = {
         enable      = true
-        sample_rate = 1.0
+        sample_rate = 0.05
       }
 
       cdn_policy = {
-        cache_mode  = "CACHE_ALL_STATIC"
-        default_ttl = 3600
-        client_ttl  = 1800
-        max_ttl     = 28800
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
         
+        serve_while_stale = 86400
+
+        negative_caching  = true
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
         cache_key_policy = {
           include_host          = true
           include_protocol      = true
