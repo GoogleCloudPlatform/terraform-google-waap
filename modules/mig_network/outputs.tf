@@ -15,8 +15,7 @@
  */
 
 #!TODO
-
-output "network_name" {
-  description = "The name of the VPC being created"
-  value       = module.mig_vpc.network_name
+output "instance_group" {
+  description = "Managed instance group"
+  value       = google_compute_instance_group_manager.mig.instance_group
 }
