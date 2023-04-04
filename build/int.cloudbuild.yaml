@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 options:
-  logging: GCS_ONLY
+  logging: CLOUD_LOGGING_ONLY
 timeout: 7200s
 steps:
 - id: prepare
