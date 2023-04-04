@@ -20,229 +20,31 @@ variable "project_id" {
   default     = ""
 }
 
-variable "backend_port" {
-  description = "value"
-  type        = number
-  default     = 80
-}
-
-variable "enable_cdn" {
-  description = "value"
-  type        = bool
-  default     = true
-}
-
-variable "firewall_projects" {
-  description = "Names of the projects to create firewall rules in"
-  type        = list(string)
-}
-
-/***********************
-** Variables Region 1 **
-************************/
-
-variable "region_r1" {
-  description = "Region in which to create resources"
+variable "region" {
+  description = "Region for cloud resources."
   type        = string
-  default     = ""
+  default     = "us-central1"
 }
 
-variable "zone_r1" {
-  description = "value"
+## Network ##
+variable "network_name" {
+  description = "Name of the network to deploy instances to."
   type        = string
-  default     = ""
+  default     = "default"
 }
 
-variable "network_name_r1" {
-  description = "VPC network name"
+variable "subnet_name" {
+  description = "The subnetwork to deploy to"
   type        = string
-  default     = ""
+  default     = "default"
 }
 
-variable "subnet_name_r1" {
-  description = "Subnet name"
-  type        = string
-  default     = ""
+variable "subnet_ip" {
+  type    = string
+  default = "10.0.16.0/24"
 }
 
-variable "subnet_ip_r1" {
-  description = "This is th IP of your subnet"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_region_r1" {
-  description = "Subnet Region"
-  type        = string
-  default     = ""
-}
-
-variable "name_prefix_r1" {
-  description = "Name prefix for the instance template"
-  type        = string
-  default     = ""
-}
-
-variable "machine_type_r1" {
-  description = "Machine type to create, e.g. n1-standard-1"
-  type        = string
-  default     = ""
-}
-
-variable "tags_r1" {
-  description = "Network tags, provided as a list"
-  type        = list(string)
-  default     = []
-}
-
-variable "source_image_r1" {
-  description = "Image used for compute VMs."
-  default     = ""
-}
-
-variable "disk_size_gb_r1" {
-  description = "The size of the image in gigabytes. If not specified, it will inherit the size of its base image."
-  type        = string
-  default     = "100"
-}
-
-variable "service_account_id_r1" {
-  description = "The account ID used to generate the virtual machine service account."
-  type        = string
-  default     = ""
-}
-
-variable "service_account_roles_r1" {
-  description = "Permissions to be added to the created service account."
-  type        = list(string)
-  default     = []
-}
-
-variable "service_account_scopes_r1" {
-  description = "List of scopes for the instance template service account"
-  type        = list(string)
-  default     = []
-}
-
-variable "mig_name_r1" {
-  description = "Name of the managed instance group."
-  type        = string
-  default     = ""
-}
-
-variable "base_instance_name_r1" {
-  description = "The base instance name to use for instances in this group."
-  type        = string
-  default     = ""
-}
-
-variable "target_size_r1" {
-  description = "The target number of running instances for this managed instance group. This value should always be explicitly set unless this resource is attached to an autoscaler, in which case it should never be set."
-  type        = number
-  default     = 1
-}
-
-/***********************
-** Variables Region 2 **
-************************/
-
-variable "region_r2" {
-  description = "Region in which to create resources"
-  type        = string
-  default     = ""
-}
-
-variable "zone_r2" {
-  description = "value"
-  type        = string
-  default     = ""
-}
-
-variable "network_name_r2" {
-  description = "VPC network name"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_name_r2" {
-  description = "Subnet name"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_ip_r2" {
-  description = "This is th IP of your subnet"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_region_r2" {
-  description = "Subnet Region"
-  type        = string
-  default     = ""
-}
-
-variable "name_prefix_r2" {
-  description = "Name prefix for the instance template"
-  type        = string
-  default     = ""
-}
-
-variable "machine_type_r2" {
-  description = "Machine type to create, e.g. n1-standard-1"
-  type        = string
-  default     = ""
-}
-
-variable "tags_r2" {
-  description = "Network tags, provided as a list"
-  type        = list(string)
-  default     = []
-}
-
-variable "source_image_r2" {
-  description = "Image used for compute VMs."
-  default     = ""
-}
-
-variable "disk_size_gb_r2" {
-  description = "The size of the image in gigabytes. If not specified, it will inherit the size of its base image."
-  type        = string
-  default     = "100"
-}
-
-variable "service_account_id_r2" {
-  description = "The account ID used to generate the virtual machine service account."
-  type        = string
-  default     = ""
-}
-
-variable "service_account_roles_r2" {
-  description = "Permissions to be added to the created service account."
-  type        = list(string)
-  default     = []
-}
-
-variable "service_account_scopes_r2" {
-  description = "List of scopes for the instance template service account"
-  type        = list(string)
-  default     = []
-}
-
-variable "mig_name_r2" {
-  description = "Name of the managed instance group."
-  type        = string
-  default     = ""
-}
-
-variable "base_instance_name_r2" {
-  description = "The base instance name to use for instances in this group."
-  type        = string
-  default     = ""
-}
-
-variable "target_size_r2" {
-  description = "The target number of running instances for this managed instance group. This value should always be explicitly set unless this resource is attached to an autoscaler, in which case it should never be set."
-  type        = number
-  default     = 1
+variable "subnet_region" {
+  type    = string
+  default = "us-central"
 }
