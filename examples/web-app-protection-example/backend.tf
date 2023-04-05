@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#!TODO
-output "network_name" {
-  description = "The name of the VPC being created"
-  value       = module.mig_vpc.network_name
-}
+# terraform {
+#   backend "gcs" {
+#     bucket = "_BUCKET_GCS_"
+#     prefix = "terraform/web-app-protection-example/dev"
+#   }
+# }

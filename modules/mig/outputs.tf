@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-terraform {
-  backend "gcs" {
-    bucket = "_BUCKET_GCS_"
-    prefix = "terraform/web-app-protection-example/dev"
-  }
+
+#!TODO
+
+output "instance_group" {
+  description = "Managed instance group"
+  value       = google_compute_instance_group_manager.mig.instance_group
 }

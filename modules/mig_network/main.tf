@@ -53,7 +53,7 @@ module "cloud-nat" {
 **** Firewall rule to allow incoming ssh connections from Google IAP servers. ****
 **********************************************************************************/
 resource "google_compute_firewall" "inbound-ip-ssh" {
-  name    = "allow-ssh-iap"
+  name    = format("allow-ssh-iap-%s", var.network_name)
   project = var.project_id
   network = module.mig_vpc.network_name #!TODO
 
