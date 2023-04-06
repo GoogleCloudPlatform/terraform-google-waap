@@ -123,7 +123,7 @@ module "security_policy" {
     "geo_us" = {
       action          = "allow"
       priority        = "1000"
-      expression      = "US"
+      expression      = "origin.region.core == 'US'"
       description     = "US Geolocalization Rule"
     }
   }
