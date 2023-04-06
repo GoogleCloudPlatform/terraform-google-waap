@@ -118,6 +118,23 @@ module "security_policy" {
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
+
+  edge_rules = {
+    "geo_us" = {
+      action          = "allow"
+      priority        = "1000"
+      expression      = "US"
+      description     = "US Geolocalization Rule"
+    }
+
+    "src_hc_ip" = {
+      action          = "allow"
+      priority        = "1001"
+      versioned_expr  = "SRC_IPS_V1"
+      src_ip_ranges   = ["35.191.0.0/16"]
+      description     = "Rule to allow healthcheck IP range"
+    }
+  }
 }
 
 module "lb-http" {
