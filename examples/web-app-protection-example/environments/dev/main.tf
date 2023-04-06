@@ -107,6 +107,18 @@ module "mig_r2" {
    
 }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+module "security_policy" {
+  source = "../../../../modules/cloud-armor"
+  
+  name        = "ca-policy-${random_id.suffix.hex}"
+  description = "Cloud Armor Security Policy"
+  type        = "CLOUD_ARMOR"
+}
+
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
   version = "7.0.0"
@@ -128,8 +140,8 @@ module "lb-http" {
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
-      compression_mode                = "AUTOMATIC"
-      security_policy                 = null
+      compression_mode                = null
+      security_policy                 = module.security_policy.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
       custom_request_headers          = null
