@@ -114,9 +114,27 @@ resource "random_id" "suffix" {
 module "security_policy" {
   source = "../../../../modules/cloud-armor"
   
+  project_id  = var.project_id 
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
+
+  edge_rules = {
+    "geo_us" = {
+      action          = "allow"
+      priority        = "1000"
+      expression      = "US"
+      description     = "US Geolocalization Rule"
+    }
+
+    "src_hc_ip" = {
+      action          = "allow"
+      priority        = "1001"
+      versioned_expr  = "SRC_IPS_V1"
+      src_ip_ranges   = ["35.191.0.0/16"]
+      description     = "Rule to allow healthcheck IP range"
+    }
+  }
 }
 
 module "lb-http" {
@@ -160,15 +178,23 @@ module "lb-http" {
 
       log_config = {
         enable      = true
-        sample_rate = 1.0
+        sample_rate = 0.05
       }
 
       cdn_policy = {
-        cache_mode  = "CACHE_ALL_STATIC"
-        default_ttl = 3600
-        client_ttl  = 1800
-        max_ttl     = 28800
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
         
+        serve_while_stale = 86400
+
+        negative_caching  = true
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
         cache_key_policy = {
           include_host          = true
           include_protocol      = true
