@@ -32,11 +32,6 @@ variable "enable_cdn" {
   default     = true 
 }
 
-variable "firewall_projects" {
-  description = "Names of the projects to create firewall rules in"
-  type        = list(string)
-}
-
 /***********************
 ** Variables Region 1 **
 ************************/
@@ -122,12 +117,6 @@ variable "service_account_scopes_r1" {
   description = "List of scopes for the instance template service account"
   type        = list
   default     = [] 
-}
-
-variable "startup_script_r1" {
-  description = "value"
-  type = string
-  default = ""
 }
 
 variable "mig_name_r1" {
@@ -233,12 +222,6 @@ variable "service_account_scopes_r2" {
   description = "List of scopes for the instance template service account"
   type        = list
   default     = [] 
-}
-
-variable "startup_script_r2" {
-  description = "value"
-  type = string
-  default = ""
 }
 
 variable "mig_name_r2" {
