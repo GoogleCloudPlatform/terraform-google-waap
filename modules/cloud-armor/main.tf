@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-resource "random_id" "suffix" {
-  byte_length = 4
-}
-
 resource "google_compute_security_policy" "policy" {
   project     = var.project_id
 
-  name        = "ca-policy-${random_id.suffix.hex}"
-  description = "Cloud Armor Security Policy"
-  type        = "CLOUD_ARMOR"
+  name        = var.name
+  description = var.description
+  type        = var.type
   
   # -----------------------------------------------------------------------------------------
   # Source Geography

@@ -107,6 +107,18 @@ module "mig_r2" {
    
 }
 
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+module "security_policy" {
+  source = "../../../../modules/cloud-armor"
+  
+  name        = "ca-policy-${random_id.suffix.hex}"
+  description = "Cloud Armor Security Policy"
+  type        = "CLOUD_ARMOR"
+}
+
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
   version = "7.0.0"

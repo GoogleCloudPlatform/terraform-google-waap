@@ -17,7 +17,23 @@
 variable "project_id" {
   description   = "Google Project ID"
   type          = string
-  default       = ""
+}
+
+variable "name" {
+  description = "Name of the security policy."
+  type        = string
+}
+
+variable "description" {
+  description = "An optional description of this security policy. Max size is 2048."
+  type        = string
+  default     = null
+}
+
+variable "type" {
+  description = "Type indicates the intended use of the security policy. Possible values are CLOUD_ARMOR and CLOUD_ARMOR_EDGE"
+  type        = string
+  default     = "CLOUD_ARMOR"
 }
 
 ## Source Geography ##
@@ -25,7 +41,7 @@ variable "project_id" {
 variable "src_geo_enable" {
   description   = "Enable geolocation rule"
   type          = bool
-  default       = false
+  default       = true
 }
 
 variable "src_geo_action" {
@@ -51,7 +67,7 @@ variable "src_geo_expression" {
 variable "src_ip_enable" {
   description   = "Enable Source IP Address rule"
   type          = bool
-  default       = false
+  default       = true
 }
 
 variable "src_ip_action" {
