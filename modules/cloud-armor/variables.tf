@@ -37,53 +37,25 @@ variable "type" {
 }
 
 ## Source Geography ##
-
-variable "src_geo_enable" {
-  description   = "Enable geolocation rule"
-  type          = bool
-  default       = true
-}
-
-variable "src_geo_action" {
-  description   = "Defines whether the action to be performed will be allow or deny"
-  type          = string
-  default       = "allow"
-}
-
-variable "src_geo_priority" {
-  description   = "Geolocation rule priority"
-  type          = string
-  default       = "1"
-}
-
-variable "src_geo_expression" {
-  description   = "Textual representation of an expression in Common Expression Language syntax"
-  type          = string
-  default       = "US"
-}
+variable "src_geo" {
+  description = "Geolocation Rules"
+  default = {}
+  type = map(object({
+    action          = string
+    priority        = string
+    expression      = string
+    description     = string
+  }))
+} 
 
 ## Source IP Address ##
-
-variable "src_ip_enable" {
-  description   = "Enable Source IP Address rule"
-  type          = bool
-  default       = true
-}
-
-variable "src_ip_action" {
-  description   = "Defines whether the action to be performed will be allow or deny"
-  type          = string
-  default       = "allow"
-}
-
-variable "src_ip_priority" {
-  description   = "Source IP Address rule priority"
-  type          = string
-  default       = "1"
-}
-
-variable "src_ip_ranges" {
-  description   = "Ranges of IPs used in the rule."
-  type          = list(string)
-  default       = ["35.191.0.0/16"]
+variable "src_ip" {
+  default = {}
+  type = map(object({
+    action          = string
+    priority        = string
+    versioned_expr  = string
+    src_ip_ranges   = list(string)
+    description     = string
+  }))
 }
