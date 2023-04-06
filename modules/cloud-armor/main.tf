@@ -41,7 +41,7 @@ resource "google_compute_security_policy" "policy" {
   # Source IP Address
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    for_each = var.src_hc_ip
+    for_each = var.src_ip
     content {
       action    = each.value.action
       priority  = each.value.priority
