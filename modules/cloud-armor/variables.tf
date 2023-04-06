@@ -43,7 +43,7 @@ variable "src_geo_priority" {
 variable "src_geo_expression" {
   description   = "Textual representation of an expression in Common Expression Language syntax"
   type          = string
-  default       = ""
+  default       = "US"
 }
 
 ## Source IP Address ##
@@ -69,5 +69,5 @@ variable "src_ip_priority" {
 variable "src_ip_ranges" {
   description   = "Ranges of IPs used in the rule."
   type          = list(string)
-  default       = []
+  default       = ["35.191.0.0/16"]
 }
