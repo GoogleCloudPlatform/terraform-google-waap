@@ -119,14 +119,15 @@ module "security_policy" {
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
 
-  edge_rules = {
+  src_geo = {
     "geo_us" = {
       action          = "allow"
       priority        = "1000"
       expression      = "US"
       description     = "US Geolocalization Rule"
     }
-
+  }
+  src_ip = {
     "src_hc_ip" = {
       action          = "allow"
       priority        = "1001"
