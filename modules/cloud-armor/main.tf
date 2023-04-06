@@ -25,33 +25,33 @@ resource "google_compute_security_policy" "policy" {
   # Source Geography
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    count                   = var.src_geo_enable ? 1 : 0
+    for_each = var.src_geo
     content {
-        action              = var.src_geo_action
-        priority            = var.src_geo_priority
-        description         = "${var.src_geo_action} specific Regions"
-        match {
-          expr {
-            expression      = var.src_geo_expression
-          }
+      action    = each.value.action
+      priority  = each.value.priority
+      match {
+        expr {
+         expression = each.value.expression 
         }
+      }
+      description = each.value.description
     }
   }
   # -----------------------------------------------------------------------------------------
   # Source IP Address
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    count                   = var.src_ip_enable ? 1 : 0
+    for_each = var.src_hc_ip
     content {
-        action              = var.src_ip_action
-        priority            = var.src_ip_priority
-        description         = "${var.src_ip_action} specific Regions"
-        match {
-          versioned_expr    = "SRC_IPS_V1"
-          config {
-            src_ip_ranges   = var.src_ip_ranges
-          }
+      action    = each.value.action
+      priority  = each.value.priority
+      match {
+        versioned_expr  = each.value.versioned_expr
+        config {
+          src_ip_ranges = each.value.src_ip_ranges
         }
+      }
+      description = each.value.description
     }
   }
 }
