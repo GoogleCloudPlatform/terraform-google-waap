@@ -114,6 +114,7 @@ resource "random_id" "suffix" {
 module "security_policy" {
   source = "../../../../modules/cloud-armor"
   
+  project_id  = var.project_id 
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
