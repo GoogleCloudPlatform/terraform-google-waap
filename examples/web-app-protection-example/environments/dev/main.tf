@@ -129,7 +129,7 @@ module "lb-http" {
   target_tags = ["backend-r1", "backend-r2"]
   
   firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
-  firewall_projects = var.firewall_projects
+  firewall_projects = [var.project_id, var.project_id]
   
   backends = {
     default = {
@@ -141,7 +141,7 @@ module "lb-http" {
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
-      compression_mode                = null
+      compression_mode                = "AUTOMATIC"
       security_policy                 = module.security_policy.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
