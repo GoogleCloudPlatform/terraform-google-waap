@@ -37,7 +37,7 @@ variable "type" {
 }
 
 ## Source Geography ##
-variable "src_geo" {
+variable "src_geo_rules" {
   description = "Geolocation Rules"
   default = {}
   type = map(object({
@@ -49,7 +49,7 @@ variable "src_geo" {
 } 
 
 ## Source IP Address ##
-variable "src_ip" {
+variable "src_ip_rules" {
   default = {}
   type = map(object({
     action          = string
@@ -57,5 +57,41 @@ variable "src_ip" {
     versioned_expr  = string
     src_ip_ranges   = list(string)
     description     = string
+  }))
+}
+
+variable "owasp_rules" {
+  description = "Rules preconfigured from owasp for cloud armor protection"
+  default = {
+    rule_sqli = {
+      action      = "deny(403)"
+      priority    = "1000"
+      expression  = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
+    }
+    rule_xss = {
+      action      = "deny(403)"
+      priority    = "1001"
+      expression  = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
+    }
+    rule_lfi = {
+      action      = "deny(403)"
+      priority    = "1002"
+      expression  = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
+    }
+    rule_rfi    = {
+      action      = "deny(403)"
+      priority    = "1003"
+      expression  = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
+    }
+    rule_methodenforcement = {
+      action      = "deny(403)"
+      priority    = "1004"
+      expression  = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
+    }
+  }
+  type = map(object({
+    action      = string
+    priority    = string
+    expression  = string
   }))
 }

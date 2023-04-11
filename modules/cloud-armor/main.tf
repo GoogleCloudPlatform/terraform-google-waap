@@ -25,7 +25,7 @@ resource "google_compute_security_policy" "policy" {
   # Source Geography
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    for_each = var.src_geo
+    for_each = var.src_geo_rules
     content {
       action    = each.value.action
       priority  = each.value.priority
@@ -41,7 +41,7 @@ resource "google_compute_security_policy" "policy" {
   # Source IP Address
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    for_each = var.src_hc_ip
+    for_each = var.src_ip_rules
     content {
       action    = each.value.action
       priority  = each.value.priority
@@ -52,6 +52,20 @@ resource "google_compute_security_policy" "policy" {
         }
       }
       description = each.value.description
+    }
+  }
+  # -----------------------------------------------------------------------------------------
+  # OWASP Rules
+  # -----------------------------------------------------------------------------------------
+  dynamic "rule" {
+    for_each = var.owasp_rules
+    content {
+      action    = each.value.action
+      priority  = each.value.priority
+      match {
+        expr {
+          expression = each.value.expression 
+        }
     }
   }
 }
