@@ -88,6 +88,11 @@ variable "owasp_rules" {
       priority    = "1004"
       expression  = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
     }
+    rule_rce = {
+      action      = "deny(403)"
+      priority    = "1005"
+      expression  = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
+    }
   }
   type = map(object({
     action      = string
