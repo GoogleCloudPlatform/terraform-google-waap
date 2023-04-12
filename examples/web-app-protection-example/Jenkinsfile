@@ -7,7 +7,7 @@ pipeline {
 
         _TF_SA_EMAIL="sa-terraform-cicd@cicd-prj-bbee.iam.gserviceaccount.com"
         _STATE_BUCKET_NAME="cicd-prj-tfstate-bkt-1rd3"
-        _PROJECT_ID="ci-waap-caba"
+        _PROJECT_ID="cicd-prj-bbee"
         _POLICY_REPO="CLOUDSOURCE"
 
         EXAMPLE_BUILD="web-app-protection-example"

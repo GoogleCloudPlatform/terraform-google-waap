@@ -17,7 +17,7 @@
 variable "project_id" {
   description = "Google Project ID"
   type        = string
-  default     = ""
+  default     = "ci-waap-caba"
 }
 
 variable "backend_port" {
