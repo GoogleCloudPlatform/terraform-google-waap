@@ -152,32 +152,32 @@ module "cloud_armor" {
   owasp_rules = {
     "rule_sqli" = {
       action     = "deny(403)"
-      priority   = "1000"
+      priority   = "1002"
       expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
     }
     "rule_xss" = {
       action     = "deny(403)"
-      priority   = "1001"
+      priority   = "1003"
       expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
     }
     "rule_lfi" = {
       action     = "deny(403)"
-      priority   = "1002"
+      priority   = "1004"
       expression = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
     }
     "rule_rfi" = {
       action     = "deny(403)"
-      priority   = "1003"
+      priority   = "1005"
       expression = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
     }
     "rule_methodenforcement" = {
       action     = "deny(403)"
-      priority   = "1004"
+      priority   = "1006"
       expression = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
     }
     "rule_rce" = {
       action     = "deny(403)"
-      priority   = "1005"
+      priority   = "1007"
       expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
     }
   }
