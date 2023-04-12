@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-# terraform {
-#   backend "gcs" {
-#     bucket = "_BUCKET_GCS_"
-#     prefix = "terraform/web-app-protection-example/dev"
-#   }
-# }
+terraform {
+  backend "gcs" {
+    bucket = "_BUCKET_GCS_"
+    prefix = "terraform/web-app-protection-example/dev"
+  }
+}
