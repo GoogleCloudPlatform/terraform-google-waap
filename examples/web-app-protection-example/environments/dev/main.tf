@@ -125,7 +125,7 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
-module "cloud-armor" {
+module "cloud_armor" {
   source      = "../../../../modules/cloud-armor"
   project_id  = var.project_id
   name        = "ca-policy-${random_id.suffix.hex}"
@@ -205,7 +205,7 @@ module "lb-http" {
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
       compression_mode                = "AUTOMATIC"
-      security_policy                 = module.security_policy.policy
+      security_policy                 = module.cloud_armor.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
       custom_request_headers          = null
