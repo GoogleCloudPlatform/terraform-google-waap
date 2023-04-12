@@ -125,7 +125,7 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
-module "security_policy" {
+module "cloud-armor" {
   source      = "../../../../modules/cloud-armor"
   project_id  = var.project_id
   name        = "ca-policy-${random_id.suffix.hex}"
@@ -147,6 +147,38 @@ module "security_policy" {
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["35.191.0.0/16"]
       description    = "Rule to allow healthcheck IP range"
+    }
+  }
+  owasp_rules = {
+    "rule_sqli" = {
+      action     = "deny(403)"
+      priority   = "1000"
+      expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_xss" = {
+      action     = "deny(403)"
+      priority   = "1001"
+      expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_lfi" = {
+      action     = "deny(403)"
+      priority   = "1002"
+      expression = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_rfi" = {
+      action     = "deny(403)"
+      priority   = "1003"
+      expression = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_methodenforcement" = {
+      action     = "deny(403)"
+      priority   = "1004"
+      expression = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_rce" = {
+      action     = "deny(403)"
+      priority   = "1005"
+      expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
     }
   }
 }

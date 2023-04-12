@@ -60,40 +60,10 @@ variable "src_ip_rules" {
   }))
 }
 
+## OWASP Rules ##
 variable "owasp_rules" {
-  description = "Rules preconfigured from owasp for cloud armor protection"
-  default = {
-    rule_sqli = {
-      action     = "deny(403)"
-      priority   = "1000"
-      expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
-    }
-    rule_xss = {
-      action     = "deny(403)"
-      priority   = "1001"
-      expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
-    }
-    rule_lfi = {
-      action     = "deny(403)"
-      priority   = "1002"
-      expression = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
-    }
-    rule_rfi = {
-      action     = "deny(403)"
-      priority   = "1003"
-      expression = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
-    }
-    rule_methodenforcement = {
-      action     = "deny(403)"
-      priority   = "1004"
-      expression = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
-    }
-    rule_rce = {
-      action     = "deny(403)"
-      priority   = "1005"
-      expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
-    }
-  }
+  description = "Rules from owasp for cloud armor protection"
+  default = {}
   type = map(object({
     action     = string
     priority   = string

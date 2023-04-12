@@ -37,35 +37,35 @@ resource "google_compute_security_policy" "policy" {
       description = rule.value.description
     }
   }
-}
 # -----------------------------------------------------------------------------------------
 # Source IP Address
 # -----------------------------------------------------------------------------------------
-dynamic "rule" {
-  for_each = var.src_ip_rules
-  content {
-    action   = each.value.action
-    priority = each.value.priority
-    match {
-      versioned_expr = each.value.versioned_expr
-      config {
-        src_ip_ranges = each.value.src_ip_ranges
+  dynamic "rule" {
+    for_each = var.src_ip_rules
+    content {
+      action   = each.value.action
+      priority = each.value.priority
+      match {
+        versioned_expr = each.value.versioned_expr
+        config {
+          src_ip_ranges = each.value.src_ip_ranges
+        }
       }
+      description = each.value.description
     }
-    description = each.value.description
   }
-}
 # -----------------------------------------------------------------------------------------
 # OWASP Rules
 # -----------------------------------------------------------------------------------------
-dynamic "rule" {
-  for_each = var.owasp_rules
-  content {
-    action   = each.value.action
-    priority = each.value.priority
-    match {
-      expr {
-        expression = each.value.expression
+  dynamic "rule" {
+    for_each = var.owasp_rules
+    content {
+      action   = each.value.action
+      priority = each.value.priority
+      match {
+        expr {
+          expression = each.value.expression
+        }
       }
     }
   }
