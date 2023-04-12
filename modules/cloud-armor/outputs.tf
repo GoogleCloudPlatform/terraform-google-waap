@@ -16,5 +16,5 @@
 
 output "policy" {
   description = "Security policy created"
-  value       = google_compute_security_policy.id
+  value       = google_compute_security_policy.policy.self_link
 }
