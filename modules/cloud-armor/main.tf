@@ -15,43 +15,58 @@
  */
 
 resource "google_compute_security_policy" "policy" {
-  project     = var.project_id
+  project = var.project_id
 
   name        = var.name
   description = var.description
   type        = var.type
-  
+
   # -----------------------------------------------------------------------------------------
   # Source Geography
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
-    for_each = var.src_geo
+    for_each = var.src_geo_rules
     content {
-      action    = rule.value.action
-      priority  = rule.value.priority
+      action   = each.value.action
+      priority = each.value.priority
       match {
         expr {
-         expression = rule.value.expression 
+          expression = each.value.expression
         }
       }
       description = rule.value.description
     }
   }
-  # -----------------------------------------------------------------------------------------
-  # Source IP Address
-  # -----------------------------------------------------------------------------------------
-  dynamic "rule" {
-    for_each = var.src_ip
-    content {
-      action    = rule.value.action
-      priority  = rule.value.priority
-      match {
-        versioned_expr  = rule.value.versioned_expr
-        config {
-          src_ip_ranges = rule.value.src_ip_ranges
-        }
+}
+# -----------------------------------------------------------------------------------------
+# Source IP Address
+# -----------------------------------------------------------------------------------------
+dynamic "rule" {
+  for_each = var.src_ip_rules
+  content {
+    action   = each.value.action
+    priority = each.value.priority
+    match {
+      versioned_expr = each.value.versioned_expr
+      config {
+        src_ip_ranges = each.value.src_ip_ranges
       }
-      description = rule.value.description
+    }
+    description = each.value.description
+  }
+}
+# -----------------------------------------------------------------------------------------
+# OWASP Rules
+# -----------------------------------------------------------------------------------------
+dynamic "rule" {
+  for_each = var.owasp_rules
+  content {
+    action   = each.value.action
+    priority = each.value.priority
+    match {
+      expr {
+        expression = each.value.expression
+      }
     }
   }
 }

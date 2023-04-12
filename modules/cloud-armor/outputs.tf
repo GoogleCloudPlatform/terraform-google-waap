@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 output "policy" {
   description = "Security policy created"
   value       = google_compute_security_policy.self_link

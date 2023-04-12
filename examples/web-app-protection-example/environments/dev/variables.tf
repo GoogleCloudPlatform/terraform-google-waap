@@ -29,7 +29,7 @@ variable "backend_port" {
 variable "enable_cdn" {
   description = "value"
   type        = bool
-  default     = true 
+  default     = true
 }
 
 /***********************
@@ -39,60 +39,60 @@ variable "enable_cdn" {
 variable "region_r1" {
   description = "Region in which to create resources"
   type        = string
-  default     = ""
+  default     = "us-central1"
 }
 
 variable "zone_r1" {
   description = "value"
   type        = string
-  default     = ""
+  default     = "us-central1-b"
 }
 
 variable "network_name_r1" {
   description = "VPC network name"
   type        = string
-  default     = ""
+  default     = "webapp-r1"
 }
 
 variable "subnet_name_r1" {
   description = "Subnet name"
   type        = string
-  default     = ""
+  default     = "webapp-r1"
 }
 
 variable "subnet_ip_r1" {
   description = "This is th IP of your subnet"
   type        = string
-  default     = ""
+  default     = "10.0.16.0/24"
 }
 
 variable "subnet_region_r1" {
   description = "Subnet Region"
   type        = string
-  default     = ""
+  default     = "us-central1"
 }
 
 variable "name_prefix_r1" {
   description = "Name prefix for the instance template"
   type        = string
-  default     = "" 
+  default     = "vm-template-"
 }
 
 variable "machine_type_r1" {
   description = "Machine type to create, e.g. n1-standard-1"
   type        = string
-  default     = ""
+  default     = "e2-small"
 }
 
 variable "tags_r1" {
   description = "Network tags, provided as a list"
   type        = list(string)
-  default     = []
+  default     = ["backend-r1"]
 }
 
 variable "source_image_r1" {
   description = "Image used for compute VMs."
-  default     = ""
+  default     = "debian-cloud/debian-11"
 }
 
 variable "disk_size_gb_r1" {
@@ -103,32 +103,33 @@ variable "disk_size_gb_r1" {
 
 variable "service_account_id_r1" {
   description = "The account ID used to generate the virtual machine service account."
-  type        = string 
-  default     = ""
+  type        = string
+  default     = "sa-backend-vm-r1"
 }
 
 variable "service_account_roles_r1" {
   description = "Permissions to be added to the created service account."
   type        = list(string)
-  default     = []
+  default     = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
 }
 
 variable "service_account_scopes_r1" {
   description = "List of scopes for the instance template service account"
-  type        = list
-  default     = [] 
+  type        = list(any)
+  default     = ["logging-write", "monitoring-write", "cloud-platform"]
 }
+
 
 variable "mig_name_r1" {
   description = "Name of the managed instance group."
   type        = string
-  default     = ""
+  default     = "mig-backend-r1"
 }
 
 variable "base_instance_name_r1" {
   description = "The base instance name to use for instances in this group."
   type        = string
-  default     = "" 
+  default     = "mig-backend-r1-vm"
 }
 
 variable "target_size_r1" {
@@ -144,60 +145,60 @@ variable "target_size_r1" {
 variable "region_r2" {
   description = "Region in which to create resources"
   type        = string
-  default     = ""
+  default     = "us-east1"
 }
 
 variable "zone_r2" {
   description = "value"
   type        = string
-  default     = ""
+  default     = "us-east1-b"
 }
 
 variable "network_name_r2" {
   description = "VPC network name"
   type        = string
-  default     = ""
+  default     = "webapp-r2"
 }
 
 variable "subnet_name_r2" {
   description = "Subnet name"
   type        = string
-  default     = ""
+  default     = "webapp-r2"
 }
 
 variable "subnet_ip_r2" {
   description = "This is th IP of your subnet"
   type        = string
-  default     = ""
+  default     = "10.0.32.0/24"
 }
 
 variable "subnet_region_r2" {
   description = "Subnet Region"
   type        = string
-  default     = ""
+  default     = "us-east1"
 }
 
 variable "name_prefix_r2" {
   description = "Name prefix for the instance template"
   type        = string
-  default     = "" 
+  default     = "vm-template-"
 }
 
 variable "machine_type_r2" {
   description = "Machine type to create, e.g. n1-standard-1"
   type        = string
-  default     = ""
+  default     = "e2-small"
 }
 
 variable "tags_r2" {
   description = "Network tags, provided as a list"
   type        = list(string)
-  default     = []
+  default     = ["backend-r2"]
 }
 
 variable "source_image_r2" {
   description = "Image used for compute VMs."
-  default     = ""
+  default     = "debian-cloud/debian-11"
 }
 
 variable "disk_size_gb_r2" {
@@ -208,32 +209,32 @@ variable "disk_size_gb_r2" {
 
 variable "service_account_id_r2" {
   description = "The account ID used to generate the virtual machine service account."
-  type        = string 
-  default     = ""
+  type        = string
+  default     = "sa-backend-vm-r2"
 }
 
 variable "service_account_roles_r2" {
   description = "Permissions to be added to the created service account."
-  type        = list
-  default     = []
+  type        = list(any)
+  default     = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
 }
 
 variable "service_account_scopes_r2" {
   description = "List of scopes for the instance template service account"
-  type        = list
-  default     = [] 
+  type        = list(any)
+  default     = ["logging-write", "monitoring-write", "cloud-platform"]
 }
 
 variable "mig_name_r2" {
   description = "Name of the managed instance group."
   type        = string
-  default     = ""
+  default     = "mig-backend-r2"
 }
 
 variable "base_instance_name_r2" {
   description = "The base instance name to use for instances in this group."
   type        = string
-  default     = "" 
+  default     = "mig-backend-r2-vm"
 }
 
 variable "target_size_r2" {
