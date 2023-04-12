@@ -132,7 +132,7 @@ module "cloud-armor" {
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
 
-  src_geo = {
+  src_geo_rules = {
     "geo_us" = {
       action      = "allow"
       priority    = "1000"
@@ -140,7 +140,7 @@ module "cloud-armor" {
       description = "US Geolocalization Rule"
     }
   }
-  src_ip = {
+  src_ip_rules = {
     "src_hc_ip" = {
       action         = "allow"
       priority       = "1001"
