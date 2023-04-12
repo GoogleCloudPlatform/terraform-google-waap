@@ -34,7 +34,7 @@ data "template_file" "startup_script" {
 }
 
 module "network_mig_r1" {
-  source = "../../modules/mig_network"
+  source = "../../../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r1
@@ -45,7 +45,7 @@ module "network_mig_r1" {
 }
 
 module "network_mig_r2" {
-  source = "../../modules/mig_network"
+  source = "../../../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r2
@@ -56,7 +56,7 @@ module "network_mig_r2" {
 }
 
 module "mig_r1" {
-  source = "../../modules/mig"
+  source = "../../../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -90,7 +90,7 @@ module "mig_r1" {
 }
 
 module "mig_r2" {
-  source = "../../modules/mig"
+  source = "../../../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -119,10 +119,35 @@ module "mig_r2" {
   zone               = var.zone_r2
 
   target_size = var.target_size_r2
+}
 
-  depends_on = [
-    module.network_mig_r2
-  ]
+resource "random_id" "suffix" {
+  byte_length = 4
+}
+
+module "security_policy" {
+  source      = "../../../../modules/cloud-armor"
+  project_id  = var.project_id
+  name        = "ca-policy-${random_id.suffix.hex}"
+  description = "Cloud Armor Security Policy"
+  type        = "CLOUD_ARMOR"
+
+  edge_rules = {
+    "geo_us" = {
+      action      = "allow"
+      priority    = "1000"
+      expression  = "US"
+      description = "US Geolocalization Rule"
+    }
+
+    "src_hc_ip" = {
+      action         = "allow"
+      priority       = "1001"
+      versioned_expr = "SRC_IPS_V1"
+      src_ip_ranges  = ["35.191.0.0/16"]
+      description    = "Rule to allow healthcheck IP range"
+    }
+  }
 }
 
 module "lb-http" {
@@ -146,8 +171,8 @@ module "lb-http" {
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
-      compression_mode                = "AUTOMATIC"
-      security_policy                 = null
+      compression_mode                = null
+      security_policy                 = module.security_policy.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
       custom_request_headers          = null
@@ -170,14 +195,12 @@ module "lb-http" {
       }
 
       cdn_policy = {
-        cache_mode  = "CACHE_ALL_STATIC"
-        default_ttl = 3600
-        client_ttl  = 1800
-        max_ttl     = 28800
-
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
         serve_while_stale = 86400
-
-        negative_caching = true
+        negative_caching  = true
         negative_caching_policy = {
           code = 404
           ttl  = 60
