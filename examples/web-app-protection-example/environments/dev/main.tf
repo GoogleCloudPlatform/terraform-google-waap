@@ -131,7 +131,7 @@ module "cloud_armor" {
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
-
+  
   src_geo_rules = {
     "geo_us" = {
       action      = "allow"
@@ -143,10 +143,10 @@ module "cloud_armor" {
   src_ip_rules = {
     "src_hc_ip" = {
       action         = "allow"
-      priority       = "2147483647"
+      priority       = "1001"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["35.191.0.0/16"]
-      description    = "default rule"
+      description    = "Rule to allow healthcheck IP range"
     }
   }
   owasp_rules = {

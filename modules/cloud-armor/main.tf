@@ -22,6 +22,24 @@ resource "google_compute_security_policy" "policy" {
   type        = var.type
 
   # -----------------------------------------------------------------------------------------
+  # Default Rules
+  # -----------------------------------------------------------------------------------------
+  dynamic "rule" {
+    for_each = var.default_rules
+    content {
+      action   = rule.value.action
+      priority = rule.value.priority
+      match {
+        versioned_expr = rule.value.versioned_expr
+        config {
+          src_ip_ranges = rule.value.src_ip_ranges
+        }
+      }
+      description = rule.value.description
+    }
+  }
+
+  # -----------------------------------------------------------------------------------------
   # Source Geography
   # -----------------------------------------------------------------------------------------
   dynamic "rule" {
@@ -37,9 +55,9 @@ resource "google_compute_security_policy" "policy" {
       description = rule.value.description
     }
   }
-# -----------------------------------------------------------------------------------------
-# Source IP Address
-# -----------------------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------------------
+  # Source IP Address
+  # -----------------------------------------------------------------------------------------
   dynamic "rule" {
     for_each = var.src_ip_rules
     content {
@@ -54,9 +72,9 @@ resource "google_compute_security_policy" "policy" {
       description = rule.value.description
     }
   }
-# -----------------------------------------------------------------------------------------
-# OWASP Rules
-# -----------------------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------------------
+  # OWASP Rules
+  # -----------------------------------------------------------------------------------------
   dynamic "rule" {
     for_each = var.owasp_rules
     content {

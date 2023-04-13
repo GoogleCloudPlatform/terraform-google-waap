@@ -36,6 +36,27 @@ variable "type" {
   default     = "CLOUD_ARMOR"
 }
 
+## Default Rule ##
+variable "default_rules" {
+  description = "default Rules"
+  default     = {
+    def_rule = {
+      action         = "allow"
+      priority       = "214783647"
+      versioned_expr = "SRC_IPS_V1"
+      src_ip_ranges  = ["*"]
+      description    = "Default IP rule"
+    }
+  }
+  type = map(object({
+    action          = string
+    priority        = string
+    versioned_expr  = string
+    src_ip_ranges   = list(string)
+    description     = string
+  }))
+}
+
 ## Source Geography ##
 variable "src_geo_rules" {
   description = "Geolocation Rules"
