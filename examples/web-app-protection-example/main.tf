@@ -230,6 +230,9 @@ module "lb-http" {
 
   ssl_certificates = google_compute_ssl_certificate.example.*.self_link
 
+  firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
+  firewall_projects = [var.project_id, var.project_id]
+
   backends = {
     default = {
 
@@ -248,6 +251,7 @@ module "lb-http" {
       custom_response_headers         = null
 
       health_check = {
+
         check_interval_sec  = 120
         timeout_sec         = 120
         healthy_threshold   = 2
@@ -270,6 +274,7 @@ module "lb-http" {
         max_ttl           = 28800
         serve_while_stale = 86400
         negative_caching  = true
+
         negative_caching_policy = {
           code = 404
           ttl  = 60
@@ -286,12 +291,14 @@ module "lb-http" {
       groups = [
         {
           group                        = module.mig_r1.instance_group
+
           balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
           max_connections              = null
           max_connections_per_instance = null
           max_connections_per_endpoint = null
+
           max_rate                     = 10
           max_rate_per_instance        = null
           max_rate_per_endpoint        = null
