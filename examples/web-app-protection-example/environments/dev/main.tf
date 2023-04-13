@@ -321,4 +321,7 @@ module "lb-http" {
       }
     }
   }
+  depends_on = [
+    google_compute_ssl_certificate.example
+  ]
 }
