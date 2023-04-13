@@ -134,7 +134,7 @@ module "cloud_armor" {
 
   src_geo_rules = {
     "geo_us" = {
-      action      = "allow(403)"
+      action      = "allow"
       priority    = "1000"
       expression  = "origin.region_code == 'US'"
       description = "US Geolocalization Rule"
@@ -142,7 +142,7 @@ module "cloud_armor" {
   }
   src_ip_rules = {
     "src_hc_ip" = {
-      action         = "allow(403)"
+      action         = "allow"
       priority       = "1001"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["35.191.0.0/16"]
