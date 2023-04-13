@@ -135,13 +135,12 @@ module "cloud_armor" {
   default_rules = {
     "default_rule" = {
       action         = "deny"
-      priority       = "214783647"
+      priority       = "2147483647"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["*"]
       description    = "Default IP rule"
     }
   }
-  
   src_geo_rules = {
     "geo_us" = {
       action      = "allow"
