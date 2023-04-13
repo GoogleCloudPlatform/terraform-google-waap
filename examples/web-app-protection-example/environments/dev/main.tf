@@ -119,6 +119,10 @@ module "mig_r2" {
   zone               = var.zone_r2
 
   target_size = var.target_size_r2
+
+  depends_on = [
+    module.network_mig_r2
+  ]
 }
 
 resource "random_id" "suffix" {
@@ -229,7 +233,7 @@ module "lb-http" {
       description                     = null
       protocol                        = "HTTPS"
       port                            = var.backend_port
-      port_name                       = "http"
+      port_name                       = "https"
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null

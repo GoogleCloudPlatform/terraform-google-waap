@@ -15,7 +15,7 @@
  */
 terraform {
   backend "gcs" {
-    bucket = "_BUCKET_GCS_"
+    bucket = "cicd-prj-tfstate-bkt-1rd3"
     prefix = "terraform/web-app-protection-example/dev"
   }
 }
