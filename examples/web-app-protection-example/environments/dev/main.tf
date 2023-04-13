@@ -135,7 +135,7 @@ module "cloud_armor" {
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
-  
+
   default_rules = {
     "default_rule" = {
       action         = "deny"

@@ -41,11 +41,11 @@ variable "default_rules" {
   description = "default Rules"
   default     = {}
   type = map(object({
-    action          = string
-    priority        = string
-    versioned_expr  = string
-    src_ip_ranges   = list(string)
-    description     = string
+    action         = string
+    priority       = string
+    versioned_expr = string
+    src_ip_ranges  = list(string)
+    description    = string
   }))
 }
 
@@ -63,7 +63,8 @@ variable "src_geo_rules" {
 
 ## Source IP Address ##
 variable "src_ip_rules" {
-  default = {}
+  default     = {}
+  description = "Source IP Rules"
   type = map(object({
     action         = string
     priority       = string
@@ -76,7 +77,7 @@ variable "src_ip_rules" {
 ## OWASP Rules ##
 variable "owasp_rules" {
   description = "Rules from owasp for cloud armor protection"
-  default = {}
+  default     = {}
   type = map(object({
     action     = string
     priority   = string
