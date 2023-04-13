@@ -34,7 +34,7 @@ data "template_file" "startup_script" {
 }
 
 module "network_mig_r1" {
-  source = "../../../../modules/mig_network"
+  source = "../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r1
@@ -45,7 +45,7 @@ module "network_mig_r1" {
 }
 
 module "network_mig_r2" {
-  source = "../../../../modules/mig_network"
+  source = "../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r2
@@ -56,7 +56,7 @@ module "network_mig_r2" {
 }
 
 module "mig_r1" {
-  source = "../../../../modules/mig"
+  source = "../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -90,7 +90,7 @@ module "mig_r1" {
 }
 
 module "mig_r2" {
-  source = "../../../../modules/mig"
+  source = "../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -130,7 +130,7 @@ resource "random_id" "suffix" {
 }
 
 module "cloud_armor" {
-  source      = "../../../../modules/cloud-armor"
+  source      = "../../modules/cloud-armor"
   project_id  = var.project_id
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
@@ -138,7 +138,7 @@ module "cloud_armor" {
 
   default_rules = {
     "default_rule" = {
-      action         = "deny"
+      action         = "allow"
       priority       = "2147483647"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["*"]
@@ -162,58 +162,58 @@ module "cloud_armor" {
       description    = "Rule to allow healthcheck IP range"
     }
   }
-  owasp_rules = {
-    "rule_sqli" = {
-      action     = "deny(403)"
-      priority   = "1002"
-      expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_xss" = {
-      action     = "deny(403)"
-      priority   = "1003"
-      expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_lfi" = {
-      action     = "deny(403)"
-      priority   = "1004"
-      expression = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_rfi" = {
-      action     = "deny(403)"
-      priority   = "1005"
-      expression = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_methodenforcement" = {
-      action     = "deny(403)"
-      priority   = "1006"
-      expression = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_rce" = {
-      action     = "deny(403)"
-      priority   = "1007"
-      expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_protocol" = {
-      action     = "deny(403)"
-      priority   = "1008"
-      expression = "evaluatePreconfiguredWaf('protocolattack-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_scanner" = {
-      action     = "deny(403)"
-      priority   = "1009"
-      expression = "evaluatePreconfiguredWaf('scannerdetection-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_php" = {
-      action     = "deny(403)"
-      priority   = "1010"
-      expression = "evaluatePreconfiguredWaf('php-v33-stable', {'sensitivity': 1})"
-    }
-    "rule_session" = {
-      action     = "deny(403)"
-      priority   = "1011"
-      expression = "evaluatePreconfiguredWaf('sessionfixation-v33-stable', {'sensitivity': 1})"
-    }
-  }
+  # owasp_rules = {
+  #   "rule_sqli" = {
+  #     action     = "deny(403)"
+  #     priority   = "1002"
+  #     expression = "evaluatePreconfiguredWaf('sqli-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_xss" = {
+  #     action     = "deny(403)"
+  #     priority   = "1003"
+  #     expression = "evaluatePreconfiguredWaf('xss-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_lfi" = {
+  #     action     = "deny(403)"
+  #     priority   = "1004"
+  #     expression = "evaluatePreconfiguredWaf('lfi-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_rfi" = {
+  #     action     = "deny(403)"
+  #     priority   = "1005"
+  #     expression = "evaluatePreconfiguredWaf('rfi-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_methodenforcement" = {
+  #     action     = "deny(403)"
+  #     priority   = "1006"
+  #     expression = "evaluatePreconfiguredWaf('methodenforcement-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_rce" = {
+  #     action     = "deny(403)"
+  #     priority   = "1007"
+  #     expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_protocol" = {
+  #     action     = "deny(403)"
+  #     priority   = "1008"
+  #     expression = "evaluatePreconfiguredWaf('protocolattack-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_scanner" = {
+  #     action     = "deny(403)"
+  #     priority   = "1009"
+  #     expression = "evaluatePreconfiguredWaf('scannerdetection-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_php" = {
+  #     action     = "deny(403)"
+  #     priority   = "1010"
+  #     expression = "evaluatePreconfiguredWaf('php-v33-stable', {'sensitivity': 1})"
+  #   }
+  #   "rule_session" = {
+  #     action     = "deny(403)"
+  #     priority   = "1011"
+  #     expression = "evaluatePreconfiguredWaf('sessionfixation-v33-stable', {'sensitivity': 1})"
+  #   }
+  #}
 }
 
 module "lb-http" {
