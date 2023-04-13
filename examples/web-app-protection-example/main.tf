@@ -230,9 +230,6 @@ module "lb-http" {
 
   ssl_certificates = google_compute_ssl_certificate.example.*.self_link
 
-  firewall_networks = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
-  firewall_projects = [var.project_id, var.project_id]
-
   backends = {
     default = {
 
@@ -290,7 +287,7 @@ module "lb-http" {
 
       groups = [
         {
-          group                        = module.mig_r1.instance_group
+          group = module.mig_r1.instance_group
 
           balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
@@ -299,10 +296,10 @@ module "lb-http" {
           max_connections_per_instance = null
           max_connections_per_endpoint = null
 
-          max_rate                     = 10
-          max_rate_per_instance        = null
-          max_rate_per_endpoint        = null
-          max_utilization              = 0.9
+          max_rate              = 10
+          max_rate_per_instance = null
+          max_rate_per_endpoint = null
+          max_utilization       = 0.9
         },
         {
           group                        = module.mig_r2.instance_group
