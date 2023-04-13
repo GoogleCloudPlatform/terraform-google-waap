@@ -180,6 +180,26 @@ module "cloud_armor" {
       priority   = "1007"
       expression = "evaluatePreconfiguredWaf('rce-v33-stable', {'sensitivity': 1})"
     }
+    "rule_protocol" = {
+      action     = "deny(403)"
+      priority   = "1008"
+      expression = "evaluatePreconfiguredWaf('protocolattack-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_scanner" = {
+      action     = "deny(403)"
+      priority   = "1009"
+      expression = "evaluatePreconfiguredWaf('scannerdetection-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_php" = {
+      action     = "deny(403)"
+      priority   = "1010"
+      expression = "	evaluatePreconfiguredWaf('php-v33-stable', {'sensitivity': 1})"
+    }
+    "rule_session" = {
+      action     = "deny(403)"
+      priority   = "1011"
+      expression = "evaluatePreconfiguredWaf('sessionfixation-v33-stable', {'sensitivity': 1})"
+    }
   }
 }
 
