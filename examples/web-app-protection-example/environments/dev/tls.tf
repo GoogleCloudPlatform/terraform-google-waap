@@ -47,6 +47,7 @@ resource "tls_self_signed_cert" "example" {
 }
 
 resource "google_compute_ssl_certificate" "example" {
+  project     = var.project_id 
   count       = 3
   name        = "cert-${count.index + 1}"
   private_key = tls_private_key.example[count.index].private_key_pem
