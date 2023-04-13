@@ -143,10 +143,10 @@ module "cloud_armor" {
   src_ip_rules = {
     "src_hc_ip" = {
       action         = "allow"
-      priority       = "1001"
+      priority       = "2147483647"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["35.191.0.0/16"]
-      description    = "Rule to allow healthcheck IP range"
+      description    = "default rule"
     }
   }
   owasp_rules = {
