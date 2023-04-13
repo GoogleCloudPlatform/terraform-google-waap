@@ -34,7 +34,7 @@ data "template_file" "startup_script" {
 }
 
 module "network_mig_r1" {
-  source = "../../../../modules/mig_network"
+  source = "../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r1
@@ -45,7 +45,7 @@ module "network_mig_r1" {
 }
 
 module "network_mig_r2" {
-  source = "../../../../modules/mig_network"
+  source = "../../modules/mig_network"
 
   project_id    = var.project_id
   region        = var.region_r2
@@ -56,7 +56,7 @@ module "network_mig_r2" {
 }
 
 module "mig_r1" {
-  source = "../../../../modules/mig"
+  source = "../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -90,7 +90,7 @@ module "mig_r1" {
 }
 
 module "mig_r2" {
-  source = "../../../../modules/mig"
+  source = "../../modules/mig"
 
   # VM Template
   project_id   = var.project_id
@@ -128,7 +128,7 @@ resource "random_id" "suffix" {
 }
 
 module "cloud_armor" {
-  source      = "../../../../modules/cloud-armor"
+  source      = "../../modules/cloud-armor"
   project_id  = var.project_id
   name        = "ca-policy-${random_id.suffix.hex}"
   description = "Cloud Armor Security Policy"
@@ -218,17 +218,17 @@ module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
   version = "7.0.0"
 
-  name                  = "lb-web-app"
-  project               = var.project_id
-  target_tags           = ["backend-r1", "backend-r2"]
+  name        = "lb-web-app"
+  project     = var.project_id
+  target_tags = ["backend-r1", "backend-r2"]
 
-  firewall_networks     = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
-  firewall_projects     = [var.project_id, var.project_id]
-  use_ssl_certificates  = true
-  ssl                   = true
-  https_redirect        = true
+  firewall_networks    = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
+  firewall_projects    = [var.project_id, var.project_id]
+  use_ssl_certificates = true
+  ssl                  = true
+  https_redirect       = true
 
-  ssl_certificates      = google_compute_ssl_certificate.example.*.self_link
+  ssl_certificates = google_compute_ssl_certificate.example.*.self_link
 
   backends = {
     default = {
