@@ -132,6 +132,16 @@ module "cloud_armor" {
   description = "Cloud Armor Security Policy"
   type        = "CLOUD_ARMOR"
   
+  default_rules = {
+    "default_rule" = {
+      action         = "deny"
+      priority       = "214783647"
+      versioned_expr = "SRC_IPS_V1"
+      src_ip_ranges  = ["*"]
+      description    = "Default IP rule"
+    }
+  }
+  
   src_geo_rules = {
     "geo_us" = {
       action      = "allow"
@@ -141,13 +151,6 @@ module "cloud_armor" {
     }
   }
   src_ip_rules = {
-    "default_rule" = {
-      action         = "deny"
-      priority       = "214783647"
-      versioned_expr = "SRC_IPS_V1"
-      src_ip_ranges  = ["*"]
-      description    = "Default IP rule"
-    }
     "src_hc_ip" = {
       action         = "allow"
       priority       = "1001"
