@@ -202,7 +202,7 @@ module "cloud_armor" {
     "rule_php" = {
       action     = "deny(403)"
       priority   = "1010"
-      expression = "	evaluatePreconfiguredWaf('php-v33-stable', {'sensitivity': 1})"
+      expression = "evaluatePreconfiguredWaf('php-v33-stable', {'sensitivity': 1})"
     }
     "rule_session" = {
       action     = "deny(403)"
@@ -227,7 +227,7 @@ module "lb-http" {
     default = {
 
       description                     = null
-      protocol                        = "HTTP"
+      protocol                        = "HTTPS"
       port                            = var.backend_port
       port_name                       = "http"
       timeout_sec                     = 10
