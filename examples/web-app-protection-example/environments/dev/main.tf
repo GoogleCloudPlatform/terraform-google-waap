@@ -133,6 +133,12 @@ module "cloud_armor" {
   type        = "CLOUD_ARMOR"
   
   src_geo_rules = {
+    "default_rule" = {
+      action      = "allow"
+      priority    = "214783647"
+      expression  = "*"
+      description = "default geo rule"
+    }
     "geo_us" = {
       action      = "allow"
       priority    = "1000"
@@ -141,6 +147,13 @@ module "cloud_armor" {
     }
   }
   src_ip_rules = {
+    "default_rule" = {
+      action         = "allow"
+      priority       = "214783647"
+      versioned_expr = "SRC_IPS_V1"
+      src_ip_ranges  = ["*"]
+      description    = "Default IP rule"
+    }
     "src_hc_ip" = {
       action         = "allow"
       priority       = "1001"

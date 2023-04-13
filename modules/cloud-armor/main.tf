@@ -21,23 +21,23 @@ resource "google_compute_security_policy" "policy" {
   description = var.description
   type        = var.type
 
-  # -----------------------------------------------------------------------------------------
-  # Default Rules
-  # -----------------------------------------------------------------------------------------
-  dynamic "rule" {
-    for_each = var.default_rules
-    content {
-      action   = rule.value.action
-      priority = rule.value.priority
-      match {
-        versioned_expr = rule.value.versioned_expr
-        config {
-          src_ip_ranges = rule.value.src_ip_ranges
-        }
-      }
-      description = rule.value.description
-    }
-  }
+  # # -----------------------------------------------------------------------------------------
+  # # Default Rules
+  # # -----------------------------------------------------------------------------------------
+  # dynamic "rule" {
+  #   for_each = var.default_rules
+  #   content {
+  #     action   = rule.value.action
+  #     priority = rule.value.priority
+  #     match {
+  #       versioned_expr = rule.value.versioned_expr
+  #       config {
+  #         src_ip_ranges = rule.value.src_ip_ranges
+  #       }
+  #     }
+  #     description = rule.value.description
+  #   }
+  # }
 
   # -----------------------------------------------------------------------------------------
   # Source Geography
