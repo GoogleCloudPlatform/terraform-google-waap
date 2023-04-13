@@ -241,7 +241,8 @@ module "lb-http" {
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
       compression_mode                = "AUTOMATIC"
-      security_policy                 = module.cloud_armor.policy
+      security_policy                 = null
+      # security_policy                 = module.cloud_armor.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
       custom_request_headers          = null
