@@ -148,8 +148,8 @@ module "cloud_armor" {
   }
   src_ip_rules = {
     "default_rule" = {
-      action         = "allow"
-      priority       = "214783647"
+      action         = "deny"
+      priority       = "214783646"
       versioned_expr = "SRC_IPS_V1"
       src_ip_ranges  = ["*"]
       description    = "Default IP rule"
