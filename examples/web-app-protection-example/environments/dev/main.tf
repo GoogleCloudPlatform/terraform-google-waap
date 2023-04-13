@@ -84,9 +84,6 @@ module "mig_r1" {
 
   target_size = var.target_size_r1
 
-  name  = var.port_name
-  port  = var.backend_port 
-
   depends_on = [
     module.network_mig_r1
   ]
@@ -114,17 +111,12 @@ module "mig_r2" {
   network    = var.network_name_r2
   subnetwork = var.subnet_name_r2
 
-
-
   # Managed Instance Group
   mig_name           = var.mig_name_r2
   base_instance_name = var.base_instance_name_r2
   zone               = var.zone_r2
 
   target_size = var.target_size_r2
-
-  name  = var.port_name
-  port  = var.backend_port
 
   depends_on = [
     module.network_mig_r2
@@ -241,11 +233,11 @@ module "lb-http" {
   backends = {
     default = {
 
-      description                     = null
+      description                     = "Web App Backend"
       protocol                        = "HTTP"
       port                            = var.backend_port
-      port_name                       = var.port_name
-      timeout_sec                     = 10
+      port_name                       = "http"
+      timeout_sec                     = 600
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
       compression_mode                = "AUTOMATIC"
@@ -256,14 +248,14 @@ module "lb-http" {
       custom_response_headers         = null
 
       health_check = {
-        check_interval_sec  = null
-        timeout_sec         = null
-        healthy_threshold   = null
-        unhealthy_threshold = null
+        check_interval_sec  = 120
+        timeout_sec         = 120
+        healthy_threshold   = 2
+        unhealthy_threshold = 2
         request_path        = "/"
         port                = var.backend_port
         host                = null
-        logging             = null
+        logging             = false
       }
 
       log_config = {
