@@ -84,6 +84,11 @@ module "mig_r1" {
 
   target_size = var.target_size_r1
 
+  named_port {
+    name  = var.port_name
+    port  = var.backend_port
+  }
+
   depends_on = [
     module.network_mig_r1
   ]
@@ -119,6 +124,11 @@ module "mig_r2" {
   zone               = var.zone_r2
 
   target_size = var.target_size_r2
+
+  named_port {
+    name  = var.port_name
+    port  = var.backend_port
+  }
 
   depends_on = [
     module.network_mig_r2
@@ -238,12 +248,12 @@ module "lb-http" {
       description                     = null
       protocol                        = "HTTP"
       port                            = var.backend_port
-      port_name                       = "http"
+      port_name                       = var.port_name
       timeout_sec                     = 10
       enable_cdn                      = var.enable_cdn
       connection_draining_timeout_sec = null
       compression_mode                = "AUTOMATIC"
-      security_policy                 = null
+      security_policy                 = module.cloud_armor.policy
       session_affinity                = null
       affinity_cookie_ttl_sec         = null
       custom_request_headers          = null
@@ -288,29 +298,29 @@ module "lb-http" {
       groups = [
         {
           group                        = module.mig_r1.instance_group
-          balancing_mode               = null
+          balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
           max_connections              = null
           max_connections_per_instance = null
           max_connections_per_endpoint = null
-          max_rate                     = null
+          max_rate                     = 10
           max_rate_per_instance        = null
           max_rate_per_endpoint        = null
-          max_utilization              = null
+          max_utilization              = 0.9
         },
         {
           group                        = module.mig_r2.instance_group
-          balancing_mode               = null
+          balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
           max_connections              = null
           max_connections_per_instance = null
           max_connections_per_endpoint = null
-          max_rate                     = null
+          max_rate                     = 10
           max_rate_per_instance        = null
           max_rate_per_endpoint        = null
-          max_utilization              = null
+          max_utilization              = 0.9
         },
       ]
 

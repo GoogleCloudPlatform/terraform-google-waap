@@ -32,6 +32,18 @@ variable "zone" {
   default     = "us-central1-f"
 }
 
+variable "port_name" {
+  description = "value"
+  type        = string
+  default     = "http"
+}
+
+variable "backend_port" {
+  description = "value"
+  type        = number
+  default     = 80
+}
+
 ## VM Service Account ##
 variable "service_account" {
   description = "The account ID used to generate the virtual machine service account."

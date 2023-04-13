@@ -26,6 +26,12 @@ variable "backend_port" {
   default     = 80
 }
 
+variable "port_name" {
+  description = "value"
+  type        = string
+  default     = "https"
+}
+
 variable "enable_cdn" {
   description = "value"
   type        = bool
