@@ -13,8 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-options:
-  logging: CLOUD_LOGGING_ONLY
 timeout: 7200s
 steps:
 - id: prepare
