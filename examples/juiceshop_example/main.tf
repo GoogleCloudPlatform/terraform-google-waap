@@ -755,7 +755,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
   rule {
     action      = "deny(403)"
-    description = "block local file inclusion"
+    description = "block remote code execution"
 
     match {
       expr {
@@ -767,7 +767,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
   rule {
     action      = "deny(403)"
-    description = "block local file inclusion"
+    description = "block scanner detection"
     preview     = true
 
     match {
@@ -780,7 +780,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
   rule {
     action      = "deny(403)"
-    description = "block local file inclusion"
+    description = "block protocol attack"
 
     match {
       expr {
@@ -792,7 +792,7 @@ resource "google_compute_security_policy" "waap_policies" {
 
   rule {
     action      = "deny(403)"
-    description = "block local file inclusion"
+    description = "block session fixation"
 
     match {
       expr {
