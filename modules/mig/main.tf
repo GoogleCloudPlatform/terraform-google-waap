@@ -77,4 +77,9 @@ resource "google_compute_instance_group_manager" "mig" {
   }
 
   target_size = var.target_size
+
+  named_port {
+    name = var.port_name
+    port = var.backend_port
+  }
 }
