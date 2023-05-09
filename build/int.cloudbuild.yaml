@@ -48,7 +48,7 @@ steps:
   args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage init --verbose']
 - id: webapp-protection-multienv-example-apply
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protecticon_multienv --stage apply --verbose']
+  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage apply --verbose']
 - id: webapp-protection-multienv-example-verify
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
   args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage verify --verbose']
