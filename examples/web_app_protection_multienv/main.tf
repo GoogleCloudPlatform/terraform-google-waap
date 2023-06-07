@@ -132,132 +132,25 @@ module "cloud-armor" {
   version = "0.3.0"
 
   project_id                           = var.project_id
-  name                                 = "ca-policy-${random_id.suffix.hex}"
+  name                                 = "ca-policy-${var.env}-${random_id.suffix.hex}"
   description                          = "Cloud Armor security policy with preconfigured rules, security rules and custom rules"
   default_rule_action                  = "deny(403)"
   type                                 = "CLOUD_ARMOR"
   layer_7_ddos_defense_enable          = true
   layer_7_ddos_defense_rule_visibility = "STANDARD"
 
-  pre_configured_rules = {
-    "sqli_sensitivity_level_1" = {
-      action          = "deny(502)"
-      priority        = 1
-      target_rule_set = "sqli-v33-stable"
-    }
-
-    "xss-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 2
-      description       = "XSS Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "xss-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "lfi-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 3
-      description       = "LFI Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "lfi-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "rfi-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 4
-      description       = "RFI Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "rfi-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "methodenforcement-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 5
-      description       = "Method Enforcement Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "methodenforcement-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "rce-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 6
-      description       = "RCE Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "rce-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "protocolattack-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 7
-      description       = "Protocol Attack Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "protocolattack-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "scannerdetection-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 8
-      description       = "Scanner Detection Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "scannerdetection-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "php-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 9
-      description       = "Php Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "php-v33-stable"
-      sensitivity_level = 1
-    }
-
-    "sessionfixation-stable_level_1" = {
-      action            = "deny(502)"
-      priority          = 10
-      description       = "Session Fixation Sensitivity Level 1"
-      preview           = true
-      target_rule_set   = "sessionfixation-v33-stable"
-      sensitivity_level = 1
-    }
-
-  }
-
-  security_rules = {
-    "allow_healthcheck_ip" = {
-      action        = "allow"
-      priority      = 11
-      description   = "Allow Healthcheck IP address"
-      src_ip_ranges = ["35.191.0.0/16"]
-    }
-
-  }
-
-  custom_rules = {
-    allow_specific_regions = {
-      action      = "allow"
-      priority    = 12
-      description = "Allow specific Regions"
-      expression  = <<-EOT
-        '[US]'.contains(origin.region_code)
-      EOT
-    }
-  }
+  pre_configured_rules = var.cloud_armor_pre_configured_rules
+  security_rules       = var.cloud_armor_security_rules
+  custom_rules         = var.cloud_armor_custom_rules
 }
 
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
   version = "7.0.0"
 
-  name        = "lb-web-app"
+  name        = "lb-web-app-${var.env}"
   project     = var.project_id
-  target_tags = ["backend-r1", "backend-r2"]
+  target_tags = concat(var.tags_r1, var.tags_r2)
 
   firewall_networks    = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
   firewall_projects    = [var.project_id, var.project_id]
