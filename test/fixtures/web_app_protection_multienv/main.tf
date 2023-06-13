@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Google LLC
+ * Copyright 2023 Google LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,12 @@
  * limitations under the License.
  */
 
-terraform {
-  required_version = ">= 0.13.0"
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = ">= 3.45"
-    }
-    google-beta = {
-      source  = "hashicorp/google-beta"
-      version = ">= 3.45"
-    }
-  }
+module "dev" {
+  source     = "../../../examples/web_app_protection_multienv/dev"
+  project_id = var.project_id
+}
 
-  provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-waap:apigee/v0.0.1"
-  }
-  provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-waap:apigee/v0.0.1"
-  }
+module "prod" {
+  source     = "../../../examples/web_app_protection_multienv/prod"
+  project_id = var.project_id
 }
