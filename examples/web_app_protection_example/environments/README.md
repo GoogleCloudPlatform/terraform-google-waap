@@ -15,19 +15,19 @@ Here's a step by step to deploy and test this example using multi-environment:
 
 1.  Clone waap repo
 
-	git clone [https://github.com/GoogleCloudPlatform/terraform-google-waap.git](https://github.com/GoogleCloudPlatform/terraform-google-waap.git)
+	```git clone [https://github.com/GoogleCloudPlatform/terraform-google-waap.git](https://github.com/GoogleCloudPlatform/terraform-google-waap.git)```
 
 2.  Change to web_app_protection_example directory:
 
-    cd terraform-google-waap/examples/web_app_protection_example
+    ```cd terraform-google-waap/examples/web_app_protection_example```
 
 2.1 Rename the file terraform.tfvars.example to terraform.tfvars
 
-    mv -v environments/dev/terraform.tfvars.example environments/dev/terraform.tfvars
+    ```mv -v environments/dev/terraform.tfvars.example environments/dev/terraform.tfvars```
 
 3.  Run terraform init from within this example directory.
     
-    terraform init -backend-config=environments/dev/backend.tf
+    ```terraform init -backend-config=environments/dev/backend.tf```
 
 4.  Change the terraform.tfvars file values, including values related to your environment.
   
@@ -35,10 +35,10 @@ Note: The "project_id" is the only variable that must be changed. Any other vari
 
 5.  Run terraform plan and check the prompt output.
   
-    terraform plan -var-file="environments/dev/terraform.tfvars"
+    ```terraform plan -var-file="environments/dev/terraform.tfvars"```
 
 6.  Run terraform apply within this example directory.
 
-    terraform apply -var-file="environments/dev/terraform.tfvars"
+    ```terraform apply -var-file="environments/dev/terraform.tfvars"```
 
 ### * Note that we are using the dev environment as a example. You can change from "dev" to "prd" or personalize the environment name according to your needs.
