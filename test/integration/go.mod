@@ -47,7 +47,6 @@ require (
 	github.com/mitchellh/go-testing-interface v1.14.2-0.20210217184823-a52172cd2f64 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/testify v1.8.3 // indirect
 	github.com/tidwall/gjson v1.14.4 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
@@ -75,3 +74,5 @@ require (
 	k8s.io/kube-openapi v0.0.0-20230525220651-2546d827e515 // indirect
 	sigs.k8s.io/kustomize/kyaml v0.14.2 // indirect
 )
+
+require github.com/stretchr/testify v1.8.3 // indirect

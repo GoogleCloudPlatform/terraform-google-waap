@@ -82,4 +82,17 @@ resource "google_compute_instance_group_manager" "mig" {
     name = var.port_name
     port = var.backend_port
   }
+  update_policy {
+    type                           = "PROACTIVE"
+    minimal_action                 = "REPLACE"
+    most_disruptive_allowed_action = "REPLACE"
+    max_surge_fixed                = 2
+    # max_unavailable_fixed          = 2
+    # min_ready_sec                  = 50
+    # replacement_method             = "RECREATE"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }

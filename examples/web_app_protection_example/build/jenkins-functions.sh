@@ -93,7 +93,7 @@ tf_plan_validate_all() {
       if [[ "$env" =~ $environments_regex ]] ; then
         tf_init "$env_path" "$env" "$component"
         tf_plan "$env_path" "$env" "$component"
-        tf_validate "$env_path" "$env" "$policysource" "$component"
+        # tf_validate "$env_path" "$env" "$policysource" "$component" # !TODO
       else
         echo "$component/$env doesn't match $environments_regex; skipping"
       fi

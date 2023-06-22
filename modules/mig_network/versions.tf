@@ -22,7 +22,6 @@ terraform {
       version = ">= 3.45"
     }
   }
-
   provider_meta "google" {
     module_name = "blueprints/terraform/terraform-google-waap:mig_network/v0.0.1"
   }

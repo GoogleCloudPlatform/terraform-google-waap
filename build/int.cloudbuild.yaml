@@ -45,16 +45,16 @@ steps:
   waitFor:
     - prepare
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage init --verbose']
+  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/web_app_protection_example --stage init --verbose']
 - id: webapp-protection-multienv-example-apply
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage apply --verbose']
+  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/web_app_protection_example --stage apply --verbose']
 - id: webapp-protection-multienv-example-verify
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage verify --verbose']
+  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/web_app_protection_example --stage verify --verbose']
 - id: webapp-protection-multienv-example-teardown
   name: 'gcr.io/cloud-foundation-cicd/$_DOCKER_IMAGE_DEVELOPER_TOOLS:$_DOCKER_TAG_VERSION_DEVELOPER_TOOLS'
-  args: ['/bin/bash', '-c', 'cft test run TestAll/fixtures/web_app_protection_multienv --stage teardown --verbose']
+  args: ['/bin/bash', '-c', 'cft test run TestAll/examples/web_app_protection_example --stage teardown --verbose']
 tags:
 - 'ci'
 - 'integration'
