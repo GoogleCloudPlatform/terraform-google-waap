@@ -5,8 +5,8 @@ pipeline {
         _BUILD_ID="${env.BUILD_ID}"
         _BRANCH_NAME="${env.BRANCH_NAME}"
 
-        _TF_SA_EMAIL="sa-terraform-cicd@cicd-prj-bbee.iam.gserviceaccount.com"
-        _STATE_BUCKET_NAME="cicd-prj-tfstate-bkt-1rd3"
+        _TF_SA_EMAIL="<_TF_SA_EMAIL>"
+        _STATE_BUCKET_NAME="<_STATE_BUCKET_NAME>"
         _PROJECT_ID="<_PROJECT_ID>"
         _POLICY_REPO="CLOUDSOURCE"
 

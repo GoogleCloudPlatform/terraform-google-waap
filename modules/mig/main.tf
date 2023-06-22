@@ -51,7 +51,6 @@ resource "google_compute_instance_template" "vm_template" {
   }
 
   metadata = {
-    # startup-script        = "${data.template_file.ops_agent_install_script.rendered}"
     startup-script = var.startup_script
   }
 
@@ -82,7 +81,6 @@ resource "google_compute_instance_group_manager" "mig" {
     name = var.port_name
     port = var.backend_port
   }
-
   update_policy {
     type                           = "PROACTIVE"
     minimal_action                 = "REPLACE"

@@ -403,7 +403,7 @@ module "lb-http" {
 
   name        = "lb-web-app"
   project     = var.project_id
-  target_tags = concat(var.tags_r1, var.tags_r2)
+  target_tags = ["lb-web-hc"]
 
   firewall_networks    = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
   firewall_projects    = [var.project_id, var.project_id]

@@ -33,13 +33,13 @@ variable "zone" {
 }
 
 variable "port_name" {
-  description = "value"
+  description = "The name of the port."
   type        = string
   default     = "http"
 }
 
 variable "backend_port" {
-  description = "value"
+  description = "The backend port number."
   type        = number
   default     = 80
 }
@@ -113,7 +113,7 @@ variable "scopes" {
 }
 
 variable "startup_script" {
-  description = "value"
+  description = "VM startup script."
   type        = string
   default     = ""
 }
