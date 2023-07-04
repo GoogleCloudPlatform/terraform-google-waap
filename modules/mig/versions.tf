@@ -22,4 +22,10 @@ terraform {
       version = ">= 3.45"
     }
   }
+  provider_meta "google" {
+    module_name = "blueprints/terraform/terraform-google-waap:mig/v0.0.1"
+  }
+  provider_meta "google-beta" {
+    module_name = "blueprints/terraform/terraform-google-waap:mig/v0.0.1"
+  }
 }
