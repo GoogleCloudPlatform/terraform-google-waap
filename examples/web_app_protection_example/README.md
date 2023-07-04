@@ -12,19 +12,19 @@ Additionally, we include an example of an infrastructure pipeline using Jenkins 
 -   Global Load Balancer with Managed Instance Groups in 2 regions
 -   Cloud CDN with some security best practices
 -   Cloud Armor with top 10 OWASP Rules and reCAPTCHA integration
-  
+
 ## Requirements
 
 -   A GCP Project containing the enabled APIs listed in this document.
 -   All the permissions outlined later on this document must be granted to the users.
 -   Run gcloud auth application-default login before following the step by step instructions below.
-     
+
 ## IAM Permissions
 
 -   The user or service account deploying this example must have the following IAM roles:Owner roles/owner
 -   reCAPTCHA Enterprise Admin: roles/recaptchaenterprise.admin
 -   Artifact Registry Admin: roles/artifactregistry.admin
-  
+
 ## APIs
 
 A project with the following APIs enabled must be used to host the resources of this module:
@@ -52,7 +52,7 @@ Here's a step by step to deploy and test this example:
     ```cd terraform-google-waap/examples/web-app-protection-example```
 
 3.  Run terraform init from within this example directory.
-    
+
     ```terraform init```
 
 4. Rename the terraform.tfvars.examples to terraform.tfvars and edit the variable values, including values related to your environment.
@@ -62,7 +62,7 @@ Here's a step by step to deploy and test this example:
 Note: The "project_id" is the only variable that must be changed. Any other variable change is optional.
 
 5.  Run terraform plan and check the prompt output.
-  
+
     ```terraform plan```
 
 6.  Run terraform apply within this example directory.
