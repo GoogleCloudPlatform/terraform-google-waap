@@ -10,7 +10,8 @@ pipeline {
         _PROJECT_ID="<_PROJECT_ID>"
         _POLICY_REPO="CLOUDSOURCE"
 
-        EXAMPLE_BUILD="web-app-protection-example"
+
+        EXAMPLE_BUILD="web_app_protection_example"
         _GCLOUD_PATH="/var/lib/jenkins/google-cloud-sdk/bin"
     }
 

@@ -17,17 +17,17 @@
 variable "project_id" {
   description = "Google Project ID"
   type        = string
-  default     = "ci-waap-a106"
+  default     = ""
 }
 
 variable "backend_port" {
-  description = "value"
+  description = "Port used by the backend"
   type        = number
   default     = 80
 }
 
 variable "enable_cdn" {
-  description = "value"
+  description = "Enable or disable the CDN feature"
   type        = bool
   default     = true
 }
@@ -37,37 +37,37 @@ variable "enable_cdn" {
 ************************/
 
 variable "region_r1" {
-  description = "Region in which to create resources"
+  description = "Region one in which to create resources."
   type        = string
   default     = "us-central1"
 }
 
 variable "zone_r1" {
-  description = "value"
+  description = "Zone one in which to create resources."
   type        = string
   default     = "us-central1-b"
 }
 
 variable "network_name_r1" {
-  description = "VPC network name"
+  description = "VPC Network name."
   type        = string
   default     = "webapp-r1"
 }
 
 variable "subnet_name_r1" {
-  description = "Subnet name"
+  description = "Subnet name."
   type        = string
   default     = "webapp-r1"
 }
 
 variable "subnet_ip_r1" {
-  description = "This is th IP of your subnet"
+  description = "Subnet IP."
   type        = string
   default     = "10.0.16.0/24"
 }
 
 variable "subnet_region_r1" {
-  description = "Subnet Region"
+  description = "Subnet region."
   type        = string
   default     = "us-central1"
 }
@@ -87,7 +87,7 @@ variable "machine_type_r1" {
 variable "tags_r1" {
   description = "Network tags, provided as a list"
   type        = list(string)
-  default     = ["backend-r1"]
+  default     = ["backend-r1", "lb-web-hc"]
 }
 
 variable "source_image_r1" {
@@ -143,37 +143,37 @@ variable "target_size_r1" {
 ************************/
 
 variable "region_r2" {
-  description = "Region in which to create resources"
+  description = "Region two in which to create resources."
   type        = string
   default     = "us-east1"
 }
 
 variable "zone_r2" {
-  description = "value"
+  description = "Zone two in which to create resources."
   type        = string
   default     = "us-east1-b"
 }
 
 variable "network_name_r2" {
-  description = "VPC network name"
+  description = "VPC Network name."
   type        = string
   default     = "webapp-r2"
 }
 
 variable "subnet_name_r2" {
-  description = "Subnet name"
+  description = "Subnet name."
   type        = string
   default     = "webapp-r2"
 }
 
 variable "subnet_ip_r2" {
-  description = "This is th IP of your subnet"
+  description = "Subnet IP."
   type        = string
   default     = "10.0.32.0/24"
 }
 
 variable "subnet_region_r2" {
-  description = "Subnet Region"
+  description = "Subnet Region."
   type        = string
   default     = "us-east1"
 }
@@ -193,7 +193,7 @@ variable "machine_type_r2" {
 variable "tags_r2" {
   description = "Network tags, provided as a list"
   type        = list(string)
-  default     = ["backend-r2"]
+  default     = ["backend-r2", "lb-web-hc"]
 }
 
 variable "source_image_r2" {
