@@ -50,7 +50,7 @@ tf_init:
     - prd
     - npd
   artifacts:
-    paths: 
+    paths:
       - $CI_PROJECT_DIR/examples/$REPO_FOLDER/environments
   tags:
     - gitlab-runner
