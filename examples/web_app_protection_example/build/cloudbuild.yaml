@@ -29,17 +29,6 @@ substitutions:
 steps:
 - name: 'hashicorp/terraform:1.3.9'
   entrypoint: 'sh'
-  id: 'tf_plan_all'
-  args:
-    - '-c'
-    - |
-      if [[ "$$BRANCH_NAME" != "dev" || "$$BRANCH_NAME" != "prd" || "$$BRANCH_NAME" != "npd" ]]; then
-        $_BEFORE_SCRIPT
-        build/pipeline-functions.sh plan_validate_all "$$BRANCH_NAME"
-      fi
-
-- name: 'hashicorp/terraform:1.3.9'
-  entrypoint: 'sh'
   id: 'tf_init'
   args:
     - '-c'
@@ -47,6 +36,17 @@ steps:
       if [[ "$$BRANCH_NAME" == "dev" || "$$BRANCH_NAME" == "prd" || "$$BRANCH_NAME" == "npd" ]]; then
         $_BEFORE_SCRIPT
         build/pipeline-functions.sh init "$$BRANCH_NAME"
+      fi
+
+- name: 'hashicorp/terraform:1.3.9'
+  entrypoint: 'sh'
+  id: 'tf_plan_all'
+  args:
+    - '-c'
+    - |
+      if [[ "$$BRANCH_NAME" != "dev" && "$$BRANCH_NAME" != "prd" && "$$BRANCH_NAME" != "npd" ]]; then
+        $_BEFORE_SCRIPT
+        build/pipeline-functions.sh plan_validate_all "$$BRANCH_NAME"
       fi
 
 - name: 'hashicorp/terraform:1.3.9'
