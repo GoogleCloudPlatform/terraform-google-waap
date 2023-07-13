@@ -1,4 +1,4 @@
-## First Commit: In this folder we will have examples related to the Managed Instance Group
+# Web App Protection example
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
@@ -45,6 +45,10 @@
 
 ## Outputs
 
+<<<<<<< HEAD
 No outputs.
+=======
+No output.
+>>>>>>> eaa8a43 (fix: docs)
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
