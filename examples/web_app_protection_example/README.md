@@ -45,10 +45,6 @@
 
 ## Outputs
 
-<<<<<<< HEAD
 No outputs.
-=======
-No output.
->>>>>>> eaa8a43 (fix: docs)
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
