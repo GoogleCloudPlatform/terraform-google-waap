@@ -1,4 +1,4 @@
-## First Commit: In this folder we will have code related to the base for environments using Maged Instance Groups
+# MIG submodule
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
