@@ -37,7 +37,7 @@ resource "google_project_service_identity" "apigee_sa" {
 }
 
 module "apigee" {
-  source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/apigee?ref=daily-2022.12.20"
+  source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/apigee?ref=v24.0.0"
   project_id = var.project_id
   organization = !var.create_apigee_org ? null : {
     display_name            = var.apigee_org_name
@@ -49,57 +49,14 @@ module "apigee" {
     analytics_region        = var.analytics_region
   }
   envgroups = var.apigee_envgroups
-  # {
-  #   test = ["test.example.com"]
-  #   prod = ["prod.example.com"]
-  # }
   environments = var.apigee_environments
-  # {
-  #   apis-test = {
-  #     display_name = "APIs test"
-  #     description  = "APIs Test"
-  #     envgroups    = ["test"]
-  #   }
-  #   apis-prod = {
-  #     display_name = "APIs prod"
-  #     description  = "APIs prod"
-  #     envgroups    = ["prod"]
-  #     iam = {
-  #       "roles/viewer" = ["group:devops@myorg.com"]
-  #     }
-  #   }
-  # }
   instances = { for k, v in var.apigee_instances : k => {
     region                   = v.region
     environments             = v.environments
     psa_ip_cidr_range        = v.psa_ip_cidr_range
     disk_encryption_key_name = module.apigee_instance_kms[k].keys["inst-disk"]
   } }
-
-  # var.apigee_instances
-  # {
-  #   instance-test-ew1 = {
-  #     region            = "europe-west1"
-  #     environments      = ["apis-test"]
-  #     psa_ip_cidr_range = "10.0.4.0/22"
-  #   }
-  #   instance-prod-ew3 = {
-  #     region            = "europe-west3"
-  #     environments      = ["apis-prod"]
-  #     psa_ip_cidr_range = "10.0.5.0/22"
-  #   }
-  # }
   endpoint_attachments = var.apigee_endpoint_attachments
-  # {
-  #   endpoint-backend-1 = {
-  #     region             = "europe-west1"
-  #     service_attachment = "projects/my-project-1/serviceAttachments/gkebackend1"
-  #   }
-  #   endpoint-backend-2 = {
-  #     region             = "europe-west1"
-  #     service_attachment = "projects/my-project-2/serviceAttachments/gkebackend2"
-  #   }
-  # }
 }
 
 module "apigee_org_kms" {
@@ -140,7 +97,6 @@ module "apigee_instance_kms" {
   ]
   prevent_destroy = var.prevent_key_destroy
 }
-
 
 # Service Networking
 # https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#service-networking
