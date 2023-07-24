@@ -30,7 +30,7 @@ This jenkins file contains rules based on branch names considering two different
 
 For this condition, the pipeline code will run steps related to terraform init and terraform apply. When working with multiple environments, it’s really important to change the values of the variables inside the terraform.tfvars files for each environment in order to avoid conflicts.
 
-2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name. 
+2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name.
 
 For this condition, the pipeline code will run steps related to terraform init and terraform plan, generating a plan output without changing your infrastructure.
 
@@ -54,7 +54,7 @@ This [Gitlab-ci](.gitlab-ci.yml) contains rules based on branch names considerin
 
 For this condition, the pipeline code will run steps related to terraform init and terraform apply. When working with multiple environments, it’s really important to change the values of the variables inside the terraform.tfvars files for each environment in order to avoid conflicts.
 
-2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name. 
+2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name.
 
 For this condition, the pipeline code will run steps related to terraform init and terraform plan, generating a plan output without changing your infrastructure.
 
@@ -77,6 +77,6 @@ This [Cloud Build](.cloudbuild.yaml) contains rules based on branch names consid
 
 For this condition, the pipeline code will run steps related to terraform init and terraform apply. When working with multiple environments, it’s really important to change the values of the variables inside the terraform.tfvars files for each environment in order to avoid conflicts.
 
-2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name. 
+2.  Behavior 2: differently from behavior 1, this behavior happens when the branch name doesn't match an environment folder name.
 
 For this condition, the pipeline code will run steps related to terraform init and terraform plan, generating a plan output without changing your infrastructure.
