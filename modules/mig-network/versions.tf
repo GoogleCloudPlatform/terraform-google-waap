@@ -23,9 +23,9 @@ terraform {
     }
   }
   provider_meta "google" {
-    module_name = "blueprints/terraform/terraform-google-waap:mig_network/v0.0.1"
+    module_name = "blueprints/terraform/terraform-google-waap:mig-network/v0.0.1"
   }
   provider_meta "google-beta" {
-    module_name = "blueprints/terraform/terraform-google-waap:mig_network/v0.0.1"
+    module_name = "blueprints/terraform/terraform-google-waap:mig-network/v0.0.1"
   }
 }
