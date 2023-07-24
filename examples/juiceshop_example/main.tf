@@ -63,16 +63,17 @@ module "apigee" {
       display_name = "demo"
       description  = "Juiceshop Demo env"
       envgroups    = ["demo"]
+      regions      = [var.region]
     }
   }
   apigee_envgroups = {
     demo = [module.nip_apigee_hostname.hostname]
   }
   apigee_instances = {
-    instance-1 = {
-      region            = var.region
-      psa_ip_cidr_range = "10.0.0.0/22"
-      environments      = ["demo"]
+    (var.region) = {
+      display_name                  = "instance-1"
+      runtime_ip_cidr_range         = "10.0.0.0/22"
+      troubleshooting_ip_cidr_range = "10.1.0.0/28"
     }
   }
   network_id = module.vpc.network_id

@@ -14,22 +14,6 @@
  * limitations under the License.
  */
 
-# Apigee Org, Instance, EnvGroup, Env setup
-# https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#create-org
-# https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#runtime-instance
-# https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli#create-environment
-# module "apigee_core" {
-#   source = "github.com/apigee/terraform-modules//modules/apigee-x-core?ref=v0.12.0"
-
-#   project_id          = var.project_id
-#   network             = var.network_id
-#   billing_type        = var.billing_type
-#   ax_region           = var.ax_region
-#   apigee_instances    = var.apigee_instances
-#   apigee_environments = var.apigee_environments
-#   apigee_envgroups    = var.apigee_envgroups
-# }
-
 resource "google_project_service_identity" "apigee_sa" {
   provider = google-beta
   project  = var.project_id
@@ -51,12 +35,15 @@ module "apigee" {
   envgroups = var.apigee_envgroups
   environments = var.apigee_environments
   instances = { for k, v in var.apigee_instances : k => {
-    region                   = v.region
-    environments             = v.environments
-    psa_ip_cidr_range        = v.psa_ip_cidr_range
-    disk_encryption_key_name = module.apigee_instance_kms[k].keys["inst-disk"]
+    display_name = v.display_name
+    description  = v.description
+    runtime_ip_cidr_range = v.runtime_ip_cidr_range
+    troubleshooting_ip_cidr_range = v.troubleshooting_ip_cidr_range
+    consumer_accept_list = v.consumer_accept_list
+    disk_encryption_key = module.apigee_instance_kms[k].keys["inst-disk"]
   } }
   endpoint_attachments = var.apigee_endpoint_attachments
+  depends_on = [ google_service_networking_connection.apigee_peering ]
 }
 
 module "apigee_org_kms" {
@@ -84,7 +71,7 @@ module "apigee_instance_kms" {
   version  = "~> 2.2.1"
 
   project_id         = var.kms_project_id == "" ? var.project_id : var.kms_project_id
-  location           = each.value.region
+  location           = each.key
   keyring            = "apigee-${var.project_id}-inst-${each.key}"
   keys               = ["inst-disk"]
   set_decrypters_for = ["inst-disk"]
@@ -132,8 +119,8 @@ resource "google_compute_network_peering_routes_config" "psa_routes" {
 resource "google_compute_region_network_endpoint_group" "psc_neg" {
   project               = var.project_id
   for_each              = var.apigee_instances
-  name                  = "apigee-psc-neg-${each.value.region}"
-  region                = each.value.region
+  name                  = "apigee-psc-neg-${each.key}"
+  region                = each.key
   network               = var.network_id
   subnetwork            = var.subnet_id
   network_endpoint_type = "PRIVATE_SERVICE_CONNECT"
