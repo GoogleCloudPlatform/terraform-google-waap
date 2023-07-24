@@ -32,18 +32,18 @@ module "apigee" {
     database_encryption_key = module.apigee_org_kms.keys["org-db"]
     analytics_region        = var.analytics_region
   }
-  envgroups = var.apigee_envgroups
+  envgroups    = var.apigee_envgroups
   environments = var.apigee_environments
   instances = { for k, v in var.apigee_instances : k => {
-    display_name = v.display_name
-    description  = v.description
-    runtime_ip_cidr_range = v.runtime_ip_cidr_range
+    display_name                  = v.display_name
+    description                   = v.description
+    runtime_ip_cidr_range         = v.runtime_ip_cidr_range
     troubleshooting_ip_cidr_range = v.troubleshooting_ip_cidr_range
-    consumer_accept_list = v.consumer_accept_list
-    disk_encryption_key = module.apigee_instance_kms[k].keys["inst-disk"]
+    consumer_accept_list          = v.consumer_accept_list
+    disk_encryption_key           = module.apigee_instance_kms[k].keys["inst-disk"]
   } }
   endpoint_attachments = var.apigee_endpoint_attachments
-  depends_on = [ google_service_networking_connection.apigee_peering ]
+  depends_on           = [google_service_networking_connection.apigee_peering]
 }
 
 module "apigee_org_kms" {
