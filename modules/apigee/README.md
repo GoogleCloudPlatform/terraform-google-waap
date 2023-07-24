@@ -5,9 +5,9 @@
 |------|-------------|------|---------|:--------:|
 | analytics\_region | GCP region for storing Apigee analytics data (see https://cloud.google.com/apigee/docs/api-platform/get-started/install-cli). | `string` | n/a | yes |
 | apigee\_endpoint\_attachments | Apigee endpoint attachments (for southbound networking: https://cloud.google.com/apigee/docs/api-platform/architecture/southbound-networking-patterns-endpoints#create-the-psc-attachments). | <pre>map(object({<br>    region             = string<br>    service_attachment = string<br>  }))</pre> | `{}` | no |
-| apigee\_envgroups | Apigee Environment Groups. | `map(list(string))` | `{}` | no |
-| apigee\_environments | Apigee Environments. | <pre>map(object({<br>    display_name = string<br>    description  = string<br>    envgroups    = list(string)<br>  }))</pre> | `{}` | no |
-| apigee\_instances | Apigee Instances (only one for EVAL). | <pre>map(object({<br>    region            = string<br>    psa_ip_cidr_range = string<br>    environments      = list(string)<br>  }))</pre> | `{}` | no |
+| apigee\_envgroups | Apigee groups (NAME => [HOSTNAMES]). | `map(list(string))` | `null` | no |
+| apigee\_environments | Apigee Environments. | <pre>map(object({<br>    display_name    = optional(string)<br>    description     = optional(string, "Terraform-managed")<br>    deployment_type = optional(string)<br>    api_proxy_type  = optional(string)<br>    node_config = optional(object({<br>      min_node_count = optional(number)<br>      max_node_count = optional(number)<br>    }))<br>    iam       = optional(map(list(string)))<br>    envgroups = optional(list(string))<br>    regions   = optional(list(string))<br>  }))</pre> | `null` | no |
+| apigee\_instances | Apigee Instances ([REGION] => [INSTANCE]). | <pre>map(object({<br>    display_name                  = optional(string)<br>    description                   = optional(string, "Terraform-managed")<br>    runtime_ip_cidr_range         = string<br>    troubleshooting_ip_cidr_range = string<br>    disk_encryption_key           = optional(string)<br>    consumer_accept_list          = optional(list(string))<br>  }))</pre> | `null` | no |
 | apigee\_org\_description | Description for Apigee Organization. | `string` | `"Apigee Org"` | no |
 | apigee\_org\_name | Display name for Apigee Organization. | `string` | `"Apigee Org"` | no |
 | billing\_type | Apigee billing type. Can be one of EVALUATION, PAYG, or SUBSCRIPTION. See https://cloud.google.com/apigee/pricing | `string` | `"EVALUATION"` | no |
