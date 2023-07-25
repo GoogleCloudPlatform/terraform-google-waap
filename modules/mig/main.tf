@@ -51,7 +51,6 @@ resource "google_compute_instance_template" "vm_template" {
   }
 
   metadata = {
-    # startup-script        = "${data.template_file.ops_agent_install_script.rendered}"
     startup-script = var.startup_script
   }
 
@@ -91,7 +90,6 @@ resource "google_compute_instance_group_manager" "mig" {
     # min_ready_sec                  = 50
     # replacement_method             = "RECREATE"
   }
-
   lifecycle {
     create_before_destroy = true
   }
