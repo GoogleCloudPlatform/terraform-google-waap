@@ -505,3 +505,51 @@ module "lb-http" {
     }
   }
 }
+## ---------------------------------------------------------------------------------------------------------------------
+## MONITORING
+## Dashboard
+## ---------------------------------------------------------------------------------------------------------------------
+
+resource "google_monitoring_dashboard" "dashboard" {
+  dashboard_json = file("./scripts/dashboard.json")
+  project        = var.project_id
+}
+
+locals {
+  policies = {
+    "sql_injection"           = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"sqli\" AND jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds!=\"owasp-crs-id942550-sqli\""
+    "cross_site_scripting"    = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"xss\""
+    "local_file_inclusion"    = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"lfi\""
+    "remote_code_execution"   = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"rce\""
+    "remote_file_inclusion"   = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"rfi\""
+    "method_enforcement"      = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"methodenforcement\""
+    "scanner_detection"       = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"scannerdetection\""
+    "protocol_attack"         = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"protocolattack\""
+    "php_injection_attack"    = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"php\""
+    "session_fixation_attack" = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"sessionfixation\""
+    "java_attack"             = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"java\""
+    "nodejs_attack"           = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"nodejs\""
+    "log4j_attack"            = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"cve\""
+    "json_sql_injection"      = "jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds=~\"owasp-crs-id942550-sqli\""
+  }
+}
+
+resource "google_logging_metric" "logging_metric" {
+  for_each = local.policies
+  project  = var.project_id
+
+  name   = "${each.key}/metric"
+  filter = each.value
+  metric_descriptor {
+    metric_kind = "DELTA"
+    value_type  = "INT64"
+
+    labels {
+      key        = "signature_id"
+      value_type = "STRING"
+    }
+  }
+  label_extractors = {
+    "signature_id" = "EXTRACT(jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds)"
+  }
+}
