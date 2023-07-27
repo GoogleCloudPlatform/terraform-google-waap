@@ -32,29 +32,40 @@ variable "analytics_region" {
 }
 
 variable "apigee_envgroups" {
-  description = "Apigee Environment Groups."
+  description = "Apigee groups (NAME => [HOSTNAMES])."
   type        = map(list(string))
-  default     = {}
+  default     = null
 }
 
 variable "apigee_environments" {
   description = "Apigee Environments."
   type = map(object({
-    display_name = string
-    description  = string
-    envgroups    = list(string)
+    display_name    = optional(string)
+    description     = optional(string, "Terraform-managed")
+    deployment_type = optional(string)
+    api_proxy_type  = optional(string)
+    node_config = optional(object({
+      min_node_count = optional(number)
+      max_node_count = optional(number)
+    }))
+    iam       = optional(map(list(string)))
+    envgroups = optional(list(string))
+    regions   = optional(list(string))
   }))
-  default = {}
+  default = null
 }
 
 variable "apigee_instances" {
-  description = "Apigee Instances (only one for EVAL)."
+  description = "Apigee Instances ([REGION] => [INSTANCE])."
   type = map(object({
-    region            = string
-    psa_ip_cidr_range = string
-    environments      = list(string)
+    display_name                  = optional(string)
+    description                   = optional(string, "Terraform-managed")
+    runtime_ip_cidr_range         = string
+    troubleshooting_ip_cidr_range = string
+    disk_encryption_key           = optional(string)
+    consumer_accept_list          = optional(list(string))
   }))
-  default = {}
+  default = null
 }
 
 variable "apigee_endpoint_attachments" {
