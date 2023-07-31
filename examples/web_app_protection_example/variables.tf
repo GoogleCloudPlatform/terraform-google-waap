@@ -33,6 +33,50 @@ variable "enable_cdn" {
 }
 
 /***********************
+**      Network       **
+************************/
+
+variable "networks" {
+  type = map(object({
+    name    = string
+    subnets = list(object({
+      name                = string
+      ip_cidr_range       = string
+      region              = string
+      private_ip          = bool
+      secondary_ip_range  = optional(list(object({
+        range_name    = optional(string)
+        ip_cidr_range = optional(string)
+      })))
+    }))
+  }))
+  default = {
+    "network_r1" = {
+      name = "vpc-webapp-r1"
+      subnets = [
+        {
+          name          = "subnet-webapp-r1"
+          ip_cidr_range = "10.0.16.0/24"
+          region        = "us-central1"
+          private_ip    = false
+        }
+      ]
+    }
+    "network_r2" = {
+      name  = "vpc-webapp-r2"
+      subnets = [
+        {
+          name          = "subnet-webapp-r2"
+          ip_cidr_range = "10.0.32.0/24"
+          region        = "us-east1"
+          private_ip    = false
+        }
+        ]
+    }
+  }
+}
+
+/***********************
 ** Variables Region 1 **
 ************************/
 

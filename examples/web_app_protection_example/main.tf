@@ -28,26 +28,60 @@ data "template_file" "startup_script" {
 ## Modules created for configuring networks used in two different regions...
 ## ---------------------------------------------------------------------------------------------------------------------
 
-module "network_mig_r1" {
-  source = "../../modules/mig-network"
+module "network" {
+  source  = "terraform-google-modules/network/google"
+  version = "~> 7.0"
 
+  for_each = var.networks
+
+  project_id   = var.project_id
+  network_name = each.value.name
+
+  subnets = [
+    for subnet in each.value.subnets :
+    {
+      subnet_name   = subnet.name
+      subnet_ip     = subnet.ip_cidr_range
+      subnet_region = subnet.region
+    }
+  ]
+}
+module "cloud-nat" {
+  source        = "terraform-google-modules/cloud-nat/google"
+  version       = "~> 1.2"
+
+  for_each = var.networks
+
+  create_router = true
   project_id    = var.project_id
-  region        = var.region_r1
-  network_name  = var.network_name_r1
-  subnet_name   = var.subnet_name_r1
-  subnet_ip     = var.subnet_ip_r1
-  subnet_region = var.subnet_region_r1
+  region        = "us-central1"                  #!TODO
+  network       = each.value.name
+  router        = format("router-%s", each.value.name)
+  name          = format("nat-%s", each.value.name)
+
+  depends_on = [ module.network ]
 }
 
-module "network_mig_r2" {
-  source = "../../modules/mig-network"
+module "firewall_rules" {
+  source       = "terraform-google-modules/network/google//modules/firewall-rules"
+  project_id   = var.project_id
+  
+  for_each = var.networks
+  network_name = each.value.name
 
-  project_id    = var.project_id
-  region        = var.region_r2
-  network_name  = var.network_name_r2
-  subnet_name   = var.subnet_name_r2
-  subnet_ip     = var.subnet_ip_r2
-  subnet_region = var.subnet_region_r2
+  rules = [{
+    name                    = format("allow-ssh-iap-%s", each.value.name)
+    description             = "Firewall rule to allow incoming ssh connections from Google IAP servers"
+    direction               = "INGRESS"
+    source_ranges           = ["35.235.240.0/20"]
+    target_tags             = ["allow-ssh-iap"]
+    allow = [{
+      protocol = "tcp"
+      ports    = ["22"]
+    }]
+  }]
+
+  depends_on = [ module.network ]
 }
 
 ## ---------------------------------------------------------------------------------------------------------------------
@@ -83,7 +117,7 @@ module "mig_r1" {
   target_size = var.target_size_r1
 
   depends_on = [
-    module.network_mig_r1
+    module.network
   ]
 }
 
@@ -115,7 +149,7 @@ module "mig_r2" {
   target_size = var.target_size_r2
 
   depends_on = [
-    module.network_mig_r2
+    module.network
   ]
 }
 
@@ -405,7 +439,7 @@ module "lb-http" {
   project     = var.project_id
   target_tags = ["lb-web-hc"]
 
-  firewall_networks    = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
+  firewall_networks    = [for k, v in var.networks : module.network[k].network_name]
   firewall_projects    = [var.project_id, var.project_id]
   use_ssl_certificates = false
   ssl                  = false
