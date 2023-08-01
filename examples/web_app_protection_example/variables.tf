@@ -32,50 +32,50 @@ variable "enable_cdn" {
   default     = true
 }
 
-/***********************
-**      Network       **
-************************/
-
 variable "networks" {
-  type = map(object({
-    name    = string
+  description = "Map of network and subnet configurations"
+  type        = map(object({
+    cnat_region  = string
+    network_name = string
     subnets = list(object({
-      name                = string
-      ip_cidr_range       = string
-      region              = string
-      private_ip          = bool
-      secondary_ip_range  = optional(list(object({
-        range_name    = optional(string)
-        ip_cidr_range = optional(string)
-      })))
+      subnet_name   = string
+      subnet_ip     = string
+      subnet_region = string
     }))
   }))
   default = {
-    "network_r1" = {
-      name = "vpc-webapp-r1"
+    network1 = {
+      network_name = "vpc-webapp-r1"
       subnets = [
         {
-          name          = "subnet-webapp-r1"
-          ip_cidr_range = "10.0.16.0/24"
-          region        = "us-central1"
-          private_ip    = false
-        }
+          subnet_name   = "webapp-r1-subnet01"
+          subnet_ip     = "10.0.16.0/24"
+          subnet_region = "us-central1"
+        },
+        {
+          subnet_name   = "webapp-r1-subnet02"
+          subnet_ip     = "10.0.18.0/24"
+          subnet_region = "us-west1"
+        },
       ]
-    }
-    "network_r2" = {
-      name  = "vpc-webapp-r2"
+    },
+    network2 = {
+      network_name = "vpc-webapp-r2"
       subnets = [
         {
-          name          = "subnet-webapp-r2"
-          ip_cidr_range = "10.0.32.0/24"
-          region        = "us-east1"
-          private_ip    = false
-        }
-        ]
-    }
+          subnet_name   = "webapp-r2-subnet01"
+          subnet_ip     = "10.0.32.0/24"
+          subnet_region = "us-east1"
+        },
+        {
+          subnet_name   = "webapp-r2-subnet02"
+          subnet_ip     = "10.0.34.0/24"
+          subnet_region = "us-east4"
+        },
+      ]
+    },
   }
 }
-
 /***********************
 ** Variables Region 1 **
 ************************/
@@ -90,30 +90,6 @@ variable "zone_r1" {
   description = "Zone one in which to create resources."
   type        = string
   default     = "us-central1-b"
-}
-
-variable "network_name_r1" {
-  description = "VPC Network name."
-  type        = string
-  default     = "webapp-r1"
-}
-
-variable "subnet_name_r1" {
-  description = "Subnet name."
-  type        = string
-  default     = "webapp-r1"
-}
-
-variable "subnet_ip_r1" {
-  description = "Subnet IP."
-  type        = string
-  default     = "10.0.16.0/24"
-}
-
-variable "subnet_region_r1" {
-  description = "Subnet region."
-  type        = string
-  default     = "us-central1"
 }
 
 variable "name_prefix_r1" {
@@ -163,7 +139,6 @@ variable "service_account_scopes_r1" {
   default     = ["logging-write", "monitoring-write", "cloud-platform"]
 }
 
-
 variable "mig_name_r1" {
   description = "Name of the managed instance group."
   type        = string
@@ -196,30 +171,6 @@ variable "zone_r2" {
   description = "Zone two in which to create resources."
   type        = string
   default     = "us-east1-b"
-}
-
-variable "network_name_r2" {
-  description = "VPC Network name."
-  type        = string
-  default     = "webapp-r2"
-}
-
-variable "subnet_name_r2" {
-  description = "Subnet name."
-  type        = string
-  default     = "webapp-r2"
-}
-
-variable "subnet_ip_r2" {
-  description = "Subnet IP."
-  type        = string
-  default     = "10.0.32.0/24"
-}
-
-variable "subnet_region_r2" {
-  description = "Subnet Region."
-  type        = string
-  default     = "us-east1"
 }
 
 variable "name_prefix_r2" {
