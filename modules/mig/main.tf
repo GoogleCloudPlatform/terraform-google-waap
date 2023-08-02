@@ -27,70 +27,127 @@ resource "google_project_iam_member" "sa_roles" {
   member  = "serviceAccount:${google_service_account.vm_sa.email}"
 }
 
-resource "google_compute_instance_template" "vm_template" {
-  project = var.project_id
+# resource "google_compute_instance_template" "vm_template" {
+#   project = var.project_id
 
-  name_prefix  = var.name_prefix
-  machine_type = var.machine_type
-  region       = var.region
-  tags         = var.tags
+#   name_prefix  = var.name_prefix
+#   machine_type = var.machine_type
+#   region       = var.region
+#   tags         = var.tags
 
-  disk {
-    boot         = true
-    type         = "PERSISTENT"
-    source_image = var.source_image
-    auto_delete  = var.disk_auto_delete
-    disk_type    = var.disk_type
-    disk_size_gb = var.disk_size_gb
-    mode         = var.disk_mode
-  }
+#   disk {
+#     boot         = true
+#     type         = "PERSISTENT"
+#     source_image = var.source_image
+#     auto_delete  = var.disk_auto_delete
+#     disk_type    = var.disk_type
+#     disk_size_gb = var.disk_size_gb
+#     mode         = var.disk_mode
+#   }
 
-  service_account {
+#   service_account {
+#     email  = google_service_account.vm_sa.email
+#     scopes = var.scopes
+#   }
+
+#   metadata = {
+#     startup-script = var.startup_script
+#   }
+
+#   network_interface {
+#     network    = format(var.network)
+#     subnetwork = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+#   }
+
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }
+
+
+module "instance_template" {
+  source  = "terraform-google-modules/vm/google//modules/instance_template"
+  version = "~> 8.0.0"
+
+  project_id    = var.project_id
+  name_prefix   = var.name_prefix
+  machine_type  = var.machine_type
+
+  source_image          = var.source_image
+  source_image_project  = var.source_image_project
+  disk_size_gb          = var.disk_size_gb
+  disk_type             = var.disk_type
+  auto_delete           = var.disk_auto_delete
+
+  startup_script = var.startup_script
+
+  network       = var.network
+  subnetwork    = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+  service_account = {
     email  = google_service_account.vm_sa.email
     scopes = var.scopes
   }
 
-  metadata = {
-    startup-script = var.startup_script
-  }
-
-  network_interface {
-    network    = format("vpc-%s", var.network)
-    subnetwork = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/subnet-${var.subnetwork}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+  tags = var.tags
 }
 
-resource "google_compute_instance_group_manager" "mig" {
-  project = var.project_id
+module "mig" {
+  source  = "terraform-google-modules/vm/google//modules/mig"
+  version = "~> 8.0.0"
 
-  name               = var.mig_name == "" ? "${var.base_instance_name}-mig" : var.mig_name
-  base_instance_name = var.base_instance_name
-  zone               = var.zone
+  project_id        = var.project_id
+  mig_name          = var.mig_name
+  hostname          = "${var.mig_name}-vm"
+  region            = var.region
+  
+  instance_template = module.instance_template.self_link
+  target_size       = var.target_size
 
-  version {
-    instance_template = google_compute_instance_template.vm_template.self_link
-  }
-
-  target_size = var.target_size
-
-  named_port {
+  named_ports = [{
     name = var.port_name
     port = var.backend_port
-  }
-  update_policy {
-    type                           = "PROACTIVE"
-    minimal_action                 = "REPLACE"
-    most_disruptive_allowed_action = "REPLACE"
-    max_surge_fixed                = 2
-    # max_unavailable_fixed          = 2
-    # min_ready_sec                  = 50
-    # replacement_method             = "RECREATE"
-  }
-  lifecycle {
-    create_before_destroy = true
-  }
+  }]
+
+  update_policy = [{
+    type                         = "PROACTIVE"
+    instance_redistribution_type = "PROACTIVE"
+    replacement_method           = "RECREATE"
+    minimal_action               = "REPLACE"
+    max_surge_fixed              = 0
+    max_surge_percent            = null
+    max_unavailable_fixed        = 4
+    max_unavailable_percent      = null
+    min_ready_sec                = null
+  }]
 }
+
+# resource "google_compute_instance_group_manager" "mig" {
+#   project = var.project_id
+
+#   name               = var.mig_name == "" ? "${var.base_instance_name}-mig" : var.mig_name
+#   base_instance_name = var.base_instance_name
+#   zone               = var.zone
+
+#   version {
+#     instance_template = google_compute_instance_template.vm_template.self_link
+#   }
+
+#   target_size = var.target_size
+
+#   named_port {
+#     name = var.port_name
+#     port = var.backend_port
+#   }
+#   update_policy {
+#     type                           = "PROACTIVE"
+#     minimal_action                 = "REPLACE"
+#     most_disruptive_allowed_action = "REPLACE"
+#     max_surge_fixed                = 2
+#     # max_unavailable_fixed          = 2
+#     # min_ready_sec                  = 50
+#     # replacement_method             = "RECREATE"
+#   }
+#   lifecycle {
+#     create_before_destroy = true
+#   }
+# }

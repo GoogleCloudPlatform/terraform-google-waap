@@ -19,3 +19,8 @@ output "network_name" {
   description = "The name of the VPC being created"
   value       = module.mig_vpc.network_name
 }
+
+output "subnets" {
+  description = "List of created subnets"
+  value       = module.mig_vpc.subnets_names
+}
