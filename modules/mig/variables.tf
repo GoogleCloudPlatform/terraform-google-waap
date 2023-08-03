@@ -113,12 +113,6 @@ variable "mig_name" {
   default     = ""
 }
 
-variable "base_instance_name" {
-  description = "The base instance name to use for instances in this group."
-  type        = string
-  default     = "backend-vm"
-}
-
 variable "region" {
   description = "Region for cloud resources."
   type        = string

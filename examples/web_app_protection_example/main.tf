@@ -15,27 +15,56 @@
  */
 
 ## ---------------------------------------------------------------------------------------------------------------------
-## STARTUP SCRIPT GCE
-## Installs and configures the application in the backends.
-## ---------------------------------------------------------------------------------------------------------------------
-
-data "template_file" "startup_script" {
-  template = file("./scripts/startup-script.sh")
-}
-
-## ---------------------------------------------------------------------------------------------------------------------
 ## NETWORKS
 ## Modules created for configuring networks used in two different regions...
 ## ---------------------------------------------------------------------------------------------------------------------
 
+locals {
+  network_cfg = {
+    "network1" = {
+      network_name = "vpc-webapp-r1"
+      cnat_region  = "us-central1"
+      subnets = [
+        {
+          subnet_name   = "webapp-r1-subnet01"
+          subnet_ip     = "10.0.16.0/24"
+          subnet_region = "us-central1"
+        },
+        {
+          subnet_name   = "webapp-r1-subnet02"
+          subnet_ip     = "10.0.18.0/24"
+          subnet_region = "us-west1"
+        },
+      ]
+    },
+    "network2" = {
+      network_name = "vpc-webapp-r2"
+      cnat_region  = "us-east1"
+      subnets = [
+        {
+          subnet_name   = "webapp-r2-subnet01"
+          subnet_ip     = "10.0.32.0/24"
+          subnet_region = "us-east1"
+        },
+        {
+          subnet_name   = "webapp-r2-subnet02"
+          subnet_ip     = "10.0.34.0/24"
+          subnet_region = "us-east4"
+        },
+      ]
+    },
+  }
+}
+
 module "network" {
-  source = "../../modules/mig-network"
-  for_each = var.networks
-  
-  project_id    = var.project_id
-  region        = each.value.cnat_region
-  network_name  = each.value.network_name
-  subnets       = each.value.subnets
+  source   = "../../modules/mig-network"
+  for_each = local.network_cfg
+
+  project_id = var.project_id
+
+  region       = each.value.cnat_region
+  network_name = each.value.network_name
+  subnets      = each.value.subnets
 }
 
 ## ---------------------------------------------------------------------------------------------------------------------
@@ -45,46 +74,46 @@ module "network" {
 
 ## Configuration for each Managed Instance Group
 locals {
-  migs_config = {
+  mig_cfg = {
     "mig1" = {
-      machine_type          = "e2-small"
-      source_image          = "debian-11"
-      source_image_project  = "debian-cloud"
-      disk_size             = "50"
-      
-      startup_script  = data.template_file.startup_script.rendered
+      machine_type         = "e2-small"
+      source_image         = "debian-11"
+      source_image_project = "debian-cloud"
+      disk_size            = "50"
 
-      mig_name        = "mig-r1"
-      region          = "us-central1"
-      target_size     = 1
-      port_name       = "http"
-      backend_port    = 80
+      startup_script = file("./scripts/startup-script.sh")
 
-      network         = module.network["network1"].network_name
-      subnetwork      = module.network["network1"].subnets[0]
+      mig_name     = "mig-r1"
+      region       = "us-central1"
+      target_size  = 1
+      port_name    = "http"
+      backend_port = 80
+
+      network    = module.network["network1"].network_name
+      subnetwork = module.network["network1"].subnets[0]
 
       service_account = "sa-backend-vm-r1"
       roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
       scopes          = ["logging-write", "monitoring-write", "cloud-platform"]
-      
+
       tags = ["backend-r1", "lb-web-hc"]
     },
     "mig2" = {
-      machine_type          = "e2-small"
-      source_image          = "debian-11"
-      source_image_project  = "debian-cloud"
-      disk_size             = "50"
-      
-      startup_script  = data.template_file.startup_script.rendered
+      machine_type         = "e2-small"
+      source_image         = "debian-11"
+      source_image_project = "debian-cloud"
+      disk_size            = "50"
 
-      mig_name        = "mig-r2"
-      region          = "us-east1"
-      target_size     = 1
-      port_name       = "http"
-      backend_port    = 80
-      
-      network         = module.network["network2"].network_name
-      subnetwork      = module.network["network2"].subnets[0]
+      startup_script = file("./scripts/startup-script.sh")
+
+      mig_name     = "mig-r2"
+      region       = "us-east1"
+      target_size  = 1
+      port_name    = "http"
+      backend_port = 80
+
+      network    = module.network["network2"].network_name
+      subnetwork = module.network["network2"].subnets[0]
 
       service_account = "sa-backend-vm-r2"
       roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
@@ -96,37 +125,38 @@ locals {
   }
 }
 module "mig" {
-  source = "../../modules/mig"
-  for_each = local.migs_config
+  source   = "../../modules/mig"
+  for_each = local.mig_cfg
 
-  project_id            = var.project_id
-  machine_type          = each.value.machine_type
-  source_image          = each.value.source_image
-  source_image_project  = each.value.source_image_project
-  disk_size_gb          = each.value.disk_size
+  project_id = var.project_id
 
-  startup_script  = each.value.startup_script
-  
-  mig_name        = each.value.mig_name
-  region          = each.value.region
-  target_size     = each.value.target_size
-  port_name       = each.value.port_name
-  backend_port    = each.value.backend_port
+  machine_type         = each.value.machine_type
+  source_image         = each.value.source_image
+  source_image_project = each.value.source_image_project
+  disk_size_gb         = each.value.disk_size
 
-  network         = each.value.network
-  subnetwork      = each.value.subnetwork
+  startup_script = each.value.startup_script
 
-  service_account = each.value.service_account 
+  mig_name     = each.value.mig_name
+  region       = each.value.region
+  target_size  = each.value.target_size
+  port_name    = each.value.port_name
+  backend_port = each.value.backend_port
+
+  network    = each.value.network
+  subnetwork = each.value.subnetwork
+
+  service_account = each.value.service_account
   roles           = each.value.roles
   scopes          = each.value.scopes
 
   tags = each.value.tags
 }
 
-# ## ---------------------------------------------------------------------------------------------------------------------
-# ## RECAPTCHA
-# ## Score Recaptcha Configuration.
-# ## ---------------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------------------------------------------
+## RECAPTCHA
+## Score Recaptcha Configuration.
+## ---------------------------------------------------------------------------------------------------------------------
 
 resource "google_recaptcha_enterprise_key" "primary" {
   display_name = "web_recaptcha"
@@ -147,10 +177,10 @@ resource "random_id" "suffix" {
   byte_length = 4
 }
 
-# ## ---------------------------------------------------------------------------------------------------------------------
-# ## CLOUD ARMOR
-# ## Backend Policy configuration with owasp rules.
-# ## ---------------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------------------------------------------
+## CLOUD ARMOR
+## Backend Policy configuration with owasp rules.
+## ---------------------------------------------------------------------------------------------------------------------
 
 resource "google_compute_security_policy" "edge_policy" {
   project     = var.project_id
@@ -396,22 +426,22 @@ module "backend_policy" {
   }
 }
 
-# ## ---------------------------------------------------------------------------------------------------------------------
-# ## LOAD BALANCER
-# ## Configuration of the Load Balancer and its resources.
-# ## ---------------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------------------------------------------
+## LOAD BALANCER
+## Configuration of the Load Balancer and its resources.
+## ---------------------------------------------------------------------------------------------------------------------
 
 locals {
   health_check = {
-        check_interval_sec  = 60
-        timeout_sec         = 60
-        healthy_threshold   = 2
-        unhealthy_threshold = 2
-        request_path        = "/"
-        port                = 80
-        host                = null
-        logging             = false
-      }
+    check_interval_sec  = 60
+    timeout_sec         = 60
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    request_path        = "/"
+    port                = 80
+    host                = null
+    logging             = false
+  }
 }
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
@@ -512,10 +542,10 @@ module "lb-http" {
     }
   }
 }
-# ## ---------------------------------------------------------------------------------------------------------------------
-# ## MONITORING
-# ## Dashboard
-# ## ---------------------------------------------------------------------------------------------------------------------
+## ---------------------------------------------------------------------------------------------------------------------
+## MONITORING
+## Dashboard
+## ---------------------------------------------------------------------------------------------------------------------
 
 resource "google_monitoring_dashboard" "dashboard" {
   dashboard_json = file("./scripts/dashboard.json")

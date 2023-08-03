@@ -15,54 +15,7 @@
  */
 
 variable "project_id" {
-  description = "Google Project ID"
+  description = "Google Project ID in which the resources will be created."
   type        = string
   default     = ""
-}
-
-variable "networks" {
-  description = "Map of network and subnet configurations"
-  type        = map(object({
-    network_name = string
-    cnat_region  = string
-    subnets = list(object({
-      subnet_name   = string
-      subnet_ip     = string
-      subnet_region = string
-    }))
-  }))
-  default = {
-    network1 = {
-      network_name = "vpc-webapp-r1"
-      cnat_region  = "us-central1"
-      subnets = [
-        {
-          subnet_name   = "webapp-r1-subnet01"
-          subnet_ip     = "10.0.16.0/24"
-          subnet_region = "us-central1"
-        },
-        {
-          subnet_name   = "webapp-r1-subnet02"
-          subnet_ip     = "10.0.18.0/24"
-          subnet_region = "us-west1"
-        },
-      ]
-    },
-    network2 = {
-      network_name = "vpc-webapp-r2"
-      cnat_region  = "us-east1"
-      subnets = [
-        {
-          subnet_name   = "webapp-r2-subnet01"
-          subnet_ip     = "10.0.32.0/24"
-          subnet_region = "us-east1"
-        },
-        {
-          subnet_name   = "webapp-r2-subnet02"
-          subnet_ip     = "10.0.34.0/24"
-          subnet_region = "us-east4"
-        },
-      ]
-    },
-  }
 }

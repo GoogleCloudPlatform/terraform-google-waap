@@ -31,20 +31,20 @@ module "instance_template" {
   source  = "terraform-google-modules/vm/google//modules/instance_template"
   version = "~> 8.0.0"
 
-  project_id    = var.project_id
-  name_prefix   = var.name_prefix
-  machine_type  = var.machine_type
+  project_id   = var.project_id
+  name_prefix  = var.name_prefix
+  machine_type = var.machine_type
 
-  source_image          = var.source_image
-  source_image_project  = var.source_image_project
-  disk_size_gb          = var.disk_size_gb
-  disk_type             = var.disk_type
-  auto_delete           = var.disk_auto_delete
+  source_image         = var.source_image
+  source_image_project = var.source_image_project
+  disk_size_gb         = var.disk_size_gb
+  disk_type            = var.disk_type
+  auto_delete          = var.disk_auto_delete
 
   startup_script = var.startup_script
 
-  network       = var.network
-  subnetwork    = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+  network    = var.network
+  subnetwork = "https://www.googleapis.com/compute/v1/projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
   service_account = {
     email  = google_service_account.vm_sa.email
     scopes = var.scopes
@@ -57,11 +57,11 @@ module "mig" {
   source  = "terraform-google-modules/vm/google//modules/mig"
   version = "~> 8.0.0"
 
-  project_id        = var.project_id
-  mig_name          = var.mig_name
-  hostname          = "${var.mig_name}-vm"
-  region            = var.region
-  
+  project_id = var.project_id
+  mig_name   = var.mig_name
+  hostname   = "${var.mig_name}-vm"
+  region     = var.region
+
   instance_template = module.instance_template.self_link
   target_size       = var.target_size
 
