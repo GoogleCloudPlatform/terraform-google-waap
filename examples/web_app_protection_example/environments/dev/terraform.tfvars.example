@@ -1,0 +1,5 @@
+/***********************
+***    Variables     ***
+************************/
+project_id        = "<PROJECT_ID>" # Madatory for multi environments.
+url_map           = "<true or false>" # Enable url map resource.
