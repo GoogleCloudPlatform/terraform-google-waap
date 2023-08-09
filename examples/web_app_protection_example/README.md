@@ -2,16 +2,17 @@
 
 This usage example shows how to successfully deploy a terraform-based infrastructure contemplating the use of Cloud CDN and Cloud Armor tools. These tools are deployed with predefined rules to protect an environment of Web applications hosted in Managed Instance Groups using the Global Load Balancer.
 
-Additionally, we include an example of an infrastructure pipeline using Jenkins to facilitate the adoption of the model in environments that already use Jenkins as a CI/CD tool for infrastructure solutions.
+Additionally, we included infrastructure pipeline examples to facilitate the adoption of the model in environments that already used Jenkins, Gitlab CI and Cloud Build as a CI/CD tool for infrastructure solutions.
 
 ## This example deploys:
 
 -   VPC Network, Subnets, Cloud Router
 -   Firewall Rules
 -   GCE Managed Instance Group running Sample application
--   Global Load Balancer with Managed Instance Groups in 2 regions
+-   Global Load Balancer
 -   Cloud CDN with some security best practices
 -   Cloud Armor with top 10 OWASP Rules and reCAPTCHA integration
+-   Traffic Management
 
 ## Requirements
 
@@ -65,12 +66,21 @@ Note: The "project_id" is the only variable that must be changed. Any other loca
 
     ```terraform apply```
 
+## Optional
+
+Some features are optional, are not created by default and are enabled based on their variables.
+
+An example is the URL map feature, used to forward HTTP(S) requests to backend services.
+
+If you need to perform traffic splitting between your backends, just set the `url_map` variable to `true` and configure the 'google_compute_url_map' resource.
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| project\_id | Google Project ID in which the resources will be created. | `string` | `""` | no |
+| project\_id | Google Project ID in which the resources will be created. | `string` | n/a | yes |
+| url\_map | Enable or disable the 'google\_compute\_url\_map' feature to route requests to backends based on rules. | `bool` | `false` | no |
 
 ## Outputs
 

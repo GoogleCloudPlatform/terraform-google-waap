@@ -125,6 +125,16 @@ variable "target_size" {
   default     = 1
 }
 
+variable "max_surge_fixed" {
+  description = "The maximum number of instances that can be created above the specified targetSize during the update process."
+  type        = number
+}
+
+variable "max_unavailable_fixed" {
+  description = "The maximum number of instances that can be unavailable during the update process."
+  type        = number
+}
+
 variable "port_name" {
   description = "The name of the port."
   type        = string

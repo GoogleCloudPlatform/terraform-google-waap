@@ -17,5 +17,10 @@
 variable "project_id" {
   description = "Google Project ID in which the resources will be created."
   type        = string
-  default     = ""
+}
+
+variable "url_map" {
+  description = "Enable or disable the 'google_compute_url_map' feature to route requests to backends based on rules."
+  type        = bool
+  default     = false
 }

@@ -10,6 +10,8 @@
 | disk\_size\_gb | The size of the image in gigabytes. If not specified, it will inherit the size of its base image. | `string` | `"100"` | no |
 | disk\_type | The GCE disk type. Can be either pd-ssd, local-ssd, pd-balanced or pd-standard. | `string` | `"pd-standard"` | no |
 | machine\_type | Machine type to create, e.g. n1-standard-1 | `string` | `"n1-standard-1"` | no |
+| max\_surge\_fixed | The maximum number of instances that can be created above the specified targetSize during the update process. | `number` | n/a | yes |
+| max\_unavailable\_fixed | The maximum number of instances that can be unavailable during the update process. | `number` | n/a | yes |
 | mig\_name | Name of the managed instance group. | `string` | `""` | no |
 | name\_prefix | Name prefix for the instance template | `string` | `"vm-template-"` | no |
 | network | Name of the network to deploy instances to. | `string` | `"default"` | no |

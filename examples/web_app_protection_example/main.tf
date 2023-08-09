@@ -75,7 +75,7 @@ module "network" {
 ## Configuration for each Managed Instance Group
 locals {
   mig_cfg = {
-    "mig1" = {
+    "mig01" = {
       machine_type         = "e2-small"
       source_image         = "debian-11"
       source_image_project = "debian-cloud"
@@ -83,22 +83,26 @@ locals {
 
       startup_script = file("./scripts/startup-script.sh")
 
-      mig_name     = "mig-r1"
-      region       = "us-central1"
-      target_size  = 1
+      mig_name = "mig-01"
+      region   = "us-central1"
+
+      target_size           = 2
+      max_surge_fixed       = 4
+      max_unavailable_fixed = 0
+
       port_name    = "http"
       backend_port = 80
 
       network    = module.network["network1"].network_name
       subnetwork = module.network["network1"].subnets[0]
 
-      service_account = "sa-backend-vm-r1"
+      service_account = "sa-mig-01"
       roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
       scopes          = ["logging-write", "monitoring-write", "cloud-platform"]
 
-      tags = ["backend-r1", "lb-web-hc"]
+      tags = ["mig-01", "lb-web-hc"]
     },
-    "mig2" = {
+    "mig02" = {
       machine_type         = "e2-small"
       source_image         = "debian-11"
       source_image_project = "debian-cloud"
@@ -106,20 +110,24 @@ locals {
 
       startup_script = file("./scripts/startup-script.sh")
 
-      mig_name     = "mig-r2"
-      region       = "us-east1"
-      target_size  = 1
+      mig_name = "mig-02"
+      region   = "us-east1"
+
+      target_size           = 2
+      max_surge_fixed       = 3
+      max_unavailable_fixed = 0
+
       port_name    = "http"
       backend_port = 80
 
       network    = module.network["network2"].network_name
       subnetwork = module.network["network2"].subnets[0]
 
-      service_account = "sa-backend-vm-r2"
+      service_account = "sa-mig-02"
       roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
       scopes          = ["logging-write", "monitoring-write", "cloud-platform"]
 
-      tags = ["backend-r2", "lb-web-hc"]
+      tags = ["mig-02", "lb-web-hc"]
     },
     # Add more settings for other MIGs if needed
   }
@@ -137,9 +145,13 @@ module "mig" {
 
   startup_script = each.value.startup_script
 
-  mig_name     = each.value.mig_name
-  region       = each.value.region
-  target_size  = each.value.target_size
+  mig_name = each.value.mig_name
+  region   = each.value.region
+
+  target_size           = each.value.target_size
+  max_surge_fixed       = each.value.max_surge_fixed
+  max_unavailable_fixed = each.value.max_unavailable_fixed
+
   port_name    = each.value.port_name
   backend_port = each.value.backend_port
 
@@ -442,6 +454,7 @@ locals {
     host                = null
     logging             = false
   }
+
 }
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
@@ -459,6 +472,9 @@ module "lb-http" {
   ssl                  = false
   https_redirect       = false
   quic                 = true
+
+  create_url_map = var.url_map ? false : true
+  url_map        = try(google_compute_url_map.traffic_mgmt[0].self_link, null)
 
   backends = {
     default = {
@@ -507,7 +523,7 @@ module "lb-http" {
 
       groups = [
         {
-          group                        = module.mig["mig1"].instance_group
+          group                        = module.mig["mig01"].instance_group
           balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
@@ -520,7 +536,7 @@ module "lb-http" {
           max_utilization              = 0.9
         },
         {
-          group                        = module.mig["mig2"].instance_group
+          group                        = module.mig["mig02"].instance_group
           balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
@@ -540,8 +556,175 @@ module "lb-http" {
         oauth2_client_secret = ""
       }
     }
+    backend01 = {
+
+      description                     = "Web App Backend 01"
+      protocol                        = "HTTP"
+      port                            = 80
+      port_name                       = "http"
+      timeout_sec                     = 600
+      enable_cdn                      = true
+      connection_draining_timeout_sec = null
+      compression_mode                = "AUTOMATIC"
+      security_policy                 = module.backend_policy.policy.name
+      edge_security_policy            = google_compute_security_policy.edge_policy.id
+      session_affinity                = null
+      affinity_cookie_ttl_sec         = null
+      custom_request_headers          = null
+      custom_response_headers         = null
+
+      health_check = local.health_check
+      log_config = {
+        enable      = true
+        sample_rate = 0.05
+      }
+
+      cdn_policy = {
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
+        serve_while_stale = 86400
+        negative_caching  = true
+
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
+        cache_key_policy = {
+          include_host          = true
+          include_protocol      = true
+          include_query_string  = true
+          include_named_cookies = ["__next_preview_data", "__prerender_bypass"]
+        }
+      }
+
+      groups = [
+        {
+          group                        = module.mig["mig01"].instance_group
+          balancing_mode               = "UTILIZATION"
+          capacity_scaler              = null
+          description                  = null
+          max_connections              = null
+          max_connections_per_instance = null
+          max_connections_per_endpoint = null
+          max_rate                     = null
+          max_rate_per_instance        = null
+          max_rate_per_endpoint        = null
+          max_utilization              = 0.9
+        },
+      ]
+      iap_config = {
+        enable               = false
+        oauth2_client_id     = null
+        oauth2_client_secret = null
+      }
+    }
+
+    backend02 = {
+
+      description                     = "Web App Backend 02"
+      protocol                        = "HTTP"
+      port                            = 80
+      port_name                       = "http"
+      timeout_sec                     = 600
+      enable_cdn                      = true
+      connection_draining_timeout_sec = null
+      compression_mode                = "AUTOMATIC"
+      security_policy                 = module.backend_policy.policy.name
+      edge_security_policy            = google_compute_security_policy.edge_policy.id
+      session_affinity                = null
+      affinity_cookie_ttl_sec         = null
+      custom_request_headers          = null
+      custom_response_headers         = null
+
+      health_check = local.health_check
+
+      log_config = {
+        enable      = true
+        sample_rate = 0.05
+      }
+
+      cdn_policy = {
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
+        serve_while_stale = 86400
+        negative_caching  = true
+
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
+        cache_key_policy = {
+          include_host          = true
+          include_protocol      = true
+          include_query_string  = true
+          include_named_cookies = ["__next_preview_data", "__prerender_bypass"]
+        }
+      }
+
+      groups = [
+        {
+          group                        = module.mig["mig02"].instance_group
+          balancing_mode               = "UTILIZATION"
+          capacity_scaler              = null
+          description                  = null
+          max_connections              = null
+          max_connections_per_instance = null
+          max_connections_per_endpoint = null
+          max_rate                     = null
+          max_rate_per_instance        = null
+          max_rate_per_endpoint        = null
+          max_utilization              = 0.9
+        },
+      ]
+      iap_config = {
+        enable               = false
+        oauth2_client_id     = null
+        oauth2_client_secret = null
+      }
+    }
   }
 }
+
+resource "google_compute_url_map" "traffic_mgmt" {
+  count = var.url_map ? 1 : 0
+
+  project = var.project_id
+
+  name            = "lb-web-app"
+  description     = "UrlMap used to route requests to a backend service based on rules."
+  default_service = module.lb-http.backend_services["default"].self_link
+
+  host_rule {
+    hosts        = ["*"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = module.lb-http.backend_services["default"].self_link
+
+    path_rule {
+      paths = ["/"]
+      route_action {
+        weighted_backend_services {
+          backend_service = module.lb-http.backend_services["backend01"].self_link
+          weight          = 400
+        }
+        weighted_backend_services {
+          backend_service = module.lb-http.backend_services["backend02"].self_link
+          weight          = 600
+        }
+      }
+    }
+  }
+}
+
 ## ---------------------------------------------------------------------------------------------------------------------
 ## MONITORING
 ## Dashboard

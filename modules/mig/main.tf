@@ -73,12 +73,12 @@ module "mig" {
   update_policy = [{
     type                         = "PROACTIVE"
     instance_redistribution_type = "PROACTIVE"
-    replacement_method           = "RECREATE"
+    replacement_method           = "SUBSTITUTE"
     minimal_action               = "REPLACE"
-    max_surge_fixed              = 0
-    max_surge_percent            = null
-    max_unavailable_fixed        = 4
+    max_surge_fixed              = var.max_surge_fixed
+    max_unavailable_fixed        = var.max_unavailable_fixed
     max_unavailable_percent      = null
-    min_ready_sec                = null
+    max_surge_percent            = null
+    min_ready_sec                = 100
   }]
 }
