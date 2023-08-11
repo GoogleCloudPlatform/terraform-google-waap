@@ -733,6 +733,13 @@ resource "google_compute_url_map" "traffic_mgmt" {
 resource "google_monitoring_dashboard" "dashboard" {
   dashboard_json = file("./scripts/dashboard.json")
   project        = var.project_id
+
+  lifecycle {
+    ignore_changes = [
+      dashboard_json
+    ]
+  }
+
 }
 
 locals {
