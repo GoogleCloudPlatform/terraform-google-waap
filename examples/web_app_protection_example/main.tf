@@ -15,39 +15,56 @@
  */
 
 ## ---------------------------------------------------------------------------------------------------------------------
-## STARTUP SCRIPT GCE
-## Installs and configures the application in the backends.
-## ---------------------------------------------------------------------------------------------------------------------
-
-data "template_file" "startup_script" {
-  template = file("./scripts/startup-script.sh")
-}
-
-## ---------------------------------------------------------------------------------------------------------------------
 ## NETWORKS
 ## Modules created for configuring networks used in two different regions...
 ## ---------------------------------------------------------------------------------------------------------------------
 
-module "network_mig_r1" {
-  source = "../../modules/mig-network"
-
-  project_id    = var.project_id
-  region        = var.region_r1
-  network_name  = var.network_name_r1
-  subnet_name   = var.subnet_name_r1
-  subnet_ip     = var.subnet_ip_r1
-  subnet_region = var.subnet_region_r1
+locals {
+  network_cfg = {
+    "network1" = {
+      network_name = "vpc-webapp-r1"
+      cnat_region  = "us-central1"
+      subnets = [
+        {
+          subnet_name   = "webapp-r1-subnet01"
+          subnet_ip     = "10.0.16.0/24"
+          subnet_region = "us-central1"
+        },
+        {
+          subnet_name   = "webapp-r1-subnet02"
+          subnet_ip     = "10.0.18.0/24"
+          subnet_region = "us-west1"
+        },
+      ]
+    },
+    "network2" = {
+      network_name = "vpc-webapp-r2"
+      cnat_region  = "us-east1"
+      subnets = [
+        {
+          subnet_name   = "webapp-r2-subnet01"
+          subnet_ip     = "10.0.32.0/24"
+          subnet_region = "us-east1"
+        },
+        {
+          subnet_name   = "webapp-r2-subnet02"
+          subnet_ip     = "10.0.34.0/24"
+          subnet_region = "us-east4"
+        },
+      ]
+    },
+  }
 }
 
-module "network_mig_r2" {
-  source = "../../modules/mig-network"
+module "network" {
+  source   = "../../modules/mig-network"
+  for_each = local.network_cfg
 
-  project_id    = var.project_id
-  region        = var.region_r2
-  network_name  = var.network_name_r2
-  subnet_name   = var.subnet_name_r2
-  subnet_ip     = var.subnet_ip_r2
-  subnet_region = var.subnet_region_r2
+  project_id = var.project_id
+
+  region       = each.value.cnat_region
+  network_name = each.value.network_name
+  subnets      = each.value.subnets
 }
 
 ## ---------------------------------------------------------------------------------------------------------------------
@@ -55,68 +72,97 @@ module "network_mig_r2" {
 ## Creation of templates and configuration of MIGs.
 ## ---------------------------------------------------------------------------------------------------------------------
 
-module "mig_r1" {
-  source = "../../modules/mig"
+## Configuration for each Managed Instance Group
+locals {
+  mig_cfg = {
+    "mig01" = {
+      machine_type         = "e2-small"
+      source_image         = "debian-11"
+      source_image_project = "debian-cloud"
+      disk_size            = "50"
 
-  project_id   = var.project_id
-  region       = var.region_r1
-  name_prefix  = var.name_prefix_r1
-  machine_type = var.machine_type_r1
-  tags         = var.tags_r1
+      startup_script = file("./scripts/startup-script.sh")
 
-  source_image = var.source_image_r1
-  disk_size_gb = var.disk_size_gb_r1
+      mig_name = "mig-01"
+      region   = "us-central1"
 
-  service_account = var.service_account_id_r1
-  roles           = var.service_account_roles_r1
-  scopes          = var.service_account_scopes_r1
+      target_size           = 2
+      max_surge_fixed       = 4
+      max_unavailable_fixed = 0
 
-  startup_script = data.template_file.startup_script.rendered
+      port_name    = "http"
+      backend_port = 80
 
-  network    = var.network_name_r1
-  subnetwork = var.subnet_name_r1
+      network    = module.network["network1"].network_name
+      subnetwork = module.network["network1"].subnets[0]
 
-  mig_name           = var.mig_name_r1
-  base_instance_name = var.base_instance_name_r1
-  zone               = var.zone_r1
+      service_account = "sa-mig-01"
+      roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
+      scopes          = ["logging-write", "monitoring-write", "cloud-platform"]
 
-  target_size = var.target_size_r1
+      tags = ["mig-01", "lb-web-hc"]
+    },
+    "mig02" = {
+      machine_type         = "e2-small"
+      source_image         = "debian-11"
+      source_image_project = "debian-cloud"
+      disk_size            = "50"
 
-  depends_on = [
-    module.network_mig_r1
-  ]
+      startup_script = file("./scripts/startup-script.sh")
+
+      mig_name = "mig-02"
+      region   = "us-east1"
+
+      target_size           = 2
+      max_surge_fixed       = 3
+      max_unavailable_fixed = 0
+
+      port_name    = "http"
+      backend_port = 80
+
+      network    = module.network["network2"].network_name
+      subnetwork = module.network["network2"].subnets[0]
+
+      service_account = "sa-mig-02"
+      roles           = ["roles/monitoring.metricWriter", "roles/logging.logWriter"]
+      scopes          = ["logging-write", "monitoring-write", "cloud-platform"]
+
+      tags = ["mig-02", "lb-web-hc"]
+    },
+    # Add more settings for other MIGs if needed
+  }
 }
+module "mig" {
+  source   = "../../modules/mig"
+  for_each = local.mig_cfg
 
-module "mig_r2" {
-  source = "../../modules/mig"
+  project_id = var.project_id
 
-  project_id   = var.project_id
-  region       = var.region_r2
-  name_prefix  = var.name_prefix_r2
-  machine_type = var.machine_type_r2
-  tags         = var.tags_r2
+  machine_type         = each.value.machine_type
+  source_image         = each.value.source_image
+  source_image_project = each.value.source_image_project
+  disk_size_gb         = each.value.disk_size
 
-  source_image = var.source_image_r2
-  disk_size_gb = var.disk_size_gb_r2
+  startup_script = each.value.startup_script
 
-  service_account = var.service_account_id_r2
-  roles           = var.service_account_roles_r2
-  scopes          = var.service_account_scopes_r2
+  mig_name = each.value.mig_name
+  region   = each.value.region
 
-  startup_script = data.template_file.startup_script.rendered
+  target_size           = each.value.target_size
+  max_surge_fixed       = each.value.max_surge_fixed
+  max_unavailable_fixed = each.value.max_unavailable_fixed
 
-  network    = var.network_name_r2
-  subnetwork = var.subnet_name_r2
+  port_name    = each.value.port_name
+  backend_port = each.value.backend_port
 
-  mig_name           = var.mig_name_r2
-  base_instance_name = var.base_instance_name_r2
-  zone               = var.zone_r2
+  network    = each.value.network
+  subnetwork = each.value.subnetwork
 
-  target_size = var.target_size_r2
+  service_account = each.value.service_account
+  roles           = each.value.roles
+  scopes          = each.value.scopes
 
-  depends_on = [
-    module.network_mig_r2
-  ]
+  tags = each.value.tags
 }
 
 ## ---------------------------------------------------------------------------------------------------------------------
@@ -397,30 +443,48 @@ module "backend_policy" {
 ## Configuration of the Load Balancer and its resources.
 ## ---------------------------------------------------------------------------------------------------------------------
 
+locals {
+  health_check = {
+    check_interval_sec  = 60
+    timeout_sec         = 60
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    request_path        = "/"
+    port                = 80
+    host                = null
+    logging             = false
+  }
+
+}
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
   version = "9.0.0"
 
-  name        = "lb-web-app"
   project     = var.project_id
+  name        = "lb-web-app"
   target_tags = ["lb-web-hc"]
 
-  firewall_networks    = [module.network_mig_r1.network_name, module.network_mig_r2.network_name]
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+
+  firewall_networks    = [module.network["network1"].network_name, module.network["network2"].network_name]
   firewall_projects    = [var.project_id, var.project_id]
   use_ssl_certificates = false
   ssl                  = false
   https_redirect       = false
   quic                 = true
 
+  create_url_map = var.url_map ? false : true
+  url_map        = try(google_compute_url_map.traffic_mgmt[0].self_link, null)
+
   backends = {
     default = {
 
-      description                     = "Web App Backend"
+      description                     = "Web App Default Backend"
       protocol                        = "HTTP"
-      port                            = var.backend_port
+      port                            = 80
       port_name                       = "http"
       timeout_sec                     = 600
-      enable_cdn                      = var.enable_cdn
+      enable_cdn                      = true
       connection_draining_timeout_sec = null
       compression_mode                = "AUTOMATIC"
       security_policy                 = module.backend_policy.policy.name
@@ -430,17 +494,152 @@ module "lb-http" {
       custom_request_headers          = null
       custom_response_headers         = null
 
-      health_check = {
-
-        check_interval_sec  = 60
-        timeout_sec         = 60
-        healthy_threshold   = 2
-        unhealthy_threshold = 2
-        request_path        = "/"
-        port                = var.backend_port
-        host                = null
-        logging             = false
+      health_check = local.health_check
+      log_config = {
+        enable      = true
+        sample_rate = 0.05
       }
+
+      cdn_policy = {
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
+        serve_while_stale = 86400
+        negative_caching  = true
+
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
+        cache_key_policy = {
+          include_host          = true
+          include_protocol      = true
+          include_query_string  = true
+          include_named_cookies = ["__next_preview_data", "__prerender_bypass"]
+        }
+      }
+
+      groups = [
+        {
+          group                        = module.mig["mig01"].instance_group
+          balancing_mode               = "UTILIZATION"
+          capacity_scaler              = null
+          description                  = null
+          max_connections              = null
+          max_connections_per_instance = null
+          max_connections_per_endpoint = null
+          max_rate                     = null
+          max_rate_per_instance        = null
+          max_rate_per_endpoint        = null
+          max_utilization              = 0.9
+        },
+        {
+          group                        = module.mig["mig02"].instance_group
+          balancing_mode               = "UTILIZATION"
+          capacity_scaler              = null
+          description                  = null
+          max_connections              = null
+          max_connections_per_instance = null
+          max_connections_per_endpoint = null
+          max_rate                     = null
+          max_rate_per_instance        = null
+          max_rate_per_endpoint        = null
+          max_utilization              = 0.9
+        },
+      ]
+
+      iap_config = {
+        enable               = false
+        oauth2_client_id     = ""
+        oauth2_client_secret = ""
+      }
+    }
+    backend01 = {
+
+      description                     = "Web App Backend 01"
+      protocol                        = "HTTP"
+      port                            = 80
+      port_name                       = "http"
+      timeout_sec                     = 600
+      enable_cdn                      = true
+      connection_draining_timeout_sec = null
+      compression_mode                = "AUTOMATIC"
+      security_policy                 = module.backend_policy.policy.name
+      edge_security_policy            = google_compute_security_policy.edge_policy.id
+      session_affinity                = null
+      affinity_cookie_ttl_sec         = null
+      custom_request_headers          = null
+      custom_response_headers         = null
+
+      health_check = local.health_check
+      log_config = {
+        enable      = true
+        sample_rate = 0.05
+      }
+
+      cdn_policy = {
+        cache_mode        = "CACHE_ALL_STATIC"
+        default_ttl       = 3600
+        client_ttl        = 1800
+        max_ttl           = 28800
+        serve_while_stale = 86400
+        negative_caching  = true
+
+        negative_caching_policy = {
+          code = 404
+          ttl  = 60
+        }
+
+        cache_key_policy = {
+          include_host          = true
+          include_protocol      = true
+          include_query_string  = true
+          include_named_cookies = ["__next_preview_data", "__prerender_bypass"]
+        }
+      }
+
+      groups = [
+        {
+          group                        = module.mig["mig01"].instance_group
+          balancing_mode               = "UTILIZATION"
+          capacity_scaler              = null
+          description                  = null
+          max_connections              = null
+          max_connections_per_instance = null
+          max_connections_per_endpoint = null
+          max_rate                     = null
+          max_rate_per_instance        = null
+          max_rate_per_endpoint        = null
+          max_utilization              = 0.9
+        },
+      ]
+      iap_config = {
+        enable               = false
+        oauth2_client_id     = null
+        oauth2_client_secret = null
+      }
+    }
+
+    backend02 = {
+
+      description                     = "Web App Backend 02"
+      protocol                        = "HTTP"
+      port                            = 80
+      port_name                       = "http"
+      timeout_sec                     = 600
+      enable_cdn                      = true
+      connection_draining_timeout_sec = null
+      compression_mode                = "AUTOMATIC"
+      security_policy                 = module.backend_policy.policy.name
+      edge_security_policy            = google_compute_security_policy.edge_policy.id
+      session_affinity                = null
+      affinity_cookie_ttl_sec         = null
+      custom_request_headers          = null
+      custom_response_headers         = null
+
+      health_check = local.health_check
 
       log_config = {
         enable      = true
@@ -470,41 +669,62 @@ module "lb-http" {
 
       groups = [
         {
-          group                        = module.mig_r1.instance_group
+          group                        = module.mig["mig02"].instance_group
           balancing_mode               = "UTILIZATION"
           capacity_scaler              = null
           description                  = null
           max_connections              = null
           max_connections_per_instance = null
           max_connections_per_endpoint = null
-          max_rate                     = 10
-          max_rate_per_instance        = null
-          max_rate_per_endpoint        = null
-          max_utilization              = 0.9
-        },
-        {
-          group                        = module.mig_r2.instance_group
-          balancing_mode               = "UTILIZATION"
-          capacity_scaler              = null
-          description                  = null
-          max_connections              = null
-          max_connections_per_instance = null
-          max_connections_per_endpoint = null
-          max_rate                     = 10
+          max_rate                     = null
           max_rate_per_instance        = null
           max_rate_per_endpoint        = null
           max_utilization              = 0.9
         },
       ]
-
       iap_config = {
         enable               = false
-        oauth2_client_id     = ""
-        oauth2_client_secret = ""
+        oauth2_client_id     = null
+        oauth2_client_secret = null
       }
     }
   }
 }
+
+resource "google_compute_url_map" "traffic_mgmt" {
+  count = var.url_map ? 1 : 0
+
+  project = var.project_id
+
+  name            = "lb-web-app"
+  description     = "UrlMap used to route requests to a backend service based on rules."
+  default_service = module.lb-http.backend_services["default"].self_link
+
+  host_rule {
+    hosts        = ["*"]
+    path_matcher = "allpaths"
+  }
+
+  path_matcher {
+    name            = "allpaths"
+    default_service = module.lb-http.backend_services["default"].self_link
+
+    path_rule {
+      paths = ["/"]
+      route_action {
+        weighted_backend_services {
+          backend_service = module.lb-http.backend_services["backend01"].self_link
+          weight          = 400
+        }
+        weighted_backend_services {
+          backend_service = module.lb-http.backend_services["backend02"].self_link
+          weight          = 600
+        }
+      }
+    }
+  }
+}
+
 ## ---------------------------------------------------------------------------------------------------------------------
 ## MONITORING
 ## Dashboard
@@ -513,6 +733,13 @@ module "lb-http" {
 resource "google_monitoring_dashboard" "dashboard" {
   dashboard_json = file("./scripts/dashboard.json")
   project        = var.project_id
+
+  lifecycle {
+    ignore_changes = [
+      dashboard_json
+    ]
+  }
+
 }
 
 locals {

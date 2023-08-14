@@ -20,30 +20,6 @@ variable "project_id" {
   default     = ""
 }
 
-variable "region" {
-  description = "Region for cloud resources."
-  type        = string
-  default     = "us-central1"
-}
-
-variable "zone" {
-  description = "Zone for managed instance groups."
-  type        = string
-  default     = "us-central1-f"
-}
-
-variable "port_name" {
-  description = "The name of the port."
-  type        = string
-  default     = "http"
-}
-
-variable "backend_port" {
-  description = "The backend port number."
-  type        = number
-  default     = 80
-}
-
 ## VM Service Account ##
 variable "service_account" {
   description = "The account ID used to generate the virtual machine service account."
@@ -69,15 +45,14 @@ variable "machine_type" {
   type        = string
   default     = "n1-standard-1"
 }
-
-variable "tags" {
-  description = "Network tags, provided as a list"
-  type        = list(string)
-  default     = []
+variable "source_image" {
+  description = "Source disk image. If neither source_image nor source_image_family is specified, defaults to the latest public CentOS image."
+  type        = string
+  default     = ""
 }
 
-variable "source_image" {
-  description = "Source disk image. If neither source_image nor source_image_family is specified, defaults to the latest public Ubuntu image."
+variable "source_image_project" {
+  description = "Project where the source image comes from. The default project contains CentOS images.	"
   type        = string
   default     = ""
 }
@@ -100,12 +75,6 @@ variable "disk_size_gb" {
   default     = "100"
 }
 
-variable "disk_mode" {
-  description = "The mode in which to attach this disk, either READ_WRITE or READ_ONLY."
-  type        = string
-  default     = "READ_WRITE"
-}
-
 variable "scopes" {
   description = "List of scopes for the instance template service account"
   type        = list(any)
@@ -116,6 +85,12 @@ variable "startup_script" {
   description = "VM startup script."
   type        = string
   default     = ""
+}
+
+variable "tags" {
+  description = "Network tags, provided as a list"
+  type        = list(string)
+  default     = []
 }
 
 ## Network ##
@@ -138,14 +113,36 @@ variable "mig_name" {
   default     = ""
 }
 
-variable "base_instance_name" {
-  description = "The base instance name to use for instances in this group."
+variable "region" {
+  description = "Region for cloud resources."
   type        = string
-  default     = "backend-vm"
+  default     = "us-central1"
 }
 
 variable "target_size" {
   description = "The target number of running instances for this managed instance group. This value should always be explicitly set unless this resource is attached to an autoscaler, in which case it should never be set."
   type        = number
   default     = 1
+}
+
+variable "max_surge_fixed" {
+  description = "The maximum number of instances that can be created above the specified targetSize during the update process."
+  type        = number
+}
+
+variable "max_unavailable_fixed" {
+  description = "The maximum number of instances that can be unavailable during the update process."
+  type        = number
+}
+
+variable "port_name" {
+  description = "The name of the port."
+  type        = string
+  default     = "http"
+}
+
+variable "backend_port" {
+  description = "The backend port number."
+  type        = number
+  default     = 80
 }

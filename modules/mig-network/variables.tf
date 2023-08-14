@@ -32,20 +32,11 @@ variable "network_name" {
   default     = ""
 }
 
-variable "subnet_name" {
-  description = "Subnet name"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_ip" {
-  description = "This is th IP of your subnet"
-  type        = string
-  default     = ""
-}
-
-variable "subnet_region" {
-  description = "Subnet Region"
-  type        = string
-  default     = ""
+variable "subnets" {
+  description = "List of subnet configurations"
+  type = list(object({
+    subnet_name   = string
+    subnet_ip     = string
+    subnet_region = string
+  }))
 }

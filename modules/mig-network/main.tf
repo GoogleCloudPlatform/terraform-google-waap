@@ -22,16 +22,10 @@ module "mig_vpc" {
   version = "~> 6.0"
 
   project_id   = var.project_id
-  network_name = format("vpc-%s", var.network_name)
+  network_name = var.network_name
   routing_mode = "GLOBAL"
 
-  subnets = [
-    {
-      subnet_name   = format("subnet-%s", var.subnet_name)
-      subnet_ip     = var.subnet_ip
-      subnet_region = var.subnet_region
-    }
-  ]
+  subnets = var.subnets
 }
 
 /***********************
@@ -43,8 +37,8 @@ module "cloud-nat" {
   version       = "~> 1.2"
   create_router = true
   project_id    = var.project_id
-  region        = var.region                  #!TODO
-  network       = module.mig_vpc.network_name #!TODO
+  region        = var.region
+  network       = module.mig_vpc.network_name
   router        = format("router-%s", var.network_name)
   name          = format("nat-%s", var.network_name)
 }
