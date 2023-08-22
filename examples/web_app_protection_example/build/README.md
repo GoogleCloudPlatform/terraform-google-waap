@@ -8,19 +8,21 @@ The files are divided into groups of two different functionalities:
 
 2.  The second group is a group of common files between the pipeles, where the terraform functions and commands that will be used are described.
 
-Segmenting in this way, we make it possible to have a centralized point for changes to *-functions.sh file functions so that whenever a new CI/CD tool is included in the environment, it will not be necessary to rewrite the functions, just create the steps of the new one CI/CD tool calling the *-functions.sh file that already has all functions and conditions duly declared.
+Segmenting in this way, we make it possible to have a centralized point for changes to pipeline-functions.sh file functions so that whenever a new CI/CD tool is included in the environment, it will not be necessary to rewrite the functions, just create the steps of the new one CI/CD tool calling the pipeline-functions.sh file that already has all functions and conditions duly declared.
 
 ## Examples already created:
 
-### jenkins
+### Jenkins
 
 If you already have a Jenkins environment to run your terraform code or if you intend to use Jenkins as your infrastructure CI/CD Tool, we created a [JenkinsFile](Jenkinsfile) example with a pipeline suggestion for this environment. Please, refer to the [JenkinsFile](Jenkinsfile) to view the example.
 
 - Requirements
 
-Jenkins installed and running
-Jenkins git plugin installed and running  (https://plugins.jenkins.io/git/)
-Terraform installed in the Jenkins instance (https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli)
+1. [Jenkins installed and running](https://www.jenkins.io/doc/book/installing/)
+
+2. [Jenkins git plugin installed and running](https://plugins.jenkins.io/git/)
+
+3. [Terraform installed in the Jenkins instance](https://developer.hashicorp.com/terraform/tutorials/gcp-get-started/install-cli)
 
 - Jenkins file rules and conditions
 
@@ -34,8 +36,7 @@ For this condition, the pipeline code will run steps related to terraform init a
 
 For this condition, the pipeline code will run steps related to terraform init and terraform plan, generating a plan output without changing your infrastructure.
 
-
-### gitlab
+### Gitlab
 
 If you already have a Gitlab environment to run your terraform code or if you intend to use Jenkins as your infrastructure CI/CD Tool, we created a [Gitlab-ci](.gitlab-ci.yml) example with a pipeline suggestion for this environment. Please, refer to the [Gitlab-ci](.gitlab-ci.yml) to view the example.
 
@@ -71,7 +72,7 @@ If you intend to use Cloud Build as your infrastructure CI/CD Tool, we created a
 
 - Cloud Buid file rules and conditions
 
-This [Cloud Build](.cloudbuild.yaml) contains rules based on branch names considering two different behavior:
+This [Cloud Build](cloudbuild.yaml) contains rules based on branch names considering two different behavior:
 
 1.  Behavior 1: this behavior happens when the code is pushed to a branch with the same name as an environment folder inside web-app-protection-example/environments/ (E.g., "prd", "dev"or "npd" ).
 

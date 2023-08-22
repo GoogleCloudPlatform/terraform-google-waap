@@ -46,7 +46,7 @@ Here's a step by step to deploy and test this example:
 
 1.  Clone waap repo
 
-	```git clone [https://github.com/GoogleCloudPlatform/terraform-google-waap.git](https://github.com/GoogleCloudPlatform/terraform-google-waap.git)```
+	```git clone``` [https://github.com/GoogleCloudPlatform/terraform-google-waap.git](https://github.com/GoogleCloudPlatform/terraform-google-waap.git)
 
 2.  Change to web-app-protection-example directory:
 
