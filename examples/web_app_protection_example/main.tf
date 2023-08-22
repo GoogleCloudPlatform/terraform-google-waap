@@ -556,7 +556,7 @@ module "lb-http" {
         oauth2_client_secret = ""
       }
     }
-    backend01 = {
+    web-app01 = {
 
       description                     = "Web App Backend 01"
       protocol                        = "HTTP"
@@ -622,7 +622,7 @@ module "lb-http" {
       }
     }
 
-    backend02 = {
+    web-app02 = {
 
       description                     = "Web App Backend 02"
       protocol                        = "HTTP"
@@ -713,11 +713,11 @@ resource "google_compute_url_map" "traffic_mgmt" {
       paths = ["/"]
       route_action {
         weighted_backend_services {
-          backend_service = module.lb-http.backend_services["backend01"].self_link
+          backend_service = module.lb-http.backend_services["web-app01"].self_link
           weight          = 400
         }
         weighted_backend_services {
-          backend_service = module.lb-http.backend_services["backend02"].self_link
+          backend_service = module.lb-http.backend_services["web-app02"].self_link
           weight          = 600
         }
       }
