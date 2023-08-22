@@ -14,7 +14,7 @@
 
 # Gitlab-ci
 image:
-  name: hashicorp/terraform:1.3.9
+  name: hashicorp/terraform:1.5.5
   entrypoint:
     - '/usr/bin/env'
     - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'

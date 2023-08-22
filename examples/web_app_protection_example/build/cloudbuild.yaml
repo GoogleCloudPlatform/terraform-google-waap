@@ -27,7 +27,7 @@ substitutions:
     for i in `find environments/ -mindepth 1 -maxdepth 1 -type d` ; do cp -Prf *.tf ./scripts/ $i ; done
 
 steps:
-- name: 'hashicorp/terraform:1.3.9'
+- name: 'hashicorp/terraform:1.5.5'
   entrypoint: 'sh'
   id: 'tf_init'
   args:
@@ -38,7 +38,7 @@ steps:
         build/pipeline-functions.sh init "$$BRANCH_NAME"
       fi
 
-- name: 'hashicorp/terraform:1.3.9'
+- name: 'hashicorp/terraform:1.5.5'
   entrypoint: 'sh'
   id: 'tf_plan_all'
   args:
@@ -49,7 +49,7 @@ steps:
         build/pipeline-functions.sh plan_validate_all "$$BRANCH_NAME"
       fi
 
-- name: 'hashicorp/terraform:1.3.9'
+- name: 'hashicorp/terraform:1.5.5'
   entrypoint: 'sh'
   id: 'tf_plan'
   args:
@@ -60,7 +60,7 @@ steps:
         build/pipeline-functions.sh plan "$$BRANCH_NAME"
       fi
 
-- name: 'hashicorp/terraform:1.3.9'
+- name: 'hashicorp/terraform:1.5.5'
   entrypoint: 'sh'
   id: 'tf_apply'
   args:
