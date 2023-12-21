@@ -57,7 +57,9 @@ locals {
 }
 
 module "network" {
-  source   = "../../modules/mig-network"
+  source  = "GoogleCloudPlatform/waap/google//modules/mig-network"
+  version = "~> 0.1"
+
   for_each = local.network_cfg
 
   project_id = var.project_id
@@ -133,7 +135,8 @@ locals {
   }
 }
 module "mig" {
-  source   = "../../modules/mig"
+  source   = "GoogleCloudPlatform/waap/google//modules/mig"
+  version  = "~> 0.1"
   for_each = local.mig_cfg
 
   project_id = var.project_id
