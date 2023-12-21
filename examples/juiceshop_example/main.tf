@@ -52,7 +52,7 @@ module "cloud_router" {
 
 module "apigee" {
   source  = "GoogleCloudPlatform/waap/google//modules/apigee"
-  version = "~> REPLACE-AFTER-RELEASE"
+  version = "~> 0.1"
 
   project_id          = var.project_id
   create_apigee_org   = true
@@ -809,7 +809,7 @@ resource "google_compute_security_policy" "waap_policies" {
 // WAAP Analytics
 module "analytics" {
   source  = "GoogleCloudPlatform/waap/google//modules/waap-analytics"
-  version = "~> REPLACE-AFTER-RELEASE"
+  version = "~> 0.1"
 
   project_id     = var.project_id
   log_sink_name  = "juiceshop_log_sink"

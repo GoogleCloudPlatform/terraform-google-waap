@@ -58,7 +58,7 @@ locals {
 
 module "network" {
   source  = "GoogleCloudPlatform/waap/google//modules/mig-network"
-  version = "~> REPLACE-AFTER-RELEASE"
+  version = "~> 0.1"
 
   for_each = local.network_cfg
 
@@ -136,7 +136,7 @@ locals {
 }
 module "mig" {
   source   = "GoogleCloudPlatform/waap/google//modules/mig"
-  version  = "~> REPLACE-AFTER-RELEASE"
+  version  = "~> 0.1"
   for_each = local.mig_cfg
 
   project_id = var.project_id
