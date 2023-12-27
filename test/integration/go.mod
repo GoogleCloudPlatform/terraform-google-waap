@@ -4,7 +4,7 @@ go 1.21
 
 toolchain go1.21.5
 
-require github.com/GoogleCloudPlatform/cloud-foundation-toolkit/infra/blueprint-test v0.11.0
+require github.com/GoogleCloudPlatform/cloud-foundation-toolkit/infra/blueprint-test v0.11.1
 
 require (
 	cloud.google.com/go v0.110.7 // indirect
