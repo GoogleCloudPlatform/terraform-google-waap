@@ -85,7 +85,7 @@ module "apigee" {
 }
 
 module "nip_apigee_hostname" {
-  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.19.1"
 
   project_id         = var.project_id
   address_name       = "apigee-external"
@@ -214,7 +214,7 @@ resource "apigee_developer_app_credential" "example" {
 
 module "recaptcha_key_gcloud" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 3.1.2"
+  version = "~> 3.3.0"
 
   platform              = "linux"
   additional_components = ["jq"]
@@ -225,7 +225,7 @@ module "recaptcha_key_gcloud" {
 
 module "recaptcha_keys_list_gcloud" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 3.1.2"
+  version = "~> 3.3.0"
 
   platform = "linux"
 
@@ -428,7 +428,7 @@ module "mig" {
 
 
 module "nip_juiceshop_hostname" {
-  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.19.1"
 
   project_id   = var.project_id
   address_name = "juiceshop-lb-ip"

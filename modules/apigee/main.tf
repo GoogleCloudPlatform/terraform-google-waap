@@ -131,7 +131,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
 }
 
 module "psc_lb" {
-  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb?ref=v0.19.1"
 
   project_id = var.project_id
   name       = "apigee-xlb-psc"
