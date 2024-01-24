@@ -245,7 +245,7 @@ resource "google_compute_security_policy" "edge_policy" {
 
 module "backend_policy" {
   source  = "GoogleCloudPlatform/cloud-armor/google"
-  version = "0.3.0"
+  version = "2.0.1"
 
   project_id                           = var.project_id
   name                                 = "backend-policy-${random_id.suffix.hex}"
@@ -461,7 +461,7 @@ locals {
 }
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
-  version = "9.0.0"
+  version = "10.1.0"
 
   project     = var.project_id
   name        = "lb-web-app"

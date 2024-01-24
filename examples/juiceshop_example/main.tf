@@ -17,7 +17,7 @@
 
 module "vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 4.0"
+  version = "~> 9.0"
 
   project_id   = var.project_id
   network_name = "waap-vpc"
@@ -39,7 +39,7 @@ module "vpc" {
 
 module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
-  version = "~> 4.0"
+  version = "~> 6.0"
   project = var.project_id
   name    = "juiceshop-router"
   network = module.vpc.network_name
@@ -269,7 +269,7 @@ resource "time_sleep" "wait_for_git_seconds" {
 # Build Docker Image
 module "build_juiceshop_image" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 2.0"
+  version = "~> 3.0"
 
   platform = "linux"
 
@@ -341,7 +341,7 @@ module "gce_container" {
 
 module "instance_template" {
   source  = "terraform-google-modules/vm/google//modules/instance_template"
-  version = "~> 7.9.0"
+  version = "~> 10.1.0"
 
   name_prefix = "juiceshop-instance-template"
   project_id  = var.project_id
@@ -384,7 +384,7 @@ module "instance_template" {
 
 module "mig" {
   source  = "terraform-google-modules/vm/google//modules/mig"
-  version = "~> 7.9.0"
+  version = "~> 10.1.0"
 
   project_id        = var.project_id
   hostname          = "juiceshop-demo"
@@ -436,7 +436,7 @@ module "nip_juiceshop_hostname" {
 
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
-  version = "~> 6.3.0"
+  version = "~> 10.1.0"
 
   project     = var.project_id
   name        = "juiceshop"
@@ -506,7 +506,7 @@ module "lb-http" {
 # ----------------------------------------------------------------------------------------------------------------------
 module "firewall_rules" {
   source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "~> 6.0.0"
+  version = "~> 9.0.0"
 
   project_id   = var.project_id
   network_name = module.vpc.network_name
