@@ -29,7 +29,7 @@ resource "google_project_iam_member" "sa_roles" {
 
 module "instance_template" {
   source  = "terraform-google-modules/vm/google//modules/instance_template"
-  version = "~> 8.0.0"
+  version = "~> 10.1.0"
 
   project_id   = var.project_id
   name_prefix  = var.name_prefix
@@ -55,7 +55,7 @@ module "instance_template" {
 
 module "mig" {
   source  = "terraform-google-modules/vm/google//modules/mig"
-  version = "~> 8.0.0"
+  version = "~> 10.1.0"
 
   project_id = var.project_id
   mig_name   = var.mig_name
