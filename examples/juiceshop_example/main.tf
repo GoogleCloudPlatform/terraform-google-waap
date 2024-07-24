@@ -436,7 +436,7 @@ module "nip_juiceshop_hostname" {
 
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
-  version = "~> 6.3.0"
+  version = "~> 11.1.0"
 
   project     = var.project_id
   name        = "juiceshop"
