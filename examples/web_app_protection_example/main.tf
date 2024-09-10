@@ -245,7 +245,7 @@ resource "google_compute_security_policy" "edge_policy" {
 
 module "backend_policy" {
   source  = "GoogleCloudPlatform/cloud-armor/google"
-  version = "0.3.0"
+  version = "3.0.0"
 
   project_id                           = var.project_id
   name                                 = "backend-policy-${random_id.suffix.hex}"
