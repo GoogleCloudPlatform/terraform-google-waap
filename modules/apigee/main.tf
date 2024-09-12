@@ -21,7 +21,7 @@ resource "google_project_service_identity" "apigee_sa" {
 }
 
 module "apigee" {
-  source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/apigee?ref=v24.0.0"
+  source     = "github.com/GoogleCloudPlatform/cloud-foundation-fabric//modules/apigee?ref=v34.1.0"
   project_id = var.project_id
   organization = !var.create_apigee_org ? null : {
     display_name            = var.apigee_org_name
