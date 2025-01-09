@@ -48,7 +48,7 @@ module "apigee" {
 
 module "apigee_org_kms" {
   source  = "terraform-google-modules/kms/google"
-  version = "~> 2.2.1"
+  version = "~> 2.3.0"
 
   project_id         = var.kms_project_id == "" ? var.project_id : var.kms_project_id
   location           = var.analytics_region
@@ -68,7 +68,7 @@ module "apigee_org_kms" {
 module "apigee_instance_kms" {
   for_each = var.apigee_instances
   source   = "terraform-google-modules/kms/google"
-  version  = "~> 2.2.1"
+  version  = "~> 2.3.0"
 
   project_id         = var.kms_project_id == "" ? var.project_id : var.kms_project_id
   location           = each.key
@@ -131,7 +131,7 @@ resource "google_compute_region_network_endpoint_group" "psc_neg" {
 }
 
 module "psc_lb" {
-  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nb-psc-l7xlb?ref=v0.21.0"
 
   project_id = var.project_id
   name       = "apigee-xlb-psc"
