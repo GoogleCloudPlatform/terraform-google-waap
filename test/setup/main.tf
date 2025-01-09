@@ -16,7 +16,7 @@
 
 module "project" {
   source  = "terraform-google-modules/project-factory/google"
-  version = "~> 13.0"
+  version = "~> 17.0"
 
   name              = "ci-waap"
   random_project_id = "true"
