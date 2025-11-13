@@ -17,7 +17,7 @@
 
 module "vpc" {
   source  = "terraform-google-modules/network/google"
-  version = "~> 4.0"
+  version = "~> 12.0"
 
   project_id   = var.project_id
   network_name = "waap-vpc"
@@ -506,7 +506,7 @@ module "lb-http" {
 # ----------------------------------------------------------------------------------------------------------------------
 module "firewall_rules" {
   source  = "terraform-google-modules/network/google//modules/firewall-rules"
-  version = "~> 6.0.0"
+  version = "~> 12.0.0"
 
   project_id   = var.project_id
   network_name = module.vpc.network_name
