@@ -85,7 +85,7 @@ module "apigee" {
 }
 
 module "nip_apigee_hostname" {
-  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.21.0"
 
   project_id         = var.project_id
   address_name       = "apigee-external"
@@ -428,7 +428,7 @@ module "mig" {
 
 
 module "nip_juiceshop_hostname" {
-  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.12.0"
+  source = "github.com/apigee/terraform-modules//modules/nip-development-hostname?ref=v0.21.0"
 
   project_id   = var.project_id
   address_name = "juiceshop-lb-ip"
