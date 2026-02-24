@@ -214,7 +214,7 @@ resource "apigee_developer_app_credential" "example" {
 
 module "recaptcha_key_gcloud" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 3.1.2"
+  version = "~> 4.0.0"
 
   platform              = "linux"
   additional_components = ["jq"]
@@ -225,7 +225,7 @@ module "recaptcha_key_gcloud" {
 
 module "recaptcha_keys_list_gcloud" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 3.1.2"
+  version = "~> 4.0.0"
 
   platform = "linux"
 
@@ -269,7 +269,7 @@ resource "time_sleep" "wait_for_git_seconds" {
 # Build Docker Image
 module "build_juiceshop_image" {
   source  = "terraform-google-modules/gcloud/google"
-  version = "~> 2.0"
+  version = "~> 4.0"
 
   platform = "linux"
 
