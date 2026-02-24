@@ -34,7 +34,7 @@ module "mig_vpc" {
 
 module "cloud-nat" {
   source        = "terraform-google-modules/cloud-nat/google"
-  version       = "~> 1.2"
+  version       = "~> 7.0"
   create_router = true
   project_id    = var.project_id
   region        = var.region
