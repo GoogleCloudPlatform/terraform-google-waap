@@ -39,7 +39,7 @@ module "vpc" {
 
 module "cloud_router" {
   source  = "terraform-google-modules/cloud-router/google"
-  version = "~> 4.0"
+  version = "~> 8.0"
   project = var.project_id
   name    = "juiceshop-router"
   network = module.vpc.network_name
