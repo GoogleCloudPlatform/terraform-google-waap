@@ -48,7 +48,7 @@ module "apigee" {
 
 module "apigee_org_kms" {
   source  = "terraform-google-modules/kms/google"
-  version = "~> 2.2.1"
+  version = "~> 4.1.0"
 
   project_id         = var.kms_project_id == "" ? var.project_id : var.kms_project_id
   location           = var.analytics_region
@@ -68,7 +68,7 @@ module "apigee_org_kms" {
 module "apigee_instance_kms" {
   for_each = var.apigee_instances
   source   = "terraform-google-modules/kms/google"
-  version  = "~> 2.2.1"
+  version  = "~> 4.1.0"
 
   project_id         = var.kms_project_id == "" ? var.project_id : var.kms_project_id
   location           = each.key
