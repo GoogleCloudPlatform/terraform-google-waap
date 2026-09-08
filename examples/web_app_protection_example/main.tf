@@ -461,7 +461,7 @@ locals {
 }
 module "lb-http" {
   source  = "GoogleCloudPlatform/lb-http/google"
-  version = "9.0.0"
+  version = "9.3.0"
 
   project     = var.project_id
   name        = "lb-web-app"

@@ -16,7 +16,7 @@
 
 module "log_export" {
   source  = "terraform-google-modules/log-export/google"
-  version = "~> 7.4.2"
+  version = "~> 7.8.0"
 
   destination_uri = module.destination.destination_uri
   filter          = "resource.type:(http_load_balancer) AND jsonPayload.enforcedSecurityPolicy.name:(${var.ca_policy_name})"
@@ -36,7 +36,7 @@ module "log_export" {
 
 module "destination" {
   source  = "terraform-google-modules/log-export/google//modules/bigquery"
-  version = "~> 7.4.2"
+  version = "~> 7.8.0"
 
   project_id               = var.project_id
   dataset_name             = var.dataset_name
